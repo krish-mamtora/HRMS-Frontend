@@ -51,23 +51,23 @@ export default function LoginPage(){
         }
 
     return (
-        <div>
+        <div className="p-4 max-w-sm mx-auto">
              {feedback.message && <p style={{ color: 'green' }}>{feedback.message}</p>}
                 {feedback.error && <p style={{ color: 'red' }}>{feedback.error}</p>}
-            <h1>Login</h1>
+            <h1 className="text-2xl font-bold mb-4">Login</h1>
             
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', maxWidth: '300px', gap: '10px' }}>
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             <div>
                 <label htmlFor="Email">Email:</label>
-                <input type="text" id="Email" value={form.Email} name="Email"   onChange={handleChange} required />
+                <input type="text" id="Email" value={form.Email} name="Email" className="border border-gray-300 rounded px-2 py-1 w-full"   onChange={handleChange} required />
             </div>
             <div>
                 <label htmlFor="password">Password:</label>
-                <input type="password" id="password" value={form.password} name="password"  onChange={handleChange} required />
+                <input type="password" id="password" value={form.password} name="password"   className="border border-gray-300 rounded px-2 py-1 w-full"  onChange={handleChange} required />
             </div>
-            <button type="submit">Login</button>
+            <button type="submit"  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Login</button>
             
-    </form>
+         </form>
         </div>
     )
 }

@@ -13,13 +13,12 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({children} : {children: React.ReactNode})=>{
 
     const [authData, setAuthData] = useState<{ accessToken: string | null, role: string | null }>({
-        accessToken: null,
-        role: null,
+        accessToken: localStorage.getItem('accessToken'),
+        role: localStorage.getItem('role'),
     });
 
     const login = (accessToken:string , role:string)=>{
-        // console.log("iiiiii");
-        // console.log("from authcontext : ",accessToken , role)
+     
        if(!accessToken || !role){
             console.error('invalid login data');
             return;
