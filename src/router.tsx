@@ -11,6 +11,8 @@ import HRHomePage  from './features/HR/HRHomePage.tsx';
 import EmpHomePage from './features/Employee/EmpHomePage.tsx';
 import ManagerHomePage from './features/Manager/ManagerHomePage.tsx';
 import UnauthorizedPage from './UnauthorizedPage.tsx';
+import HrRoutes from './features/HR/HrRoutes.tsx';
+
 const Protected = ({children } : {children:JSX.Element})=>{
     const {accessToken} = useAuth();
    return accessToken ? children : <Navigate to="/login"/>;
@@ -51,7 +53,8 @@ const router = createBrowserRouter([
                         <HRHomePage/>
                     </RoleProtected>
                 </Protected>
-            )
+            ) , 
+            children: HrRoutes,
         },
          {
             path:"manager" , element : 
