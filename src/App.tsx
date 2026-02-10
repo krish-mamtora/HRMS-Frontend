@@ -1,10 +1,13 @@
+import { RouterProvider } from 'react-router-dom';
 import './App.css'
-
+import { AuthProvider } from './features/auth/context/AuthContext';
+import router from './router';
 function App() {
   return (
-    <h1 className="text-3xl font-bold text-center text-blue-500">
-      HRMS
-    </h1>
+   
+    <AuthProvider>
+        <RouterProvider router={router}/>
+    </AuthProvider>
   );
 }
 
