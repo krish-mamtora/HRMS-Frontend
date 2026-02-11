@@ -4,6 +4,8 @@ import TravelPlans from './TravelandExpense/TravelPlans';
 import Jobs from './JobListing/Jobs';
 import Social from './Social/Social';
 import Games from './Games/Games';
+import AddPlanForm from './TravelandExpense/AddPlanForm';
+import CreateJob from './JobListing/CreateJob';
 type Props = {}
 
 const HrRoutes = [
@@ -11,6 +13,12 @@ const HrRoutes = [
   {
     path: 'travel',
     element: <TravelPlans />,
+    children:[
+      {
+        path :  'create',
+        element : <AddPlanForm/>
+      }
+    ]
   },
   {
     path: 'social',
@@ -24,14 +32,12 @@ const HrRoutes = [
    {
     path: 'jobs',
     element: <Jobs />,
-    // Children: [
-    //     {
-    //         index : true,
-    //         element:(
-    //             <Vie/>
-    //         )
-    //     }
-    // ]
-  }
+    children:[
+      {
+        path:'create',
+        element : <CreateJob/>
+      }
+    ]
+  },
 ]
 export default HrRoutes;

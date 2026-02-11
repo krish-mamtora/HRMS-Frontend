@@ -7,13 +7,13 @@ export default function MainLayout() {
     const {accessToken , logout }  = useAuth();
     const navLinkClass = ({ isActive }: { isActive: boolean }) => 
     isActive ? "text-yellow-400" : "hover:text-yellow-300 transition";
-    
+
   return (
     <div className="min-h-screen bg-gray-50">
         <nav className="p-4 shadow-md">
             <div className="container mx-auto flex justify-end items-center">
                 
-               <div className="flex gap-6 items-center">
+               <div className="flex gap-6 items-center mr-4">
             <NavLink to="/" className={navLinkClass}>Home</NavLink>
         
             {accessToken && role === 'HR' && (
@@ -30,8 +30,8 @@ export default function MainLayout() {
                 {
                     !accessToken && 
                     <>
-                        <NavLink to="/login">Login</NavLink>
-                        <NavLink to="register">Register</NavLink>
+                        <NavLink to="/login" className={navLinkClass}>Login</NavLink>
+                        <NavLink to="register" className={navLinkClass}>Register</NavLink>
                     </>
                 }
 

@@ -2,74 +2,79 @@ import React, { useState, type ChangeEvent, type FormEvent } from 'react'
 import api from '../../auth/api/axios';
 import type { AxiosError } from 'axios';
 import axios from 'axios';
+import { usePlans } from '../hooks/usePlans';
+import AddPlanForm from './AddPlanForm';
+import { Outlet, useNavigate } from 'react-router-dom';
 type Props = {}
 
 export interface TravelPlanData {
   startDate: string;
   endDate: string;
   destination: string;
+  travelMode: string;
+  tripType:string;
   purpose: string;
-    createdByUserId : number;
+  createdByUserId : number;
+  id : number;
+
+  CreatedAt : Date;
 }
 
 const TravelPlans = (props: Props) => {
+    const navigate = useNavigate();
+    const handleRedirect = () =>{
+        navigate('/hr/travel/create');
+    }
 
-    const [feedback , setFeedback]= useState({message:'' , error:''});
+    const {data , isLoading , isError , error} = usePlans();
+
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
     
-    const [formData , setFormData] = useState<TravelPlanData>({
-        startDate : '',
-        endDate : '',
-        destination : '',
-        purpose : '',
-        createdByUserId :0
-    });
+    const ManageEmployees = ()=>{
 
-    const handleChange = (e:ChangeEvent<HTMLInputElement>)=>{
-       const {name , value} = e.target;
-        setFormData ((prevData)=>({
-            ...prevData , [name]:value,
-        }))
     }
 
-    const handleSubmit =async (e:FormEvent<HTMLFormElement>)=>{
-       e.preventDefault();
-       console.log(formData);
-       if(!formData.startDate||!formData.createdByUserId||!formData.destination||!formData.endDate||!formData.purpose){
-            setFeedback(prev => ({ ...prev, error: 'Please enter all fields' }));
-                return;
-       }try{
-            const res = await api.post("/TravelPlan" , formData)
-            if(res.status === 200){
-                alert("Plan created");
-            }
-        }catch(err){
-            if(axios.isAxiosError(err)){
-                const axiosError = err as AxiosError<{message:string}>;
-                setFeedback(prev=>({...prev , error:axiosError.response?.data?.message || 'failed to add plan'}))
-            }else{
-                setFeedback(prev=>({...prev , error:'An error occured'}));
-            }
-       }
-    }
   return (
     <>
-        <div>TravelPlans</div>
+    <h2 className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>TravelPlans</h2>
 
-        <form onSubmit={handleSubmit}>
-            <label htmlFor="destination">Destination : </label>
-            <input type="text" id="destination" name="destination" value={formData.destination} onChange={handleChange} required />
-               <label htmlFor="purpose">purpose : </label>
-            <input type="text" id="purpose" name="purpose" value={formData.purpose} onChange={handleChange} required />
-               <label htmlFor="startDate">startdate : </label>
-            <input type="date" id="startDate" name="startDate" value={formData.startDate} onChange={handleChange} required/>
-               <label htmlFor="endDate">enddate : </label>
-            <input type="date" id="endDate" name="endDate" value={formData.endDate} onChange={handleChange} required/>
-              <label htmlFor="createdByUserId">createdby : </label>
-            <input type="number" id="createdByUserId" name="createdByUserId" value={formData.createdByUserId} onChange={handleChange} required/>
-            <button type='submit'>Create Plan</button>
-        </form>
+    
+     <div>
+
+                    
+        <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add New Plan</button>
+        <Outlet/>
+      
+    
+      <h1>Travel Plan List</h1>
+        <div>
+    
+        </div>
+     
+        <div className="p-4">
+             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data?.map((plan) => (
+                <li key={plan.id} className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h2 className="text-xl font-semibold text-slate-900">{plan.destination}</h2>
+                    <p className="text-sm text-sky-700 font-medium">{plan.purpose}</p>
+                   <p className="text-sm text-sky-700 font-medium">{plan.travelMode}</p>
+                   <p className="text-sm text-sky-700 font-medium">{plan.tripType}</p>
+                    <div className="flex justify-between text-xs text-slate-500 mt-4 pt-4 border-t border-slate-100">
+                      <span>{plan.startDate}</span>
+                      <span>{plan.endDate}</span>
+                    </div>
+                    <h2>{plan.createdByUserId}</h2>
+                    <h2>{plan.id}</h2>
+                     <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Assign</button>
+                </li>
+                ))}
+            </ul>
+        </div>
+        </div>
     </>
   )
 }
+
 
 export default TravelPlans;

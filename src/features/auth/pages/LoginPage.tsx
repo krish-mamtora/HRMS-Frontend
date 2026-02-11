@@ -23,15 +23,13 @@ export default function LoginPage(){
                 setFeedback(prev => ({ ...prev, error: 'Please enter both Email and password.' }));
                 return;
             }
-            console.log(form.Email , form.password );
             try{
                 const res = await api.post("/auth/login" , form);
-                  console.log("check : 1" ,res.data ," 2 ", res.data.accessToken , " 3 ", res.data.role);
                 if(res.data && res.data.accessToken && res.data.role){
                     login(res.data.accessToken , res.data.role);
                 }
+                localStorage.setItem('id' , res.data.id);
                 if(res.data.role === 'Employee'){
-                    console.log("reached--------")
                      navigate("/employee");
                 }
                 else if(res.data.role ==='HR'){
