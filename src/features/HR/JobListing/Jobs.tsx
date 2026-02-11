@@ -31,11 +31,11 @@ const Jobs = (props: Props) => {
         }
   return (
     <>
-        <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creatoin and Refferal</div>
-                      
-        <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Create New</button>
-        <Outlet/>
-    
+        <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
+          <div className='flex justify-end'>            
+            <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Create New</button>
+            <Outlet/>
+        </div>
       <h1>Job Position List</h1>
 
 

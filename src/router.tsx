@@ -12,6 +12,7 @@ import EmpHomePage from './features/Employee/EmpHomePage.tsx';
 import ManagerHomePage from './features/Manager/ManagerHomePage.tsx';
 import UnauthorizedPage from './UnauthorizedPage.tsx';
 import HrRoutes from './features/HR/HrRoutes.tsx';
+import EmployeeRoutes from './features/Employee/EmployeeRoutes.tsx';
 
 const Protected = ({children } : {children:JSX.Element})=>{
     const {accessToken} = useAuth();
@@ -57,21 +58,25 @@ const router = createBrowserRouter([
             children: HrRoutes,
         },
          {
-            path:"manager" , element : 
+            path:"manager" , element :(
+
                 <Protected>
                     <RoleProtected  allowedRoles={["Manager"]}>
                         <ManagerHomePage/>
                     </RoleProtected>
                 </Protected>
+                ),
+             
             
         },
          {
             path:"employee" , element : 
-                <Protected>
+                (<Protected>
                     <RoleProtected  allowedRoles={["Employee"]}>
                         <EmpHomePage/>
                     </RoleProtected>
-                </Protected>
+                </Protected>) , 
+                   children : EmployeeRoutes,
         }
     ]
   },

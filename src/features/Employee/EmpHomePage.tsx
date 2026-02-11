@@ -1,10 +1,13 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom';
 
 type Props = {}
 
-const Home = (props: Props) => {
+const EmpHomePage = (props: Props) => {
   return (
-    <div>Employee Home page</div>
+     <>
+    <Outlet/>
+     </>
   )
 }
-export default Home;
+export default EmpHomePage;

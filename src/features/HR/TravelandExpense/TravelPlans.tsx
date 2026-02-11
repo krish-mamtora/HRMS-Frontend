@@ -41,11 +41,11 @@ const TravelPlans = (props: Props) => {
 
     
      <div>
-
+ <div className='flex justify-end'> 
                     
-        <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add New Plan</button>
+      <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add New Plan</button>
         <Outlet/>
-      
+      </div>
     
       <h1>Travel Plan List</h1>
         <div>
@@ -70,8 +70,8 @@ const TravelPlans = (props: Props) => {
                 </li>
                 ))}
             </ul>
-        </div>
-        </div>
+         </div>
+      </div>
     </>
   )
 }

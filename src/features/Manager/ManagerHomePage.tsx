@@ -2,9 +2,9 @@ import React from 'react'
 
 type Props = {}
 
-const Home = (props: Props) => {
+const ManagerHomePage = (props: Props) => {
   return (
     <div>Manager Home Page</div>
   )
 }
-export default Home;
+export default ManagerHomePage;

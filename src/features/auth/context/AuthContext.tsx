@@ -38,7 +38,6 @@ export const AuthProvider = ({children} : {children: React.ReactNode})=>{
     useEffect(()=>{
         const storedaccessToken  = localStorage.getItem("accessToken");
         const storedRole = localStorage.getItem("role");
-        console.log("KKKK: ",storedRole , storedaccessToken);
         if(storedRole && storedaccessToken){
             setAuthData({accessToken: storedaccessToken, role: storedRole});
         }
