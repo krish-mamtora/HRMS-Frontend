@@ -7,6 +7,8 @@ import Games from './Games/Games';
 import AddPlanForm from './TravelandExpense/AddPlanForm';
 import CreateJob from './JobListing/CreateJob';
 import AssignEmployees from './TravelandExpense/AssignEmployees';
+import JobApplications from './JobListing/JobApplications';
+
 type Props = {}
 
 const HrRoutes = [
@@ -43,6 +45,10 @@ const HrRoutes = [
         element : <CreateJob/>
       }
     ]
+  },
+  {
+    path:'jobs/:id',
+    element : <JobApplications/>
   },
 ]
 export default HrRoutes;

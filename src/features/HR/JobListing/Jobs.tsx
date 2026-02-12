@@ -31,6 +31,11 @@ const Jobs = (props: Props) => {
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;
        
+    
+    const handleApplications = (id:number) =>{
+       
+        navigate(`/hr/jobs/${id}`)
+    }
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
@@ -62,6 +67,7 @@ const Jobs = (props: Props) => {
                     <h2>No of Positions : {job.totalPositions}</h2>
                     <h2>Job Url : {job.jdUrl}</h2>
                     <h2>Status : {job.status}</h2>
+                    <button  onClick={()=>handleApplications(job.id)} className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md shadow transition duration-200">Manage</button>
                 </li>
                 ))}
             </ul>

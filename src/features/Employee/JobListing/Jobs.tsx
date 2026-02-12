@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom';
 import useJobs from '../hooks/useJobs';
+import api from '../../auth/api/axios';
 type Props = {}
 
 export interface JobCreate {
@@ -16,23 +17,65 @@ export interface JobCreate {
   ManagedBy : number;
 }
 
+export interface ReferalCreate{
+    JobId :number,
+    ReffName : string ,
+    ReffMail : string , 
+    ReffResumeUrl : string , 
+    EmpId : number , 
+    Description : string ,  
+}
 const Jobs = (props: Props) => {
 
-   const navigate = useNavigate();
+    const [formData , setFormData] = useState<ReferalCreate>({
+        JobId:0,
+        ReffMail:'',
+        ReffResumeUrl:'',
+        ReffName:'',
+        EmpId: parseInt(localStorage.getItem('id')||'0'),
+        Description:'',
+    });
 
       const {data , isLoading , isError , error} = useJobs();
     
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;
-        const Managejobs = ()=>{
+  
+        const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLTextAreaElement>)=>{
+            const {name , value} = e.target;
+            setFormData ((prevData)=>({
+                ...prevData , [name]:value,
+            }))
         }
+       const handleSubmit = async (e:FormEvent<HTMLFormElement>)=>{
+            e.preventDefault();
+            console.log(formData);
+
+            if(!formData.EmpId||!formData.JobId||!formData.ReffMail||!formData.ReffName||!formData.ReffResumeUrl){
+                alert("Please fill required fields!!");
+                return ;
+            }
+            try{
+                const res = await api.post("/Referal" ,formData);
+                if(res.status >= 200 && res.status < 300){
+                     alert("Friend Reffered !!")
+                }
+            }catch(err){
+               alert(err.message);
+            }
+       }
+        const openModal = (jobId: number) => {
+            setFormData(prev => ({...prev, JobId: jobId}));
+            (document.getElementById(`refer_friend_model_${jobId}`) as HTMLDialogElement)?.showModal();
+        };
+        const closeModal = (jobId: number) => {
+            (document.getElementById(`refer_friend_model_${jobId}`) as HTMLDialogElement)?.close();
+        };
+
   return (
     <>
-        <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
+        <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Position</div>
          
-      <h1>Job Position List</h1>
-
-
        <div className="p-4">
              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {data?.map((job) => (
@@ -48,42 +91,43 @@ const Jobs = (props: Props) => {
                     <h2>Status : {job.status}</h2>
                     <div>
                         <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded mr-5 mt-2"
-                        onClick={()=>document.getElementById('refer_friend_model').showModal()}
+                        onClick={()=>openModal(job.id)}
                         >Refer Friend</button>
 
-                        <dialog id="refer_friend_model"  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+                        <dialog id={`refer_friend_model_${job.id}`}  className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-26">
                             <div className="w-full max-w-xs">
                                 <h3 className="font-bold text-lg">Refer Friend for : {job.title}</h3>
                                 <p className="py-4">Please enter your friends detials below</p>
                                 <div className="modal-action">
-                                <form method="dialog" >
+                                <form method="dialog" onSubmit={handleSubmit}>
                                     <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-                                            Username
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
+                                            Name
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="username" name='username'  type="text" placeholder="Name of your Friend.." required/>
+                                        <input value={formData.ReffName} onChange={handleChange} id="ReffName" name='ReffName'  type="text" placeholder="Name of your Friend.."  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required/>
                                     </div>
                                     <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
                                             Email
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="email" type="email" name='email' placeholder="Email address of your Friend.." required/>
+                                        <input value={formData.ReffMail} onChange={handleChange} id="ReffName" type="email" name='ReffMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required/>
                                     </div>
                                      <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="resume">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResumeUrl">
                                             Resume
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="resume" name='resume' type="file" placeholder="Resume of your Friend.." required/>
+                                        <input value={formData.ReffResumeUrl} onChange={handleChange} id="ReffResumeUrl" name='ReffResumeUrl' type="text" placeholder="Resume of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required/>
                                     </div>
                                     <div className="mb-4">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="note">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Description">
                                             Note
                                         </label>
-                                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="note" type="note" name='note' placeholder="Name of your Friend.."/>
+                                        <input value={formData.Description} onChange={handleChange} id="Description" type="text" name='Description' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Name of your Friend.."/>
                                     </div>
+                                    <input type="hidden" />
                                    <div className='flex justify-end'>
-                                    <button className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" id='Close'   onClick={()=>document.getElementById('refer_friend_model').close()}>Close</button> 
-                                    <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Refer !</button>
+                                    <button type="button" className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onClick={()=>closeModal(job.id)}  >Close</button> 
+                                    <button  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Refer !</button>
                                  </div>
                                 </form>
                                 </div>

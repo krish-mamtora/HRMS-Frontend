@@ -3,8 +3,7 @@ import Jobs from './JobListing/Jobs';
 import Games from './Games/Games';
 import Social from './Social/Social';
 import TravelPlans from './TravelandExpense/TravelPlans';
-
-type Props = {}
+import TravelPlanDetails from './TravelandExpense/TravelPlanDetails';
 
 const EmployeeRoutes = [
 
@@ -13,10 +12,14 @@ const EmployeeRoutes = [
     element: <TravelPlans />,
     // children:[
     //   {
-    //     path :  'create',
-    //     element : <AddPlanForm/>
+    //     path :  ':id',
+    //     element : <TravelPlanDetails/>
     //   }
     // ]
+  },
+  {
+    path : 'travel/:id',
+    element : <TravelPlanDetails/>
   },
   {
     path: 'social',
