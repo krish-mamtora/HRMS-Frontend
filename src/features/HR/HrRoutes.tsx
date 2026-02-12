@@ -6,6 +6,7 @@ import Social from './Social/Social';
 import Games from './Games/Games';
 import AddPlanForm from './TravelandExpense/AddPlanForm';
 import CreateJob from './JobListing/CreateJob';
+import AssignEmployees from './TravelandExpense/AssignEmployees';
 type Props = {}
 
 const HrRoutes = [
@@ -17,6 +18,10 @@ const HrRoutes = [
       {
         path :  'create',
         element : <AddPlanForm/>
+      },
+      {
+        path:'assign/:id',
+        element : <AssignEmployees/>
       }
     ]
   },

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import useJobs from '../hooks/useJobs';
 
 type Props = {}
@@ -20,6 +20,9 @@ export interface JobCreate {
 const Jobs = (props: Props) => {
 
    const navigate = useNavigate();
+    const location = useLocation();
+    const isCreating = location.pathname.includes('/create');
+
     const handleRedirect = () =>{
         navigate('/hr/jobs/create');
     }
@@ -27,16 +30,24 @@ const Jobs = (props: Props) => {
     
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;
-        const Managejobs = ()=>{
-        }
+       
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
-          <div className='flex justify-end'>            
-            <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Create New</button>
-            <Outlet/>
-        </div>
-      <h1>Job Position List</h1>
+                <div className='flex justify-end'>
+                    {!isCreating && (
+                        <button 
+                            onClick={handleRedirect} 
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors"
+                        >
+                            Create New
+                        </button>
+                    )}
+                </div>
+              <div>
+                   <Outlet />
+              </div>
+                <h1>Job Position List</h1>
 
 
        <div className="p-4">

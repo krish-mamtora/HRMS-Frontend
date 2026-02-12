@@ -65,26 +65,42 @@ const AddPlanForm = (props: Props) => {
 
   return (
     <>
-      <button onClick={handleClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Close</button>
+    <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Open Position Form</h2>
+              <button onClick={handleClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Close</button>
+    </div> 
     <div>AddPlanForm</div>
     <div className="">
-        <form onSubmit={handleSubmit}  className="flex items-center space-x-4  bg-gray-100">
-            <label htmlFor="destination" className="block mb-2.5 text-sm font-medium text-heading">Destination : </label>
-            <input type="text" id="destination" name="destination" className="border border-gray-300 rounded px-2 py-1 w-full"  value={formData.destination} onChange={handleChange} required />
-               <label htmlFor="purpose"  className="block mb-2.5 text-sm font-medium text-heading">purpose : </label>
-            <input type="text" id="purpose" name="purpose" className="border border-gray-300 rounded px-2 py-1 w-full"  value={formData.purpose} onChange={handleChange} required />
-               <label htmlFor="startDate"  className="block mb-2.5 text-sm font-medium text-heading">startdate : </label>
-            <input type="date" id="startDate" name="startDate" className="border border-gray-300 rounded px-2 py-1 w-full" value={formData.startDate} onChange={handleChange} required/>
-               <label htmlFor="endDate"  className="block mb-2.5 text-sm font-medium text-heading">enddate : </label>
-            <input type="date" id="endDate" name="endDate" className="border border-gray-300 rounded px-2 py-1 w-full" value={formData.endDate} onChange={handleChange} required/>
-              <label htmlFor="TravelMode" className="block mb-2.5 text-sm font-medium text-heading">Select an option</label>
+        <form onSubmit={handleSubmit}  className="space-y-4">
+            <div>
+                <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-1">Destination : </label>
+                <input type="text" id="destination" name="destination" className="w-full border border-gray-300 rounded-md px-3 py-2"  value={formData.destination} onChange={handleChange} required />
+            </div>
+             <div>
+               <label htmlFor="purpose"  className="block text-sm font-medium text-gray-700 mb-1">purpose : </label>
+                <input type="text" id="purpose" name="purpose" className="w-full border border-gray-300 rounded-md px-3 py-2"  value={formData.purpose} onChange={handleChange} required />
+            </div>
+             <div>
+               <label htmlFor="startDate"  className="block text-sm font-medium text-gray-700 mb-1">startdate : </label>
+                <input type="date" id="startDate" name="startDate" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.startDate} onChange={handleChange} required/>
+            </div>
+              <div>
+               <label htmlFor="endDate"  className="block text-sm font-medium text-gray-700 mb-1">enddate : </label>
+                 <input type="date" id="endDate" name="endDate" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.endDate} onChange={handleChange} required/>
+              </div>
+              <div>
+              <label htmlFor="TravelMode" className="block text-sm font-medium text-gray-700 mb-1">Select an option</label>
                 <select id="TravelMode" name="TravelMode"  value={formData.TravelMode} onChange={handleChange} required className="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body">
                 <option value="road">Road Transport</option>
                 <option value="rail">Rail Transport</option>
                 <option value="water">Water Transport</option>
                 <option value="air">Air Transport</option>
             </select>
-            <label htmlFor="TripType" className="block mb-2.5 text-sm font-medium text-heading">Select an option</label>
+            </div>
+            <div>
+            <label htmlFor="TripType" className="block text-sm font-medium text-gray-700 mb-1">Select an option</label>
             <select id="TripType" name="TripType" value={formData.TripType} onChange={handleChange} required className="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body">
                 <option value="Client Meeting">Client Meeting</option>
                 <option value="Conferences and Trade Showst">Conferences and Trade Showst</option>
@@ -92,13 +108,13 @@ const AddPlanForm = (props: Props) => {
                 <option value="Training and Development Programs">Training and Development Programs</option>
                 <option value="Corporate Retreats">Corporate Retreats</option>
             </select>
-
+            </div>
             <input type="hidden" id="createdByUserId" name="createdByUserId" value={localStorage.getItem('id')||''} required/>
 
             <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Create Plan</button>
         </form>        
     </div>
-
+</div>
     </>
   )
 }
