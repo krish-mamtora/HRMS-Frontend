@@ -5,25 +5,25 @@ import { useQuery } from '@tanstack/react-query';
 type Props = {}
 
 export interface JobReferals{
-    JobId :number,
-    ReffName : string ,
-    ReffMail : string , 
-    ReffResumeUrl : string , 
-    EmpId : number , 
-    Description : string ,  
+    jobId :number,
+    reffName : string ,
+    reffMail : string , 
+    reffResumeUrl : string , 
+    empId : number , 
+    description : string ,  
 }
 
-const fetchApplicationsFromJobId = async(id:number):Promise<JobReferals[]>=>{
+const fetchApplicationsFromJobId = async(jobId:number):Promise<JobReferals[]>=>{
     
-    const response = await api.get<JobReferals[]>(`/Referal/job/${id}`);
-     console.log(response)
+    const response = await api.get<JobReferals[]>(`/Referal/job/${jobId}`);
+     console.log("response data : ",response.data)
     return response.data;
 }
 
-const useApplications = () => {
+const useApplications = (jobId:number) => {
     return useQuery<JobReferals[],Error>({
-        queryKey : ['JobReferals'],
-        queryFn : fetchApplicationsFromJobId,
+        queryKey : ['JobReferals' , jobId],
+        queryFn :()=> fetchApplicationsFromJobId(jobId),
     });
 }
 export default useApplications;

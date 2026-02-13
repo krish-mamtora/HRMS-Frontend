@@ -27,6 +27,31 @@ export interface ReferalCreate{
 }
 const Jobs = (props: Props) => {
 
+    const [file , setFile] = useState();
+    const [fileName , setFileName] = useState();
+
+    
+    const saveFile = (e)=>{
+        console.log(e.target.files[0]);
+        setFile(e.target.files[0]);
+        setFileName(e.target.files[0].name);
+    }
+
+    const uploadFile=async(e)=>{
+        console.log(file);
+        const formData2 = new FormData();
+        formData2.append("formFile" , file);
+        formData2.append("fileName" , fileName);
+        try{
+            const res = await api.post("/file" ,formData2);
+            if(res.status >= 200 && res.status < 300){
+                alert("Resume uploaded !!")
+            }
+        }catch(err){
+            alert(err.message);
+        }
+    }
+
     const [formData , setFormData] = useState<ReferalCreate>({
         JobId:0,
         ReffMail:'',
@@ -112,7 +137,7 @@ const Jobs = (props: Props) => {
                                         </label>
                                         <input value={formData.ReffMail} onChange={handleChange} id="ReffName" type="email" name='ReffMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required/>
                                     </div>
-                                     <div className="mb-4">
+                                    <div className="mb-4">
                                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResumeUrl">
                                             Resume
                                         </label>
@@ -124,13 +149,15 @@ const Jobs = (props: Props) => {
                                         </label>
                                         <input value={formData.Description} onChange={handleChange} id="Description" type="text" name='Description' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Name of your Friend.."/>
                                     </div>
-                                    <input type="hidden" />
                                    <div className='flex justify-end'>
                                     <button type="button" className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition" onClick={()=>closeModal(job.id)}  >Close</button> 
                                     <button  className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Refer !</button>
                                  </div>
                                 </form>
-                                </div>
+
+                                  {/*   <input type="file" onChange={saveFile}/>
+                                    <input type="button" value="upload" onClick={uploadFile} />*/}
+                                </div> 
                             </div>
                         </dialog>
 

@@ -100,7 +100,7 @@ const AddPlanForm = (props: Props) => {
             </select>
             </div>
             <div>
-            <label htmlFor="TripType" className="block text-sm font-medium text-gray-700 mb-1">Select an option</label>
+            <label htmlFor="TripType" className="block text-sm font-medium text-gray-700 mb-1">Trip Type</label>
             <select id="TripType" name="TripType" value={formData.TripType} onChange={handleChange} required className="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body">
                 <option value="Client Meeting">Client Meeting</option>
                 <option value="Conferences and Trade Showst">Conferences and Trade Showst</option>

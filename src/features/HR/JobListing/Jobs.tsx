@@ -27,7 +27,8 @@ const Jobs = (props: Props) => {
         navigate('/hr/jobs/create');
     }
       const {data , isLoading , isError , error} = useJobs();
-    
+        console.log(typeof(data));
+
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;
        

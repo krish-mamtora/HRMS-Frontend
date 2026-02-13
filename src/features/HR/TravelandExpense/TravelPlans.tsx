@@ -28,20 +28,21 @@ const TravelPlans = (props: Props) => {
     }
 
     const {data , isLoading , isError , error} = usePlans();
-
+    if(!data){
+      return <h2>No Plan Found..</h2>
+    }
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
     
-    const handleAssign = (id:number)=>{
-      navigate(`/hr/travel/assign/:${id}`);
-      console.log(id);
+    const handleAssign = (planId:number)=>{
+      console.log("from handle : ",planId , typeof(planId));
+      navigate(`/hr/travel/${planId}`);
+      // console.log(planId);
     }
 
   return (
     <>
     <h2 className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>TravelPlans</h2>
-
-    
          <div className='flex justify-end'>
                     {!isCreating && (
                         <button 

@@ -21,11 +21,15 @@ const HrRoutes = [
         path :  'create',
         element : <AddPlanForm/>
       },
-      {
-        path:'assign/:id',
-        element : <AssignEmployees/>
-      }
+      // {
+      //   path:'assign/:id',
+      //   element : <AssignEmployees/>
+      // }
     ]
+  },
+    {
+    path : 'travel/:planId',
+    element : <AssignEmployees/>
   },
   {
     path: 'social',
@@ -43,12 +47,12 @@ const HrRoutes = [
       {
         path:'create',
         element : <CreateJob/>
-      }
+      } , 
     ]
   },
-  {
-    path:'jobs/:id',
-    element : <JobApplications/>
-  },
+{
+  path:'jobs/:jobId',
+  element :<JobApplications/>
+}
 ]
 export default HrRoutes;
