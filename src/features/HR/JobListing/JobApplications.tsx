@@ -42,7 +42,7 @@ export const JobApplications = () => {
                                     <td className="px-6 py-4">{item.reffName}</td>
                                     <td className="px-6 py-4">{item.reffMail}</td>
                                     <td className="px-6 py-4 col ">
-                                        <a href={item.reffResumeUrl} className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
+                                        <a href={item.reffResumeUrl} target='_blank' className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
                                     </td >
                                     <td className="px-6 py-4">{item.empId}</td>
                                     <td className="px-6 py-4">{item.description}</td>

@@ -37,9 +37,16 @@ const TravelPlans = (props: Props) => {
     const handleAssign = (planId:number)=>{
       console.log("from handle : ",planId , typeof(planId));
       navigate(`/hr/travel/${planId}`);
-      // console.log(planId);
     }
 
+    const managePlan = (planId : number)=>{
+      navigate(`/hr/travel/expense/${planId}`);
+      console.log(planId);
+    } 
+    const manageDocuments = (planId : number)=>{
+      navigate(`/hr/travel/documents/${planId}`);
+    console.log(planId);
+    } 
   return (
     <>
     <h2 className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>TravelPlans</h2>
@@ -58,7 +65,7 @@ const TravelPlans = (props: Props) => {
                   <Outlet />
                 </div>
      
-      <h1>Travel Plan List</h1>
+      {/* <h1>Travel Plan List</h1> */}
         <div>
     
         </div>
@@ -75,7 +82,10 @@ const TravelPlans = (props: Props) => {
                     <span className="text-sm text-sky-700 font-medium">End Date :</span> {plan.endDate}<br/>
                     <h2>Created by : {plan.createdByUserId}</h2>
                     <h2>ID : {plan.id}</h2>
-                     <button onClick={()=>handleAssign(plan.id)} className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Assign</button>
+                    <button onClick={()=>managePlan(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Manage Expense</button>
+                     <button onClick={()=>handleAssign(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Assign Plan</button>
+                     <button onClick={()=>manageDocuments(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Travel Documents</button>
+
                 </li>
                 ))}
             </ul>

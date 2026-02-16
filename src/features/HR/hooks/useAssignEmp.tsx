@@ -17,16 +17,20 @@ export interface UserProfile{
     managerId : number,
 }
 
+
 const fetchAllUesrs = async():Promise<UserProfile[]>=>{
     const response = await api.get<UserProfile[]>('/userProfile');
      console.log("response data : ",response.data)
     return response.data;
 }
 
-const useAssignEmp = () => {
+
+ const useAssignEmp = () => {
     return useQuery<UserProfile[],Error>({
         queryKey : ['UserProfile' ],
         queryFn :()=> fetchAllUesrs(),
     });
 }
+
+
 export default useAssignEmp;

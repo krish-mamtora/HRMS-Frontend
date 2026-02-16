@@ -3,7 +3,7 @@ import useAssignEmp from '../hooks/useAssignEmp'
 import api from '../../auth/api/axios';
 import { useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
-
+import { DataTable } from "simple-datatables";
 type Props = {}
 
 export interface AssignPlan {
@@ -15,6 +15,16 @@ export interface AssignPlan {
 
 const AssignEmployees = (props: Props) => {
 
+
+  // const dataTable = new simpleDatatables.DataTable("#default-table");
+
+  
+  // if (document.getElementById("search-table") && typeof simpleDatatables.DataTable !== 'undefined') {
+  //     const dataTable = new simpleDatatables.DataTable("#search-table", {
+  //         searchable: true,
+  //         sortable: false
+  //     });
+  // }
 
   // useEffect(()=>{
 
@@ -61,10 +71,10 @@ const AssignEmployees = (props: Props) => {
   return (
    <>
     <div>
-            <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Employees</div>
+            <div  className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Employees</div>
 
                 <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-                    <table className="w-full text-sm text-left rtl:text-right text-body">
+                    <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
                         <thead className="bg-neutral-secondary-soft border-b border-default">
                             <tr>
                                 <th className="px-6 py-3 font-medium">Id</th>

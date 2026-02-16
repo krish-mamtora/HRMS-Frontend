@@ -2,14 +2,14 @@ import React, { useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type { ReferalCreate } from './types';
 
-interface ReferralModalProps {
+interface ModalProps {
     jobId: number;
     jobTitle: string;
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ReferralModal: React.FC<ReferralModalProps> = ({ jobId, jobTitle, isOpen, onClose }) => {
+const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose }) => {
     const [formData, setFormData] = useState<ReferalCreate>({
         JobId: jobId,
         ReffMail: '',

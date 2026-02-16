@@ -72,16 +72,14 @@ const CreateJob = (props: Props) => {
   return (
     <>
     <div className="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    {/* <button onClick={handleClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Close</button> */}
     <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">Open Position Form</h2>
+        <h2 className="text-xl font-semibold text-gray-800">Open New Position</h2>
         <button onClick={handleClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm">
             Close
         </button>
     </div> 
-    <div>Open Position Form</div>
     <div className="">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 ">
         <div>
             <label htmlFor="Title" className="block text-sm font-medium text-gray-700 mb-1">Title</label>
             <input type="text" id="Title" name="Title" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition" value={formData.Title} onChange={handleChange} required />

@@ -8,7 +8,8 @@ import AddPlanForm from './TravelandExpense/AddPlanForm';
 import CreateJob from './JobListing/CreateJob';
 import AssignEmployees from './TravelandExpense/AssignEmployees';
 import JobApplications from './JobListing/JobApplications';
-
+import ManageTravel from './TravelandExpense/ManageTravel';
+import TravelDocument from './TravelandExpense/TravelDocument';
 type Props = {}
 
 const HrRoutes = [
@@ -21,12 +22,19 @@ const HrRoutes = [
         path :  'create',
         element : <AddPlanForm/>
       },
-      // {
-      //   path:'assign/:id',
-      //   element : <AssignEmployees/>
-      // }
+ 
     ]
   },
+        {
+        path:'travel/expense/:planId',
+        element : <ManageTravel/>
+      }
+     ,
+      {
+        path:'travel/documents/:planId',
+        element : <TravelDocument/>
+      }
+     ,
     {
     path : 'travel/:planId',
     element : <AssignEmployees/>
