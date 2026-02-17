@@ -85,7 +85,6 @@ const TravelPlans = (props: Props) => {
                     <button onClick={()=>managePlan(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Manage Expense</button>
                      <button onClick={()=>handleAssign(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Assign Plan</button>
                      <button onClick={()=>manageDocuments(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Travel Documents</button>
-
                 </li>
                 ))}
             </ul>

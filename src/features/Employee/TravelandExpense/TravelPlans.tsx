@@ -16,6 +16,10 @@ const TravelPlans = (props: Props) => {
       navigate(`/employee/travel/${id}`);
       console.log(id);
     }
+    const handleExpense = (id:number)=>{
+      navigate(`/employee/travel/expense/${id}`);
+      console.log(id);
+    }
     
   return (
     <>
@@ -34,15 +38,13 @@ const TravelPlans = (props: Props) => {
                     <span className="text-sm text-sky-700 font-medium">Type : </span> {plan.tripType}<br/>
                     <span className="text-sm text-sky-700 font-medium">Start Date : </span>{plan.startDate}<br/>
                     <span className="text-sm text-sky-700 font-medium">End Date :</span> {plan.endDate}<br/>
+                      <button onClick={()=>handleExpense(plan.id)} className="mr-2 mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Expenses</button>
+
                      <button onClick={()=>handleAssign(plan.id)} className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Details</button>
                 </li>
                 ))}
             </ul>
          </div>
-
-          <div>
-          <Outlet />
-        </div>
     </>
    
   )

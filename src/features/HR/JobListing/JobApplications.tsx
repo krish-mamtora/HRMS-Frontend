@@ -1,6 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import useApplications from '../hooks/useApplications';
+import api from '../../auth/api/axios';
+import { resume } from 'react-dom/server';
 
 export const JobApplications = () => {
       const {jobId} = useParams<{jobId: string}>();
@@ -8,6 +10,20 @@ export const JobApplications = () => {
     if (!jobId) 
     {
         return <div>No Job Id Found</div>
+    }
+
+    const handleDownload = async (resumeUrl  : string)=>{
+        fetch(`https://localhost:7035/api/referrals/download-resume/${resumeUrl}`)
+        .then(response=>response.blob())
+        .then(blob=>{
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+             a.download = resumeUrl.split('_')[1] || resumeUrl; 
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
     }
 
     const numJobid = Number(jobId);
@@ -42,7 +58,7 @@ export const JobApplications = () => {
                                     <td className="px-6 py-4">{item.reffName}</td>
                                     <td className="px-6 py-4">{item.reffMail}</td>
                                     <td className="px-6 py-4 col ">
-                                        <a href={item.reffResumeUrl} target='_blank' className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
+                                        <a href={item.reffResumeUrl} target='_blank' onClick={()=>{handleDownload(item.reffResumeUrl)}} className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
                                     </td >
                                     <td className="px-6 py-4">{item.empId}</td>
                                     <td className="px-6 py-4">{item.description}</td>

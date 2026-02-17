@@ -1,74 +1,154 @@
-import React, { useState, type ChangeEvent, type FormEvent } from 'react';
+import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
-import type {  ShareJob } from './types';
+import type { ShareJob } from './types';
 
 interface ModalProps {
-    jobId: number;
-    jobTitle: string;
-    isOpen: boolean;
-    onClose: () => void;
+  jobId: number;
+  jobTitle: string;
+  isOpen: boolean;
+  onClose: () => void;
 }
+
 const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose }) => {
-    const [formData, setFormData] = useState<ShareJob>({
-        JobId: jobId,
+  const [formData, setFormData] = useState<ShareJob>({
+    JobId: jobId,
+    ReceiverMail: '',
+    Subject: '',
+    Message: '',
+    EmpId: parseInt(localStorage.getItem('id') || '0'),
+  });
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  // Update form data when jobId changes
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      JobId: jobId,
+      EmpId: parseInt(localStorage.getItem('id') || '0'),
+    }));
+  }, [jobId, isOpen]); // Added isOpen to refresh data on open
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
+
+    try {
+      await api.post("/ShareJob", formData);
+      setMessage('Job shared successfully!');
+      
+      // Reset form fields
+      setFormData((prev) => ({
+        ...prev,
         ReceiverMail: '',
         Subject: '',
         Message: '',
-        EmpId: parseInt(localStorage.getItem('id') || '0'),
-    });
+      }));
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
-    };
+      // Close after delay
+      setTimeout(() => {
+        onClose();
+        setMessage('');
+      }, 1500);
+    } catch (error) {
+      console.error(error);
+      setMessage('Failed to share job. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      console.log(formData);
-    };
+  if (!isOpen) return null;
 
-    if (!isOpen) return null;
+  return (
+    // Backdrop overlay for better modal feel
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white rounded-lg shadow-xl p-8 m-4 max-w-xl w-full">
+        <h3 className="font-bold text-2xl mb-2">Share Job: {jobTitle}</h3>
+        <p className="text-gray-600 mb-6">Please enter your friend's details below</p>
+        
+        {message && (
+          <div className={`p-3 mb-4 rounded ${message.includes('successfully') ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+            {message}
+          </div>
+        )}
 
-    return (
-        <dialog open={isOpen} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-26">
-            <div className="w-full max-w-xs">
-                <h3 className="font-bold text-lg">Refer Friend for : {jobTitle}</h3>
-                <p className="py-4">Please enter your friends details below</p>
-                <form method="dialog" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
-                            Email
-                        </label>
-                        <input value={formData.ReceiverMail} onChange={handleChange} id="ReceiverMail" type="email" name='ReceiverMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Subject">
-                            Subject
-                        </label>
-                        <input value={formData.Subject} onChange={handleChange} id="Subject" type="text" name='Subject' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Subject" />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Message">
-                            Message
-                        </label>
-                        <input value={formData.Message} onChange={handleChange} id="Message" type="text" name='Message' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Message" />
-                    </div>
-                    <div className='flex justify-end'>
-                        <button
-                            type="button"
-                            className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                            onClick={onClose}
-                        >
-                            Close
-                        </button>
-                        <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            Send Email !
-                        </button>
-                    </div>
-                </form>
-            
-            </div>
-        </dialog>
-    );
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReceiverMail">
+              Friend's Email
+            </label>
+            <input
+              value={formData.ReceiverMail}
+              onChange={handleChange}
+              id="ReceiverMail"
+              type="email"
+              name='ReceiverMail'
+              placeholder="friend@example.com"
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-300"
+              required
+            />
+          </div>
+          
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Subject">
+              Subject
+            </label>
+            <input
+              value={formData.Subject}
+              onChange={handleChange}
+              id="Subject"
+              type="text"
+              name='Subject'
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-300"
+              placeholder="Check out this job!"
+              required
+            />
+          </div>
+
+          <div className="mb-6">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Message">
+              Message
+            </label>
+            <textarea
+              value={formData.Message}
+              onChange={handleChange}
+              id="Message"
+              name='Message'
+              rows={4}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-300"
+              placeholder="Tell your friend why they should apply..."
+            />
+          </div>
+
+          <div className='flex justify-end gap-3'>
+            <button
+              type="button"
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-400 transition"
+              onClick={onClose}
+              disabled={isLoading}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-blue-300"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Sending...' : 'Send Email'}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
 };
 
 export default SharejobModal;

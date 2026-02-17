@@ -6,7 +6,7 @@ export interface ReferalCreate{
     JobId :number,
     ReffName : string ,
     ReffMail : string , 
-    ReffResumeUrl : string , 
+    ResumeFile: File | null;
     EmpId : number , 
     Description : string ,  
 }

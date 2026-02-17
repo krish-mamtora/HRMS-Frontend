@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import useAssignEmp from '../hooks/useAssignEmp'
 import api from '../../auth/api/axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios, { AxiosError } from 'axios';
 import { DataTable } from "simple-datatables";
+import type { UserProfileDisplayDto } from '../../OrgChart/Profile';
 type Props = {}
 
 export interface AssignPlan {
@@ -16,6 +17,12 @@ export interface AssignPlan {
 const AssignEmployees = (props: Props) => {
 
 
+    const navigate = useNavigate();
+
+    const ViewProfile = (empProfileId : number) =>{
+            navigate(`/hr/UserProfile/${empProfileId}`);
+  
+    }
   // const dataTable = new simpleDatatables.DataTable("#default-table");
 
   
@@ -29,6 +36,10 @@ const AssignEmployees = (props: Props) => {
   // useEffect(()=>{
 
   // } , [])
+  const [profile, setProfile] = useState<UserProfileDisplayDto | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+
   const {data , isLoading , isError , error} = useAssignEmp();
    const { planId } = useParams<{ planId: string }>();
 
@@ -47,7 +58,7 @@ const AssignEmployees = (props: Props) => {
        const Data = {
              EmpId: [EmployeeProfileId] ,
                 PId: planIdNum,
-                Status : "Assigned",
+                Status : 'Assigned',
                 CreatedAt: new Date(),
         }
          console.log(EmployeeProfileId);
@@ -66,7 +77,6 @@ const AssignEmployees = (props: Props) => {
            }
         }
     }
-
 
   return (
    <>
@@ -100,6 +110,8 @@ const AssignEmployees = (props: Props) => {
                                     <td className="px-6 py-4">{item.gender}</td>
                                     <td className='px-6 py-4'>{item.managerId}</td>
                                     <td  className="px-6 py-4">
+                                    <button onClick={()=>ViewProfile(item.userProfileId)}>View Profile</button>
+
                                     <button onClick={()=>assignEmployee(item.userProfileId)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Assign</button>
                                     </td>
                                 </tr>
