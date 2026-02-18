@@ -1,6 +1,7 @@
 import React, { useEffect, useState} from 'react';
 import api from '../../auth/api/axios';
 import { useParams } from 'react-router-dom';
+import useExpense from '../hooks/useExpense';
 
 export const TravelExpense = () => {
   const [expenseType, setexpenseType] = useState('');
@@ -12,6 +13,8 @@ export const TravelExpense = () => {
   const { id } = useParams();
   const numPlanId = id ? Number(id) : 0; 
   const EmpId = localStorage.getItem('id');
+
+  
 
   useEffect(() => {  
     const fetchData = async()=>{
@@ -41,6 +44,12 @@ export const TravelExpense = () => {
     }
   };
 
+
+  const {data , isLoading , isError , error} = useExpense(travelAssignId);
+    console.log('Previous Expenses : ',data);
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
   return (
     <>
     <div>
@@ -55,7 +64,6 @@ export const TravelExpense = () => {
       <label htmlFor="Description">Description : </label>
 
       <input type="text" name='Description'  placeholder="Description" onChange={(e) => setDescription(e.target.value)} required  />
-      {/* <input type="text" placeholder="Type" onChange={(e) => setexpenseType(e.target.value)} required /> */}
         <br /><label htmlFor="Amount">Amount : </label>
 
       <input type="number" name='Amount' placeholder="Amount" onChange={(e) => setAmount(e.target.value)} required />
@@ -68,7 +76,61 @@ export const TravelExpense = () => {
     </form>
 </div>
 <div>
+  
+        {/* <div className="p-4">
+             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data?.map((plan) => (
+                <li key={plan.id} className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h2 className="text-xl font-semibold text-slate-900">Expense for : {plan.expenseType}</h2>
+                    <span className="text-sm text-sky-700 font-medium">Amount :  </span>{plan.amount}<br/>
+                    <span className="text-sm text-sky-700 font-medium">Description : </span> {plan.description}<br/>
+                    <span className="text-sm text-sky-700 font-medium">ApprovedBy : </span>{plan.approvedBy}<br/>
+                    <span className="text-sm text-sky-700 font-medium">Status :</span> {plan.status}<br/>
+                     
+                </li>
+                ))}
+            </ul>
+         </div> */}
 
+         <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                    <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
+                        <thead className="bg-neutral-secondary-soft border-b border-default">
+                            <tr>
+                               <th className="px-6 py-3 font-medium">Expense Type : </th>
+                                <th className="px-6 py-3 font-medium">Amount : </th>
+                                <th className="px-6 py-3 font-medium">Description :</th>
+                                <th className="px-6 py-3 font-medium">Document</th>
+                                <th className="px-6 py-3 font-medium">Status :</th>
+                                 <th className="px-6 py-3 font-medium">ApprovedBy :</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {data?.map((item, index) => (
+                                <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
+                                    {/* <td className="px-6 py-4"> {item.expenseType}</td> */}
+                                    <td className="px-6 py-4">
+                                      {item.expenseType === 1 ? "Food" : item.expenseType === 2 
+                                       ? "Travel" : item.expenseType === 3  ? "Accommodation"  : "Unknown"}
+                                    </td>
+                                    <td className="px-6 py-4">{item.amount}</td>
+                                    <td className="px-6 py-4">{item.description}</td>
+                                     <td className="px-6 py-4 col ">
+                                        <a 
+                        
+                                        onClick={()=>{}} 
+                                        className='font-medium text-blue-600 hover:underline flex items-center'
+                                    >
+                                         Proof Document
+                                    </a>
+                                    </td >
+                                    <td className="px-6 py-4">{item.status}</td>
+                                    <td className="px-6 py-4">{item.approvedBy}</td>
+                                    {/* <td  className="px-6 py-4">  </td> */}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
 </div>
     </>
   );
