@@ -27,10 +27,10 @@ const HrRoutes = [
  
     ]
   },
-        {
+    {
         path:'travel/expense/:planId',
         element : <ManageTravel/>
-      }
+    }
      ,
       {
         path:'travel/documents/:planId',

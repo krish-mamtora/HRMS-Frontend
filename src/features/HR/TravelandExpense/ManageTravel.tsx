@@ -7,15 +7,15 @@ const ManageTravel = (props: Props) => {
     const { planId } = useParams<{ planId: string }>();
 
     const planIdNum = planId ? Number(planId) : 0;
-
+    
     console.log("from use : ", planId, typeof (planId));
     const { data, isLoading, isError, error } = useExpense(planIdNum);
     if (!data) {
-        return <h2>No Plan Found..</h2>
+        return <h2>No Expense Found..</h2>
     }
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
-
+    console.log("Received : ",data)
     return (
            <>
     <div>
@@ -29,22 +29,25 @@ const ManageTravel = (props: Props) => {
                                 <th className="px-6 py-3 font-medium">approvedBy</th>
                                 <th className="px-6 py-3 font-medium">amount </th>
                                 <th className="px-6 py-3 font-medium">hrRemarks </th>
-                              
+                                <th className="px-6 py-3 font-medium">Status </th>
                                 <th className="px-6 py-3 font-medium">expenseType</th>
                                    <th className="px-6 py-3 font-medium">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.map((item, index) => (
+                            {Array.isArray(data)&& data?.map((item, index) => (
+                                
                                 <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                    <td className="px-6 py-4">{item.id}</td>
+                                    {/* <td className="px-6 py-4">{item.id}</td>
                                     <td className="px-6 py-4">{item.approvedBy}</td>
                                     <td className="px-6 py-4">{item.amount}</td>
                                     <td className="px-6 py-4">{item.hrRemarks}</td>
+                                     <td className="px-6 py-4">{item.status}</td>
                                     <td className='px-6 py-4'>{item.expenseType}</td>
                                     <td  className="px-6 py-4">
                                     <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Verify</button>
-                                    </td>
+                                    </td> */}
+                                    hii
                                 </tr>
                             ))}
                         </tbody>

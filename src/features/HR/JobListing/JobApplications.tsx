@@ -12,19 +12,32 @@ export const JobApplications = () => {
         return <div>No Job Id Found</div>
     }
 
-    const handleDownload = async (resumeUrl  : string)=>{
-        fetch(`https://localhost:7035/api/referrals/download-resume/${resumeUrl}`)
-        .then(response=>response.blob())
-        .then(blob=>{
+    const handleDownload = async (e: React.MouseEvent, resumeUrl: string) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`https://localhost:7035/api/getresume/download-resume/${resumeUrl}`);
+            if (!response.ok) {
+                throw new Error('Could not download the file. Please check if the file exists.');
+            }
+            const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
+            a.style.display = 'none';
             a.href = url;
-             a.download = resumeUrl.split('_')[1] || resumeUrl; 
+            
+            const fileName = resumeUrl.includes('_')?resumeUrl.split('_').slice(1).join('_') : resumeUrl;
+            a.download = fileName; 
+
             document.body.appendChild(a);
             a.click();
-            a.remove();
-        })
-    }
+           window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            console.error("Download error:", err);
+            alert("Failed to download resume. Please try again.");
+        }
+    };
 
     const numJobid = Number(jobId);
     const { data, isLoading, isError, error } = useApplications(numJobid);
@@ -58,7 +71,13 @@ export const JobApplications = () => {
                                     <td className="px-6 py-4">{item.reffName}</td>
                                     <td className="px-6 py-4">{item.reffMail}</td>
                                     <td className="px-6 py-4 col ">
-                                        <a href={item.reffResumeUrl} target='_blank' onClick={()=>{handleDownload(item.reffResumeUrl)}} className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
+                                        <a 
+                                        href="#" 
+                                        onClick={(e) => handleDownload(e, item.reffResumeUrl)} 
+                                        className='font-medium text-blue-600 hover:underline flex items-center'
+                                    >
+                                        Download Resume
+                                    </a>
                                     </td >
                                     <td className="px-6 py-4">{item.empId}</td>
                                     <td className="px-6 py-4">{item.description}</td>

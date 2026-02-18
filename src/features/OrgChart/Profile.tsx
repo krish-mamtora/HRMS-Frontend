@@ -23,7 +23,7 @@ const numProfileId = empProfileId ? Number(empProfileId) : 0;
 
   return (
     <>
-      <div className="profile-container">
+      {/* <div className="profile-container">
         <h1>Profile</h1>
           <p></p>
           <p></p>
@@ -34,7 +34,7 @@ const numProfileId = empProfileId ? Number(empProfileId) : 0;
           <p></p>
           <p>Joined: {new Date(data.joinDate).toLocaleDateString()}</p>
           <p></p>
-        </div> 
+        </div>  */}
     <div>
 
     <div className="p-4">

@@ -15,8 +15,6 @@ export interface UserProfileDisplayDto {
   isActive: boolean;
 }
 
-
-
 const fetchEmployeesProfile = async(id:number):Promise<UserProfileDisplayDto[]>=>{
     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile/${id}`);
     console.log("Employee Profile : " , response.data);
@@ -25,7 +23,7 @@ const fetchEmployeesProfile = async(id:number):Promise<UserProfileDisplayDto[]>=
 
 const useProfile = (id:number) =>{
     return useQuery<UserProfileDisplayDto[], Error>({
-        queryKey: ['userProfiles', 'assigned', id],
+        queryKey: ['fetchuserProfile', 'assigned', id],
         queryFn: () => fetchEmployeesProfile(id),
     });
 }
