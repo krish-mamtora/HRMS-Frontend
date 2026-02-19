@@ -11,6 +11,7 @@ import JobApplications from './JobListing/JobApplications';
 import ManageTravel from './TravelandExpense/ManageTravel';
 import TravelDocument from './TravelandExpense/TravelDocument';
 import Profile from '../OrgChart/Profile';
+import ExpenseList from './TravelandExpense/ExpenseList';
 
 type Props = {}
 
@@ -37,6 +38,10 @@ const HrRoutes = [
         element : <TravelDocument/>
       }
      ,
+     {
+        path:'travel/expense/:planId/:empId',
+        element : <ExpenseList/>
+     },
     { 
       path : 'UserProfile/:empProfileId',
       element : <Profile/>

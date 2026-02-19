@@ -9,6 +9,7 @@ export interface ReferalCreate{
     ResumeFile: File | null;
     EmpId : number , 
     Description : string ,  
+    Status : string ,
 }
 
 const fetchJobs = async():Promise<ReferalCreate[]>=>{

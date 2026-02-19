@@ -50,7 +50,7 @@ const AddPlanForm = (props: Props) => {
                 return;
        }try{
             const res = await api.post("/TravelPlan" , formData)
-            if(res.status === 200){
+            if(res.status >= 200 && res.status<=300){
                 alert("Plan created");
             }
         }catch(err){

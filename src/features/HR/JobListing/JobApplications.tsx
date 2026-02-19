@@ -61,7 +61,8 @@ export const JobApplications = () => {
                                 <th className="px-6 py-3 font-medium">Resume </th>
                                 <th className="px-6 py-3 font-medium">Referred By</th>
                                 <th className="px-6 py-3 font-medium">Description</th>
-                                   <th className="px-6 py-3 font-medium">Action</th>
+                                {/* <th className="px-6 py-3 font-medium">Status</th> */}
+                                <th className="px-6 py-3 font-medium">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -81,8 +82,10 @@ export const JobApplications = () => {
                                     </td >
                                     <td className="px-6 py-4">{item.empId}</td>
                                     <td className="px-6 py-4">{item.description}</td>
+                                    {/* <td className="px-6 py-4">{item.}</td> */}
+
                                     <td  className="px-6 py-4">
-                                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Status</button>
+                                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Action</button>
                                     </td>
                                 </tr>
                             ))}

@@ -47,9 +47,9 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
                 data.append('EmpId', formData.EmpId.toString());
                 data.append('Description', formData.Description);
                 // console.log("Received Date: ",data);
-                     for (let pair of (data as any).entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
-            }
+            //          for (let pair of (data as any).entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
                 const res = await api.post('/Referal', data , {
                      headers: {
                             'Content-Type': 'multipart/form-data',

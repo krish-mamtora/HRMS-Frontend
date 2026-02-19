@@ -22,11 +22,6 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
-    // const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      
-    //   console.log(formData);
-    // };
-
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {

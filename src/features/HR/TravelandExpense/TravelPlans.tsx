@@ -82,7 +82,7 @@ const TravelPlans = (props: Props) => {
                     <span className="text-sm text-sky-700 font-medium">End Date :</span> {plan.endDate}<br/>
                     <h2>Created by : {plan.createdByUserId}</h2>
                     <h2>ID : {plan.id}</h2>
-                    <button onClick={()=>managePlan(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Manage Expense</button>
+                    <button onClick={()=>managePlan(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Manage Membres</button>
                      <button onClick={()=>handleAssign(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Assign Plan</button>
                      <button onClick={()=>manageDocuments(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Travel Documents</button>
                 </li>
