@@ -38,6 +38,7 @@ const ManageTravel = (props: Props) => {
 
     return (
         <>
+
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Members</div>
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
                 <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
@@ -68,7 +69,7 @@ const ManageTravel = (props: Props) => {
                                 <td className="px-6 py-4">
                                     <button onClick={() => ViewProfile(item.userProfileId)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3">View Profile</button>
 
-                                    <button onClick={() => manageExpense(item.userProfileId)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Manage Expense</button>
+                                    <button onClick={() => manageExpense(item.userProfileId )} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Manage Expense</button>
                                 </td>
                             </tr>
                         ))}
