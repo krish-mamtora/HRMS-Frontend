@@ -34,7 +34,9 @@ const ManageTravel = (props: Props) => {
           navigate(`/hr/travel/expense/${planIdNum}/${empId}`);
     }
 
-
+    const manageDocuments = ( empId : number )=>{
+           navigate(`/hr/travel/documents/${planIdNum}/${empId}`);
+    }
 
     return (
         <>
@@ -68,6 +70,7 @@ const ManageTravel = (props: Props) => {
                                 <td className='px-6 py-4'>{item.managerId}</td>
                                 <td className="px-6 py-4">
                                     <button onClick={() => ViewProfile(item.userProfileId)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3">View Profile</button>
+                                    <button  onClick={()=>manageDocuments(item.userProfileId)} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-800 mr-3">Documents</button>
 
                                     <button onClick={() => manageExpense(item.userProfileId )} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Manage Expense</button>
                                 </td>

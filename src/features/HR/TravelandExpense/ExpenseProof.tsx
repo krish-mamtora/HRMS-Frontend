@@ -8,12 +8,11 @@ type Props = {}
 
 const ExpenseProof = (props: Props) => {
 
-        
-    // const { temp } = useParams<{ temp: string }>();
+const { expenseId } = useParams<{ expenseId: string }>(); 
+    console.log(typeof(expenseId), expenseId); 
+      const { data, isLoading, isError, error } = useProofDocument(Number(expenseId));
 
-    // console.log( typeof(temp), temp);
-
-    const { data, isLoading, isError, error } = useProofDocument(7);
+    // const { data, isLoading, isError, error } = useProofDocument(7);
 
     data?.map((item, index) => (
         console.log(item.ProofDocumentUrl)

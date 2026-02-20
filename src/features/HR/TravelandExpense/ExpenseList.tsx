@@ -10,12 +10,9 @@ const ExpenseList = (props: Props) => {
 
     
     const navigate = useNavigate();
-  const openProofPage = (id:number) => {
-  
-         let temp =  id.toString();
-         console.log(typeof(temp), temp);
-                navigate(`/hr/travel/expense/proof/${temp}`);
-        
+
+    const openProofPage = (id: number) => {
+        navigate(`/hr/travel/expense/proof/${id}`);
         };
 
     const { planId, empId } = useParams<{ planId: string, empId: string }>();
@@ -57,7 +54,7 @@ const ExpenseList = (props: Props) => {
                             <th className="px-6 py-3 font-medium">Expense Type </th>
                             <th className="px-6 py-3 font-medium">Amount  </th>
                             <th className="px-6 py-3 font-medium">Description </th>
-                            <th className="px-6 py-3 font-medium">Document</th>
+                            <th className="px-6 py-3 font-medium">Documents</th>
                             <th className="px-6 py-3 font-medium">Status </th>
                             <th className="px-6 py-3 font-medium">Updated By </th>
                             <th className="px-6 py-3 font-medium">HR Remarks</th>
@@ -67,7 +64,6 @@ const ExpenseList = (props: Props) => {
                     <tbody>
                         {data?.map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                {/* <td className="px-6 py-4"> {item.expenseType}</td> */}
                                 <td className="px-6 py-4">
                                     {item.expenseType === 1 ? "Food" : item.expenseType === 2
                                         ? "Travel" : item.expenseType === 3 ? "Accommodation" : "Unknown"}
@@ -80,7 +76,7 @@ const ExpenseList = (props: Props) => {
                                         className='font-medium text-blue-600 hover:underline flex items-center'
                                     >
                                       {/* {item.id} */}
-                                        Proof Document
+                                        Proof Documents
                                     </button>
                                 </td >
                                 <td className="px-6 py-4">{item.status}</td>
