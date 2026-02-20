@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import useExpense from '../hooks/useExpense';
 import useProofDocument from '../hooks/useProofDocument';
@@ -8,7 +8,6 @@ type Props = {}
 
 const ExpenseList = (props: Props) => {
 
-    
     const navigate = useNavigate();
 
     const openProofPage = (id: number) => {
@@ -25,12 +24,7 @@ const ExpenseList = (props: Props) => {
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
 
-    // useEffect(()=>{
-    //     console.log("h");
-    // },[])
-
     const ApproveExpense = async (itemId: number) => {
-        // const response = await api.put(`/Expense/${itemId}`);
         console.log(itemId);
     }
     const rejectExpense = (itemId: number) => {
@@ -43,10 +37,12 @@ const ExpenseList = (props: Props) => {
     const activeReject = "bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition";
     const disabledReject = "bg-red-300 text-white px-4 py-2 rounded hover:bg-red-400 transition";
 
+    const totalAmount = data?.reduce((sum, item) =>sum + (Number(item.amount) || 0), 0) || 0;
+    // console.log(totalAmount);
     return (
         <>
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>ExpenseList  </div>
-
+        
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
                 <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
                     <thead className="bg-neutral-secondary-soft border-b border-default">
@@ -75,7 +71,6 @@ const ExpenseList = (props: Props) => {
                                           onClick={()=>openProofPage(item.id)}
                                         className='font-medium text-blue-600 hover:underline flex items-center'
                                     >
-                                      {/* {item.id} */}
                                         Proof Documents
                                     </button>
                                 </td >
@@ -91,9 +86,13 @@ const ExpenseList = (props: Props) => {
                         ))}
                     </tbody>
                 </table>
+                
             </div>
-
-
+           <div className='text-right'>
+             <p className="text-red-500 text-xl font-bold mt-3">
+            Total Claim Amount : {totalAmount}
+            </p>
+           </div>
         </>
 
     )
