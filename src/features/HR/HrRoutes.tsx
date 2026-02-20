@@ -12,6 +12,7 @@ import ManageTravel from './TravelandExpense/ManageTravel';
 import TravelDocument from './TravelandExpense/TravelDocument';
 import Profile from '../OrgChart/Profile';
 import ExpenseList from './TravelandExpense/ExpenseList';
+import ExpenseProof from './TravelandExpense/ExpenseProof';
 
 type Props = {}
 
@@ -32,15 +33,23 @@ const HrRoutes = [
         path:'travel/expense/:planId',
         element : <ManageTravel/>
     }
-     ,
-      {
-        path:'travel/documents/:planId',
-        element : <TravelDocument/>
-      }
+    //  ,
+    //   {
+    //     path:'travel/documents/:planId',
+    //     element : <TravelDocument/>
+    //   }
      ,
      {
         path:'travel/expense/:planId/:empId',
         element : <ExpenseList/>
+     },
+      {
+        path:'travel/documents/:planId/:empId',
+        element : <TravelDocument/>
+     },
+     {
+      path : 'travel/expense/proof/:expenseId',
+      element : <ExpenseProof/>
      },
     { 
       path : 'UserProfile/:empProfileId',
