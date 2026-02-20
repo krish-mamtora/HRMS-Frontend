@@ -17,6 +17,9 @@ const useProof = (id: number) => {
    return useQuery<ExpenseProofData[],Error>({
         queryKey : ['fetchExpenseProoffromExpense' ,id ],
         queryFn :()=> fetchExpenseProoffromExpense(id),
+         staleTime: 1000 * 60 * 5,
+        // cacheTime: 30 * 60 * 1000, 
+        retry: 2,
     });
 }
 export default useProof

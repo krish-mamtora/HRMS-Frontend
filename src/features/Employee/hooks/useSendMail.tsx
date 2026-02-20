@@ -21,6 +21,8 @@ const useSendMail = () => {
    return useQuery<ReferalCreate[],Error>({
         queryKey : ['SendMail'],
         queryFn : SendJobMail,
+         staleTime: 1000 * 60 * 5,
+           retry: 2,
     });
 }
 export default useSendMail;
