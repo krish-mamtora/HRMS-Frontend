@@ -38,7 +38,7 @@ const AssignEmployees = (props: Props) => {
   // } , [])
   const [profile, setProfile] = useState<UserProfileDisplayDto | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
-
+    const [selectedDepartment , setSelectedDepartment] = useState('');
 
   const {data , isLoading , isError , error} = useAssignEmp();
    const { planId } = useParams<{ planId: string }>();
@@ -82,6 +82,18 @@ const AssignEmployees = (props: Props) => {
    <>
     <div>
             <div  className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Add Travel Members</div>
+        <div className="flex justify-end p-2 bg-gray-50 border-b">
+        <label htmlFor="departmentFilter">Select Department : </label>
+        <select name='departmentFilter' value={selectedDepartment} onChange={(e)=>setSelectedDepartment(e.target.value)}>
+          <option value="">All</option>
+          <option value="IT">IT</option>
+          <option value="Sales">Sales</option>
+          <option value="Finance">Finance</option>
+          <option value="Human Resources (HR)">Human Resources (HR)</option>
+          <option value="Customer Service">Customer Service</option>
+          <option value="Quality Assurance">Quality Assurance</option>
+        </select>
+      </div>
 
                 <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
                     <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
@@ -100,7 +112,7 @@ const AssignEmployees = (props: Props) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {data?.map((item, index) => (
+                            {data?.filter((item)=>selectedDepartment==="" || item.department===selectedDepartment).map((item, index) => (
                                 <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                     <td className="px-6 py-4">{item.userProfileId}</td>
                                     <td className="px-6 py-4">{item.firstName}</td>
