@@ -23,10 +23,7 @@ const { expenseId } = useParams<{ expenseId: string }>();
         return <h2>No Expense Found..</h2>
     }
     if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
-
-    
-    
+    if (error) return <div>Error: {error.message}</div>;    
             const handleDownload = async (e: React.MouseEvent, ProofDocumentUrl: string) => {
                 e.preventDefault();
         
@@ -71,7 +68,7 @@ const { expenseId } = useParams<{ expenseId: string }>();
                         {data?.map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                
-                                <td className="px-6 py-4">{item.proofDocumentUrl}</td>
+                                <td className="px-6 py-4">{item.proofDocumentUrl.split('_')[1]}</td>
 
                                 <td className="px-6 py-4 col ">
                                     <a

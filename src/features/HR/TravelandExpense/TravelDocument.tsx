@@ -17,13 +17,6 @@ const TravelDocument = (props: Props) => {
   const { planId, empId } = useParams<{ planId: string, empId: string }>();
     const [filedoc, setFile] = useState<File | null>(null);
 
-  // console.log(planId , empId);
-
-// const fetchUserName = async (id :number)=>{
-//     const response = await api.get(`/UserProfile/${id}`);
-//     return [response.data.firstName , response.data.lastName];
-// }
-
      useEffect(() => {
         const fetchData = async () => {
             try {
@@ -150,9 +143,8 @@ const TravelDocument = (props: Props) => {
                                 </td>
                                 <td className="px-6 py-4">{item.description}</td>
                                 <td className="px-6 py-4">
-                                  {item.uploadedBy}
+                                 {item.uploadedBy==localStorage.getItem('id') ? 'You':'Employee' }
 
-                                {/* {  fetchUserName(item.uploadedBy)} */}
                                 </td>
                                 <td className="px-6 py-4 col ">
                                     <a

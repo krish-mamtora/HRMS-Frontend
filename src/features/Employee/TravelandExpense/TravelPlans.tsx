@@ -12,15 +12,15 @@ const TravelPlans = (props: Props) => {
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
    
-    const handleAssign = (id:number)=>{
+    const handleDetails = (id:number)=>{
+      console.log( 'Value Sent', id);
       navigate(`/employee/travel/${id}`);
-      console.log(id);
     }
     const handleExpense = (id:number)=>{
       navigate(`/employee/travel/expense/${id}`);
       console.log(id);
     }
-    
+
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Plan List</div>
@@ -38,9 +38,9 @@ const TravelPlans = (props: Props) => {
                     <span className="text-sm text-sky-700 font-medium">Type : </span> {plan.tripType}<br/>
                     <span className="text-sm text-sky-700 font-medium">Start Date : </span>{plan.startDate}<br/>
                     <span className="text-sm text-sky-700 font-medium">End Date :</span> {plan.endDate}<br/>
-                      <button onClick={()=>handleExpense(plan.id)} className="mr-2 mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Expenses</button>
+                      <button onClick={()=>handleExpense(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 mr-3 mt-2">Expenses</button>
 
-                     <button onClick={()=>handleAssign(plan.id)} className="mt-3 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Details</button>
+                     <button onClick={()=>handleDetails(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Documents</button>
                 </li>
                 ))}
             </ul>

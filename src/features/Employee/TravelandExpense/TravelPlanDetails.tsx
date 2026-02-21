@@ -1,27 +1,172 @@
-import React from 'react'
-import { Outlet, useParams } from 'react-router-dom'
-
+import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
+import api from '../../auth/api/axios';
+import type {TravelDocument} from "../hooks/useTravelDocument";
+import { useParams } from 'react-router-dom';
+import useTravelDocument from '../../HR/hooks/useTravelDocument'
 type Props = {}
 
-interface ExpenseData {
-  
-    TravelAssignId : number , 
-    ExpenseType : string , 
-
-}
 const TravelPlanDetails = (props: Props) => {
-    const {id} = useParams();
+
+       const [UploadedBy, setUploadedBy] = useState(localStorage.getItem('id') || '');
+        const [TravelDocument, setTravelDocument] = useState<File | null>(null);
+        const [Description, setDescription] = useState('');
+        const [Type, setType] = useState('');
+        const [CreatedAt, setCreatedAt] = useState('');
+  const [travelAssignId, setTravelAssignId] = useState<string | null>(null);
+    const { id } = useParams<{ id: string }>();
+  const [filedoc, setFile] = useState<File | null>(null);
+  const empId = localStorage.getItem('id');
+
+  console.log(id , empId);
+     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await api.get(`/Expense/getId?EmpId=${empId}&PId=${id}`);
+                setTravelAssignId(response.data);
+            } catch (error) {
+                console.error("Error fetching travel assign id:", error);
+            }
+        };
+        if (empId && id) fetchData();
+    }, [empId, id]);
+
+  console.log('Travel Assign Id : ',travelAssignId);
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+       if (!filedoc|| !travelAssignId) {
+      alert('Please fill all fields and select a file.');
+      return;
+    }
+    console.log(UploadedBy , Description , Type , travelAssignId);
+    try {
+      const data = new FormData();
+      data.append('Description', Description);
+      data.append('UploadedBy', UploadedBy);
+      data.append('Type', Type);
+      data.append('TravelAssignmentId' ,travelAssignId);
+      data.append('TravelDocument', filedoc);
+
+      const res = await api.post('/TravelDocument', data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      if (res.status >= 200 && res.status < 300) {
+        alert('Document Added !!');
+        setDescription('');
+        setType('');
+        return ;
+      }
+    } catch (err: any) {
+      alert(err.message);
+    }
+  };
+
+    const { data, isLoading, isError, error } = useTravelDocument(Number(travelAssignId));
+    console.log('Documents Received : ', data);
+    if (isLoading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+
+    
+        const handleDownload = async (e: React.MouseEvent, travelDocumentUrl: string) => {
+            e.preventDefault();
+    
+            try {
+                const response = await fetch(`https://localhost:7035/api/TravelDocument/download-travel-document/${travelDocumentUrl}`);
+                if (!response.ok) {
+                    throw new Error('Could not download the file. Please check if the file exists.');
+                }
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+    
+                const fileName = travelDocumentUrl.includes('_') ? travelDocumentUrl.split('_').slice(1).join('_') : travelDocumentUrl;
+                a.download = fileName;
+    
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            } catch (err) {
+                console.error("Download error:", err);
+                alert("Failed to download proof. Please try again.");
+            }
+        };
+    
+        
   return (
     <>
-        {id}
-        <div>TravelPlanDetails</div>
-        {/* <h6>display documents , uploaded by hr </h6>
-        <h6>display document uploaded by employee (status)</h6>
-        add expense model with document attach  */}
+    <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
 
+      <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
+        <br />
+        <form onSubmit={handleSubmit} className="w-full flex">
+          <label htmlFor="Type">Document Type : </label>
+          <select  value={Type} name="Type" id="Type"  onChange={(e) => setType(e.target.value)}  required >
+            <option value="">Select</option>
+            <option value="Tickets">Tickets</option>
+            <option value="Policy PDFs">Policy PDFs</option>
+          </select>
+          <br />
+          <label htmlFor="Description">Description : </label>
+          <input type="text" name='Description' placeholder="Description"  value={Description} onChange={(e) => setDescription(e.target.value)}  required />
+          <br />
+          <label htmlFor="TravelDocument">Document : </label>
+          <input type="file" accept=".pdf,.doc,.docx" name='TravelDocument' onChange={(e) => setFile(e.target.files?.[0] || null)} required />
+          <br />
+          <button type="submit"  className="mt-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Document</button>
+        </form>
+      </div>
+
+
+       <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
+                    <thead className="bg-neutral-secondary-soft border-b border-default">
+                        <tr>
+                            <th className="px-6 py-3 font-medium">Type : </th>
+                            <th className="px-6 py-3 font-medium">Description : </th>
+                            <th className="px-6 py-3 font-medium">uploadedBy</th>
+                            <th className="px-6 py-3 font-medium">Download :</th>
+                            <th className="px-6 py-3 font-medium">Created At :</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data?.map((item, index) => (
+                            <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
+                                <td className="px-6 py-4">
+                                   {item.type}
+                                </td>
+                                <td className="px-6 py-4">{item.description}</td>
+                                <td className="px-6 py-4">
+                                  {item.uploadedBy==localStorage.getItem('id') ? 'You':'HR' }
+
+                                </td>
+                                <td className="px-6 py-4 col ">
+                                    <a
+                                         onClick={(e) => handleDownload(e,item.travelDocumentUrl)} 
+                                        className='font-medium text-blue-600 hover:underline flex items-center'
+                                    >
+                              
+                                        {item.travelDocumentUrl.split('_')[1]}
+                                    </a>
+                                  <img src="src/features/HR/TravelandExpense/PDF_ICON.jpg" alt="PDF" className="pdf-icon"/>
+
+                                </td >
+                                <td className="px-6 py-4">{item.createdAt}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div> 
 
     </>
-  )
-}
+  );
+};
 
-export default TravelPlanDetails
+export default TravelPlanDetails;
