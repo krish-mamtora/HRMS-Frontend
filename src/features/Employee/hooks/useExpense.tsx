@@ -22,6 +22,7 @@ const useExpense = (id: number) => {
    return useQuery<ExpenseData[],Error>({
         queryKey : ['ExpenseDetailsfromPlanAssignId' ,id ],
         queryFn :()=> fetchExpenseDetailsfromPlanAssignId(id),
+        
     });
 }
 export default useExpense

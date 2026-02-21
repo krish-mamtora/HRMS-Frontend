@@ -52,6 +52,8 @@ const useEmployeesForPlan = (planId: number) => {
   return useQuery({
     queryKey: ['employeesForPlan', planId],
     queryFn: () => handleEmployeeData(planId),
+       staleTime: 1000 * 60 * 5,
+           retry: 2, 
   });
 
 };

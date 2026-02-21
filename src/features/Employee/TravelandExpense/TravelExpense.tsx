@@ -2,6 +2,7 @@ import React, { useEffect, useState, FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import { useParams } from 'react-router-dom';
 import useExpense from '../hooks/useExpense';
+import type { ExpenseProof } from '../../HR/hooks/useProofDocument';
 
 export const TravelExpense = () => {
     const [expenseType, setexpenseType] = useState('');
@@ -9,6 +10,8 @@ export const TravelExpense = () => {
     const [file, setFile] = useState<File | null>(null);
     const [travelAssignId, setTravelAssignId] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedStatusType , setselectedStatusType] = useState('');
+    const[selectedType , setselectedType] = useState('');
     const [lastDateforExpense, setlastDateforExpense] = useState(null);
     var allowExpense = false;
     const { id } = useParams();
@@ -41,7 +44,8 @@ export const TravelExpense = () => {
         if (EmpId && numPlanId) fetchData();
     }, [EmpId, numPlanId]);
 
-    const handleSubmit = async (e: FormEvent) => {
+
+    const handleSubmit = async (e: FormEvent, id:number) => {
         e.preventDefault();
         if (!file) return alert("Please upload proof");
 
@@ -66,7 +70,16 @@ export const TravelExpense = () => {
                 await api.post('/ExpenseProof', fileData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                alert("Expense and Document submitted!");
+                // alert("Expense and Document submitted!");
+                const notificationData = {
+                    travelExpenseId: newExpenseId,
+                    recipientEmail: "mivelen857@esyline.com", 
+                    senderId: Number(localStorage.getItem('id')),
+                    subject: "New Expense Claim Submitted",
+                    body: `New expense claim for ${amount} has been submitted. Description: ${description}`
+                };
+                await api.post('/Expense/notifyExpenseCreate', notificationData);
+                alert("Expense, Document, and Notification submitted successfully!");
             }
         } catch (error) {
             console.error("Error submitting expense:", error);
@@ -82,21 +95,27 @@ export const TravelExpense = () => {
     if (error) return <div>Error: {error.message}</div>;
 
 
-    const handleDownload = async (e: React.MouseEvent, proofUrl: string) => {
+    const handleDownload = async (e: React.MouseEvent, id:number) => {
         e.preventDefault();
-
+        console.log(id);
+        const proofUrl = await api.get<ExpenseProof[]>(`ExpenseProof/getExpenseProofForExpenseid/${id}`);
+        const documentpath = proofUrl.data[0].proofDocumentUrl;
+        console.log(documentpath);
         try {
-            const response = await fetch(`https://localhost:7035/api/ExpenseProof/download-expense-proof/${proofUrl}`);
+            const response = await fetch(`https://localhost:7035/api/ExpenseProof/download-expense-proof/${encodeURIComponent(documentpath)}`);
+            console.log(response)
+            
             if (!response.ok) {
                 throw new Error('Could not download the file. Please check if the file exists.');
             }
+            
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.style.display = 'none';
             a.href = url;
 
-            const fileName = proofUrl.includes('_') ? proofUrl.split('_').slice(1).join('_') : proofUrl;
+            const fileName = documentpath.includes('_') ? documentpath.split('_').slice(1).join('_') : documentpath;
             a.download = fileName;
 
             document.body.appendChild(a);
@@ -108,6 +127,8 @@ export const TravelExpense = () => {
             alert("Failed to download proof. Please try again.");
         }
     };
+
+    
 
     function compareDateWithOffset(targetDateString: string , currentDate) {
         // const currentDate = new Date();
@@ -160,6 +181,28 @@ export const TravelExpense = () => {
                 </form>
             </div>
 
+            <div className="flex items-center justify-end gap-4 p-3 bg-gray-50 border-b text-sm text-gray-700">
+                <div  className="flex items-center gap-2">
+                    <label htmlFor="selectedStatusType" className="font-medium">Expense Status</label>
+                    <select name="selectedStatusType" id="selectedStatusType" value={selectedStatusType} onChange={(e)=>setselectedStatusType(e.target.value)} className="border rounded-md p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">All</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div  className="flex items-center gap-2">
+                    <label htmlFor="ExpenseType" className="font-medium">Expense Type</label>
+                    <select name="ExpenseType" id="ExpenseType" value={selectedType} onChange={(e)=>setselectedType(e.target.value)} className="border rounded-md p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">All</option>
+                        <option value="1">Food</option>
+                        <option value="2">Transportation Expense</option>
+                        <option value="3">Accommodation Expenses</option>
+                    </select>
+
+                </div>
+            </div>
+
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
                 <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
                     <thead className="bg-neutral-secondary-soft border-b border-default">
@@ -171,11 +214,11 @@ export const TravelExpense = () => {
 
                             <th className="px-6 py-3 font-medium">Document</th>
                             <th className="px-6 py-3 font-medium">Status :</th>
-                            <th className="px-6 py-3 font-medium">ApprovedBy :</th>
+                            <th className="px-6 py-3 font-medium">Updated By :</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((item, index) => (
+                        {data?.filter((item)=>(selectedType==="" || item.expenseType.toString()===selectedType)&&((selectedStatusType === "" || item.status === selectedStatusType))).map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                 {/* <td className="px-6 py-4"> {item.expenseType}</td> */}
                                 <td className="px-6 py-4">
@@ -188,7 +231,7 @@ export const TravelExpense = () => {
                                 <td className="px-6 py-4 col ">
                                     <a
 
-                                        //  onClick={(e) => handleDownload()} 
+                                         onClick={(e) => handleDownload(e , item.id )} 
                                         className='font-medium text-blue-600 hover:underline flex items-center'
                                     >
                                         Proof Document
@@ -196,6 +239,7 @@ export const TravelExpense = () => {
                                 </td >
                                 <td className="px-6 py-4">{item.status}</td>
                                 <td className="px-6 py-4">{item.approvedBy}</td>
+                                <td>{item.id}</td>
                             </tr>
                         ))}
                     </tbody>

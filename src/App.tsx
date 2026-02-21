@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-quer
 
 import { AuthProvider } from './features/auth/context/AuthContext';
 import router from './router';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 const queryClient = new QueryClient();
 (window as any).queryClient = queryClient; 
 

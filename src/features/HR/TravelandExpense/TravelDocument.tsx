@@ -6,7 +6,7 @@ import useTravelDocument from '../hooks/useTravelDocument';
 type Props = {}
 
 const TravelDocument = (props: Props) => {
-
+      const [filterType, setFilterType] = useState('');
        const [UploadedBy, setUploadedBy] = useState(localStorage.getItem('id') || '');
         const [TravelDocument, setTravelDocument] = useState<File | null>(null);
         const [Description, setDescription] = useState('');
@@ -103,24 +103,39 @@ const TravelDocument = (props: Props) => {
     <>
     <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
 
-      <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
-        <br />
-        <form onSubmit={handleSubmit} className="w-full flex">
+      <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
+        <form onSubmit={handleSubmit} className="w-full flex items-center gap-4 whitespace-nowrap">
+        
           <label htmlFor="Type">Document Type : </label>
-          <select  value={Type} name="Type" id="Type"  onChange={(e) => setType(e.target.value)}  required >
+          <select  value={Type} name="Type" id="Type"  onChange={(e) => setType(e.target.value)}  required   className="border rounded px-2 py-1 text-sm outline-none bg-white">
             <option value="">Select</option>
             <option value="Tickets">Tickets</option>
-            <option value="Policy PDFs">Policy PDFs</option>
+            <option value="Visa Invitation/Support Letter">Visa Invitation/Support Letter</option>
+            <option value="Hotel/Accommodation Vouchers">Hotel/Accommodation Vouchers</option>
+            <option value="Travel Policy PDF">Travel Policy PDF</option>
+            <option value="Travel Insurance Policy">Travel Insurance Policy</option>
           </select>
           <br />
           <label htmlFor="Description">Description : </label>
-          <input type="text" name='Description' placeholder="Description"  value={Description} onChange={(e) => setDescription(e.target.value)}  required />
+          <input type="text" name='Description' placeholder="Description"  value={Description} onChange={(e) => setDescription(e.target.value)}  required         className="flex-1 border rounded px-2 py-1 text-sm outline-none focus:ring-1 focus:ring-blue-500" />
           <br />
           <label htmlFor="TravelDocument">Document : </label>
           <input type="file" accept=".pdf,.doc,.docx" name='TravelDocument' onChange={(e) => setFile(e.target.files?.[0] || null)} required />
           <br />
           <button type="submit"  className="mt-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Document</button>
         </form>
+      </div>
+
+
+      <div className="flex justify-end p-2 bg-gray-50 border-b">
+        <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="text-xs border rounded p-1 outline-none" >
+          <option value="">All Types</option>
+          <option value="Tickets">Tickets</option>
+          <option value="Visa Invitation/Support Letter">Visa Invitation/Support Letter</option>
+          <option value="Hotel/Accommodation Vouchers">Hotel/Accommodation Vouchers</option>
+          <option value="Travel Policy PDF">Travel Policy PDF</option>
+          <option value="Travel Insurance Policy">Travel Insurance Policy</option>
+        </select>
       </div>
 
 
@@ -136,7 +151,7 @@ const TravelDocument = (props: Props) => {
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((item, index) => (
+                        {data?.filter((item)=>filterType === "" || item.type===filterType).map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                 <td className="px-6 py-4">
                                    {item.type}

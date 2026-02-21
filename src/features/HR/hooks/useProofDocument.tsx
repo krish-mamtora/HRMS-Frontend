@@ -23,6 +23,11 @@ const useProofDocument = (ExpenseId:number) =>{
     return useQuery<ExpenseProof[], Error>({
         queryKey: ['fetchExpensProof' , ExpenseId],
         queryFn: () => fetchProofDocuments(ExpenseId),
+                staleTime: 1000 * 60 * 5,   
+            gcTime: 1000 * 60 * 10,    
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,      
+            retry: 2,
     });
 }
 export default  useProofDocument;

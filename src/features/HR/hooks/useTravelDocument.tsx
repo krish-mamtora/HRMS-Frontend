@@ -62,7 +62,11 @@ const useTravelDocument = (id: number) => {
    return useQuery<TravelDocument[],Error>({
         queryKey : ['DocumentDetailsfromPlanAssignId' ,id ],
         queryFn :()=> fetchDocumentDetailsfromPlanAssignId(id),
-        
+                staleTime: 1000 * 60 * 5,   
+            gcTime: 1000 * 60 * 10,    
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,      
+            retry: 2,
     });
 }
 

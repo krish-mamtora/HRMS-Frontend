@@ -24,6 +24,11 @@ const useApplications = (jobId:number) => {
     return useQuery<JobReferals[],Error>({
         queryKey : ['JobReferals' , jobId],
         queryFn :()=> fetchApplicationsFromJobId(jobId),
+                   staleTime: 1000 * 60 * 5,   
+            gcTime: 1000 * 60 * 10,    
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,      
+            retry: 2,
     });
 }
 export default useApplications;
