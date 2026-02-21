@@ -23,8 +23,18 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-      console.log(formData);
-    };
+    e.preventDefault();
+    try {
+        const response = await api.post('/ShareJob', formData);
+        if (response.status === 200) {
+            alert("Email sent successfully!");
+            onClose(); 
+        }
+    } catch (error) {
+        console.error("Error sending email:", error);
+        alert("Failed to send email. Check console for details.");
+    }
+};
 
     if (!isOpen) return null;
 

@@ -65,9 +65,7 @@ const router = createBrowserRouter([
                         <ManagerHomePage/>
                     </RoleProtected>
                 </Protected>
-                ),
-             
-            
+                ),      
         },
          {
             path:"employee" , element : 

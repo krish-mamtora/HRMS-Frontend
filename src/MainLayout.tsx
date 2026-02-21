@@ -1,7 +1,12 @@
 import React from 'react'
 import useAuth from './features/auth/hooks/useAuth';
 import { NavLink, Outlet } from 'react-router-dom';
+import useThemeStore from '../src/store/useThemeStore';
+
 export default function MainLayout() {
+
+    const { isDarkMode, toggleTheme } = useThemeStore();
+
     const role = localStorage.getItem('role');
 
     const {accessToken , logout }  = useAuth();
@@ -10,9 +15,11 @@ export default function MainLayout() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-        <nav className="p-4 shadow-md">
+        <nav className="p-4 shadow-md" style={{ background: isDarkMode ? '#333' : '#eee', color: isDarkMode ? '#fff' : '#000' }}>
             <div className="container mx-auto flex justify-end items-center">
-                
+                 <button onClick={toggleTheme} className='mr-2'>
+                       Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
+                </button>
                <div className="flex gap-6 items-center mr-4">
             <NavLink to="/" className={navLinkClass}>Home</NavLink>
         

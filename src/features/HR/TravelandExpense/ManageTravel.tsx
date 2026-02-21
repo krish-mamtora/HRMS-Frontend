@@ -1,57 +1,87 @@
 import React from 'react'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useExpense from '../hooks/useExpense';
+import useEmployeesForPlan from '../hooks/useEmployeesForPlan';
 type Props = {}
+interface AssignedUser {
+    UserProfileId: number;
+}
+
+
 
 const ManageTravel = (props: Props) => {
+
+        const navigate = useNavigate();
+
+    const ViewProfile = (empProfileId : number) =>{
+            navigate(`/hr/UserProfile/${empProfileId}`);
+  
+    }
+    
     const { planId } = useParams<{ planId: string }>();
 
     const planIdNum = planId ? Number(planId) : 0;
 
-    console.log("from use : ", planId, typeof (planId));
-    const { data, isLoading, isError, error } = useExpense(planIdNum);
+    const { data, isLoading, isError, error } = useEmployeesForPlan(planIdNum);
     if (!data) {
-        return <h2>No Plan Found..</h2>
+        return <h2>No Employee Found..</h2>
     }
     if (isLoading) return <div>Loading...</div>;
     if (error) return <div>Error: {error.message}</div>;
+    console.log(data);
+
+    const manageExpense = ( empId : number )=>{
+          navigate(`/hr/travel/expense/${planIdNum}/${empId}`);
+    }
+
+    const manageDocuments = ( empId : number )=>{
+           navigate(`/hr/travel/documents/${planIdNum}/${empId}`);
+    }
 
     return (
-           <>
-    <div>
-            <div  className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Expenses for </div>
+        <>
 
-                <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-                    <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
-                        <thead className="bg-neutral-secondary-soft border-b border-default">
-                            <tr>
-                                <th className="px-6 py-3 font-medium">Id</th>
-                                <th className="px-6 py-3 font-medium">approvedBy</th>
-                                <th className="px-6 py-3 font-medium">amount </th>
-                                <th className="px-6 py-3 font-medium">hrRemarks </th>
-                              
-                                <th className="px-6 py-3 font-medium">expenseType</th>
-                                   <th className="px-6 py-3 font-medium">Action</th>
+            <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Members</div>
+            <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+                <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
+                    <thead className="bg-neutral-secondary-soft border-b border-default">
+                        <tr>
+                            <th className="px-6 py-3 font-medium">Id</th>
+                            <th className="px-6 py-3 font-medium">First Name </th>
+                            <th className="px-6 py-3 font-medium">Last Name </th>
+                            <th className="px-6 py-3 font-medium">Department </th>
+
+                            <th className="px-6 py-3 font-medium">Age </th>
+                            <th className="px-6 py-3 font-medium">Gender </th>
+
+                            <th className="px-6 py-3 font-medium">Manager</th>
+                            <th className="px-6 py-3 font-medium">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data?.map((item, index) => (
+                            <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
+                                <td className="px-6 py-4">{item.userProfileId}</td>
+                                <td className="px-6 py-4">{item.firstName}</td>
+                                <td className="px-6 py-4">{item.lastName}</td>
+                                <td className="px-6 py-4">{item.department}</td>
+                                <td className="px-6 py-4">{item.age}</td>
+                                <td className="px-6 py-4">{item.gender}</td>
+                                <td className='px-6 py-4'>{item.managerId}</td>
+                                <td className="px-6 py-4">
+                                    <button onClick={() => ViewProfile(item.userProfileId)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3">View Profile</button>
+                                    <button  onClick={()=>manageDocuments(item.userProfileId)} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-800 mr-3">Documents</button>
+
+                                    <button onClick={() => manageExpense(item.userProfileId )} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Manage Expense</button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {data?.map((item, index) => (
-                                <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                    <td className="px-6 py-4">{item.id}</td>
-                                    <td className="px-6 py-4">{item.approvedBy}</td>
-                                    <td className="px-6 py-4">{item.amount}</td>
-                                    <td className="px-6 py-4">{item.hrRemarks}</td>
-                                    <td className='px-6 py-4'>{item.expenseType}</td>
-                                    <td  className="px-6 py-4">
-                                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Verify</button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             </div>
-   </>
+
+
+        </>
 
     )
 }

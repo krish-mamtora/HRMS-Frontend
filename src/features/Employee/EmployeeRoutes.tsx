@@ -4,22 +4,21 @@ import Games from './Games/Games';
 import Social from './Social/Social';
 import TravelPlans from './TravelandExpense/TravelPlans';
 import TravelPlanDetails from './TravelandExpense/TravelPlanDetails';
+import TravelExpense from './TravelandExpense/TravelExpense';
 
 const EmployeeRoutes = [
 
   {
     path: 'travel',
     element: <TravelPlans />,
-    // children:[
-    //   {
-    //     path :  ':id',
-    //     element : <TravelPlanDetails/>
-    //   }
-    // ]
   },
   {
     path : 'travel/:id',
     element : <TravelPlanDetails/>
+  },
+   {
+    path : 'travel/expense/:id',
+    element : <TravelExpense/>
   },
   {
     path: 'social',

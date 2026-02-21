@@ -14,7 +14,7 @@ export interface ReferalCreate {
   JobId: number;
   ReffName: string;
   ReffMail: string;
-  ReffResumeUrl: string;
+ ReffResume: File | null;
   EmpId: number;
   Description: string;
 }
@@ -22,7 +22,7 @@ export interface ReferalCreate {
 export interface ShareJob{
   JobId: number;
   ReceiverMail: string;
-  JdUrl: string;
+//   JdUrl: string;
   EmpId: number;
   Subject: string;
   Message : string;

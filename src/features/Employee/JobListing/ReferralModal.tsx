@@ -13,29 +13,53 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
     const [formData, setFormData] = useState<ReferalCreate>({
         JobId: jobId,
         ReffMail: '',
-        ReffResumeUrl: '',
+        ReffResume: null,
         ReffName: '',
         EmpId: parseInt(localStorage.getItem('id') || '0'),
         Description: '',
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prevData) => ({ ...prevData, [name]: value }));
+        const { name, value , type } = e.target;
+        if(e.target instanceof HTMLInputElement && e.target.type === 'file'){
+            const fileInput = e.target as HTMLInputElement;
+            setFormData((prev) => ({ 
+                ...prev, 
+                [name]: fileInput.files ? fileInput.files[0] : null 
+            }));
+        }else{
+            setFormData((prevData) => ({ ...prevData, [name]: value }));
+        }
     };
 
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (!formData.EmpId || !formData.JobId || !formData.ReffMail || !formData.ReffName || !formData.ReffResumeUrl) {
+        if (!formData.EmpId || !formData.JobId || !formData.ReffMail || !formData.ReffName || !formData.ReffResume) {
             alert('Please fill required fields!!');
             return;
         }
         try {
-            const res = await api.post('/Referal', formData);
+               const data = new FormData();
+                data.append('JobId', formData.JobId.toString());
+                data.append('ReffName', formData.ReffName);
+                data.append('ReffMail', formData.ReffMail);
+                data.append('ReffResume', formData.ReffResume);
+                data.append('EmpId', formData.EmpId.toString());
+                data.append('Description', formData.Description);
+                // console.log("Received Date: ",data);
+            //          for (let pair of (data as any).entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            // }
+                const res = await api.post('/Referal', data , {
+                     headers: {
+                            'Content-Type': 'multipart/form-data',
+                        },
+                });
+                
             if (res.status >= 200 && res.status < 300) {
                 alert('Friend Referred !!');
                 onClose();
-            }
+            }       
         } catch (err: any) {
             alert(err.message);
         }
@@ -62,11 +86,25 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
                         <input value={formData.ReffMail} onChange={handleChange} id="ReffName" type="email" name='ReffMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
                     </div>
                     <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResume">
+                            Resume (PDF/DOCX)
+                        </label>
+                        <input 
+                            onChange={handleChange} 
+                            id="ReffResume" 
+                            name="ReffResume" 
+                            type="file" 
+                            accept=".pdf,.doc,.docx" 
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
+                            required 
+                        />
+                    </div>
+                    {/* <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResumeUrl">
                             Resume
                         </label>
                         <input value={formData.ReffResumeUrl} onChange={handleChange} id="ReffResumeUrl" name='ReffResumeUrl' type="text" placeholder="Resume of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Description">
                             Note

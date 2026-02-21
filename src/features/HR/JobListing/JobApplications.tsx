@@ -1,6 +1,8 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
 import useApplications from '../hooks/useApplications';
+import api from '../../auth/api/axios';
+import { resume } from 'react-dom/server';
 
 export const JobApplications = () => {
       const {jobId} = useParams<{jobId: string}>();
@@ -9,6 +11,33 @@ export const JobApplications = () => {
     {
         return <div>No Job Id Found</div>
     }
+
+    const handleDownload = async (e: React.MouseEvent, resumeUrl: string) => {
+        e.preventDefault();
+
+        try {
+            const response = await fetch(`https://localhost:7035/api/getresume/download-resume/${resumeUrl}`);
+            if (!response.ok) {
+                throw new Error('Could not download the file. Please check if the file exists.');
+            }
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            
+            const fileName = resumeUrl.includes('_')?resumeUrl.split('_').slice(1).join('_') : resumeUrl;
+            a.download = fileName; 
+
+            document.body.appendChild(a);
+            a.click();
+           window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        } catch (err) {
+            console.error("Download error:", err);
+            alert("Failed to download resume. Please try again.");
+        }
+    };
 
     const numJobid = Number(jobId);
     const { data, isLoading, isError, error } = useApplications(numJobid);
@@ -32,7 +61,8 @@ export const JobApplications = () => {
                                 <th className="px-6 py-3 font-medium">Resume </th>
                                 <th className="px-6 py-3 font-medium">Referred By</th>
                                 <th className="px-6 py-3 font-medium">Description</th>
-                                   <th className="px-6 py-3 font-medium">Action</th>
+                                <th className="px-6 py-3 font-medium">Status</th>
+                                <th className="px-6 py-3 font-medium">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -42,12 +72,20 @@ export const JobApplications = () => {
                                     <td className="px-6 py-4">{item.reffName}</td>
                                     <td className="px-6 py-4">{item.reffMail}</td>
                                     <td className="px-6 py-4 col ">
-                                        <a href={item.reffResumeUrl} target='_blank' className='font-medium text-fg-brand hover:underline text-blue-500 hover:text-blue-700'>View Resume</a>
+                                        <a 
+                                        href="#" 
+                                        onClick={(e) => handleDownload(e, item.reffResumeUrl)} 
+                                        className='font-medium text-blue-600 hover:underline flex items-center'
+                                    >
+                                        Download Resume
+                                    </a>
                                     </td >
                                     <td className="px-6 py-4">{item.empId}</td>
                                     <td className="px-6 py-4">{item.description}</td>
+                                    <td className="px-6 py-4">{item.status}</td>
+
                                     <td  className="px-6 py-4">
-                                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Status</button>
+                                    <button className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Action</button>
                                     </td>
                                 </tr>
                             ))}
