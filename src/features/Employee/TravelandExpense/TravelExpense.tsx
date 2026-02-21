@@ -9,6 +9,8 @@ export const TravelExpense = () => {
     const [file, setFile] = useState<File | null>(null);
     const [travelAssignId, setTravelAssignId] = useState('');
     const [description, setDescription] = useState('');
+    const [selectedStatusType , setselectedStatusType] = useState('');
+    const[selectedType , setselectedType] = useState('');
     const [lastDateforExpense, setlastDateforExpense] = useState(null);
     var allowExpense = false;
     const { id } = useParams();
@@ -160,6 +162,28 @@ export const TravelExpense = () => {
                 </form>
             </div>
 
+            <div className="flex items-center justify-end gap-4 p-3 bg-gray-50 border-b text-sm text-gray-700">
+                <div  className="flex items-center gap-2">
+                    <label htmlFor="selectedStatusType" className="font-medium">Expense Status</label>
+                    <select name="selectedStatusType" id="selectedStatusType" value={selectedStatusType} onChange={(e)=>setselectedStatusType(e.target.value)} className="border rounded-md p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">All</option>
+                        <option value="Approved">Approved</option>
+                        <option value="Rejected">Rejected</option>
+                        <option value="pending">Pending</option>
+                    </select>
+                </div>
+                <div  className="flex items-center gap-2">
+                    <label htmlFor="ExpenseType" className="font-medium">Expense Type</label>
+                    <select name="ExpenseType" id="ExpenseType" value={selectedType} onChange={(e)=>setselectedType(e.target.value)} className="border rounded-md p-1 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500">
+                        <option value="">All</option>
+                        <option value="1">Food</option>
+                        <option value="2">Transportation Expense</option>
+                        <option value="3">Accommodation Expenses</option>
+                    </select>
+
+                </div>
+            </div>
+
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
                 <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
                     <thead className="bg-neutral-secondary-soft border-b border-default">
@@ -171,11 +195,11 @@ export const TravelExpense = () => {
 
                             <th className="px-6 py-3 font-medium">Document</th>
                             <th className="px-6 py-3 font-medium">Status :</th>
-                            <th className="px-6 py-3 font-medium">ApprovedBy :</th>
+                            <th className="px-6 py-3 font-medium">Updated By :</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {data?.map((item, index) => (
+                        {data?.filter((item)=>(selectedType==="" || item.expenseType.toString()===selectedType)&&((selectedStatusType === "" || item.status === selectedStatusType))).map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                                 {/* <td className="px-6 py-4"> {item.expenseType}</td> */}
                                 <td className="px-6 py-4">
