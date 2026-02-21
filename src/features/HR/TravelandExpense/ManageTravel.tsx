@@ -79,8 +79,6 @@ const ManageTravel = (props: Props) => {
                     </tbody>
                 </table>
             </div>
-
-
         </>
 
     )

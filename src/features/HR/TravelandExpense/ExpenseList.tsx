@@ -66,7 +66,6 @@ const ExpenseList = (props: Props) => {
         }else{
             exp.pendingAmount+=amount;
         }
-
         return exp;
     } , {approvedAmount : 0 , rejectedAmount : 0 , pendingAmount : 0})
 

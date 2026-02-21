@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../auth/api/axios";
 
 export interface Expense{
@@ -19,11 +19,11 @@ const fetchAssignedEmployees = async(planId , empId):Promise<Expense[]>=>{
                 EmpId : empId , 
                 PId : planId
             }
-         });
-          const travelassignid = response.data;
-      console.log("Travel Assign Id : " , response.data , typeof(response.data)); 
-      const expenseList = await api.get<Expense[]>(`/Expense/getExpensesByTravelAssignedId/${travelassignid}`);
-      console.log("Expenses : ",expenseList.data);
+         }); 
+        const travelassignid = response.data;
+        console.log("Travel Assign Id : " , response.data , typeof(response.data)); 
+        const expenseList = await api.get<Expense[]>(`/Expense/getExpensesByTravelAssignedId/${travelassignid}`);
+        console.log("Expenses : ",expenseList.data);
         return expenseList.data;
     }catch(error){
         console.error("error occured" , error);
@@ -33,8 +33,13 @@ const fetchAssignedEmployees = async(planId , empId):Promise<Expense[]>=>{
 
 const useExpense = (planId , empId) =>{
     return useQuery<Expense[], Error>({
-        queryKey: ['fetchExpenses' , planId , empId],
-        queryFn: () => fetchAssignedEmployees(planId , empId),
+        queryKey: ['fetchExpenses' , planId,empId],
+        queryFn: () => fetchAssignedEmployees(planId,empId),
+              staleTime: 1000 * 60 * 5,   
+        gcTime: 1000 * 60 * 10,    
+        refetchOnWindowFocus: false, 
+        refetchOnMount: false,      
+        retry: 2,
     });
 }
 export default  useExpense;

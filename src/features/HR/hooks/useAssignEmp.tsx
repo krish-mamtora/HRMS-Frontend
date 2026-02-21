@@ -24,11 +24,15 @@ const fetchAllUesrs = async():Promise<UserProfile[]>=>{
     return response.data;
 }
 
-
  const useAssignEmp = () => {
     return useQuery<UserProfile[],Error>({
         queryKey : ['UserProfile' ],
         queryFn :()=> fetchAllUesrs(),
+             staleTime: 1000 * 60 * 5,   
+            gcTime: 1000 * 60 * 10,    
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,      
+            retry: 2,
     });
 }
 

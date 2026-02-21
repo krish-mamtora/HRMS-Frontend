@@ -24,6 +24,11 @@ const useJobs = () => {
    return useQuery<JobCreate[],Error>({
         queryKey : ['JobCreate'],
         queryFn : fetchJobs,
+                staleTime: 1000 * 60 * 5,   
+            gcTime: 1000 * 60 * 10,    
+            refetchOnWindowFocus: false,
+            refetchOnMount: false,      
+            retry: 2,
     });
 }
 export default useJobs

@@ -3,10 +3,7 @@ import api from '../auth/api/axios';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import useProfile from './hooks/useProfile';
-import useOrg from './hooks/useOrg';
-
-import { OrganizationChart } from 'primereact/organizationchart';
-        
+import useOrg from './hooks/useOrg';      
 
 type Props = {}
 
