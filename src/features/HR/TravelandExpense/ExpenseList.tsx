@@ -61,7 +61,7 @@ const ExpenseList = (props: Props) => {
         const amount = Number(item.amount);
         if(item.status=="Approved"){
             exp.approvedAmount += amount;
-        }else if(item.status =="Rejectd") {
+        }else if(item.status =="Rejected") {
             exp.rejectedAmount+=amount;
         }else{
             exp.pendingAmount+=amount;
