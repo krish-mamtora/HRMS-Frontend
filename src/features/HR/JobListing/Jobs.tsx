@@ -12,6 +12,7 @@ export interface JobCreate {
     ExpYearsReq: number;
     Role: string;
     TotalPositions: number;
+    ReviewerEmail:string;
     JdUrl: string;
     ContactMail: string
     ManagedBy: number;
@@ -90,6 +91,7 @@ const Jobs = (props: Props) => {
                             <p className="text-sm text-sky-700 font-medium">JD : {job.description}</p>
                             <p className="text-sm text-sky-700 font-medium">Exp: {job.expYearsReq}</p>
                             <h2>Contact Mail : {job.contactMail}</h2>
+                            <h2>Reviewer Mail : {job.reviewerEmail}</h2>
                             <h2>No of Positions : {job.totalPositions}</h2>
                             <a
                                 onClick={(e) => handleDownload(e, job.jdUrl)}

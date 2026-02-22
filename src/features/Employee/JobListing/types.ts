@@ -15,6 +15,7 @@ export interface ReferalCreate {
   ReffName: string;
   ReffMail: string;
  ReffResume: File | null;
+ SendMails: string[];
   EmpId: number;
   Description: string;
 }

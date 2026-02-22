@@ -13,6 +13,7 @@ export interface JobCreate {
     ExpYearsReq: number;
     Role: string;
     TotalPositions: number;
+    ReviewerEmail:string;
     JdUrl: File | null;
     ContactMail: string
     ManagedBy: number;
@@ -28,6 +29,7 @@ const CreateJob = (props: Props) => {
         ExpYearsReq: 0,
         Role: '',
         TotalPositions: 1,
+        ReviewerEmail:'',
         JdUrl: null,
         ContactMail: '',
         ManagedBy: Number(localStorage.getItem('id')) || 0
@@ -61,6 +63,7 @@ const CreateJob = (props: Props) => {
         data.append('ContactMail', formData.ContactMail);
         data.append('Status', formData.Status || "Open");
         data.append('ExpYearsReq', formData.ExpYearsReq.toString());
+        data.append('ReviewerEmail' , formData.ReviewerEmail);
         data.append('TotalPositions', formData.TotalPositions.toString());
         data.append('ManagedBy', formData.ManagedBy.toString());
 
@@ -129,14 +132,24 @@ const CreateJob = (props: Props) => {
                                 <input type="number" id="TotalPositions" name="TotalPositions" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.TotalPositions} onChange={handleChange} required />
                             </div>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
-                                <label htmlFor="JdUrl" className="block text-sm font-medium text-gray-700 mb-1">JD URL</label>
-                                <input type="file" id="JdUrl"  name="JdUrl" className="w-full border border-gray-300 rounded-md px-3 py-2" onChange={handleFileChange}  accept=".pdf,.doc,.docx" required/>            </div>
+                                <label htmlFor="ReviewerEmail" className="block text-sm font-medium text-gray-700 mb-1">Reviewer Email</label>
+                                <input type="email" id="ReviewerEmail" name="ReviewerEmail" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.ReviewerEmail} onChange={handleChange} required />
+                            </div>
                             <div>
                                 <label htmlFor="ContactMail" className="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
                                 <input type="email" id="ContactMail" name="ContactMail" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.ContactMail} onChange={handleChange} required />
                             </div>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label htmlFor="JdUrl" className="block text-sm font-medium text-gray-700 mb-1">JD URL</label>
+                                <input type="file" id="JdUrl"  name="JdUrl" className="w-full border border-gray-300 rounded-md px-3 py-2" onChange={handleFileChange}  accept=".pdf,.doc,.docx" required/>            </div>
+                            {/* <div>
+                                <label htmlFor="ContactMail" className="block text-sm font-medium text-gray-700 mb-1">Contact Email</label>
+                                <input type="email" id="ContactMail" name="ContactMail" className="w-full border border-gray-300 rounded-md px-3 py-2" value={formData.ContactMail} onChange={handleChange} required />
+                            </div> */}
                         </div>
 
                         <input type="hidden" name="ManagedBy" value={localStorage.getItem('id') || ''} />

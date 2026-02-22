@@ -9,7 +9,7 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
-const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl, isOpen, onClose }) => {
+const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, onClose }) => {
     const [formData, setFormData] = useState<ShareJob>({
         JobId: jobId,
         ReceiverMail: '',

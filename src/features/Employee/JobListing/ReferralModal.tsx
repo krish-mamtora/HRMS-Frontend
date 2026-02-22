@@ -5,15 +5,18 @@ import type { ReferalCreate } from './types';
 interface ModalProps {
     jobId: number;
     jobTitle: string;
+    sendMails: string[];
     isOpen: boolean;
     onClose: () => void;
 }
 
-const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose }) => {
+const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, sendMails,isOpen, onClose }) => {
+    console.log(sendMails);
     const [formData, setFormData] = useState<ReferalCreate>({
         JobId: jobId,
         ReffMail: '',
         ReffResume: null,
+        SendMails :sendMails,
         ReffName: '',
         EmpId: parseInt(localStorage.getItem('id') || '0'),
         Description: '',
@@ -46,20 +49,20 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
                 data.append('ReffResume', formData.ReffResume);
                 data.append('EmpId', formData.EmpId.toString());
                 data.append('Description', formData.Description);
-                // console.log("Received Date: ",data);
-            //          for (let pair of (data as any).entries()) {
-            //     console.log(pair[0] + ': ' + pair[1]);
-            // }
+                // data.append('ReceiverEmails' , formData.SendMails);
+                sendMails.forEach((email) => {
+                    if (email) data.append('ReceiverEmails', email);
+                });
+
                 const res = await api.post('/Referal', data , {
                      headers: {
                             'Content-Type': 'multipart/form-data',
                         },
                 });
                 
-            if (res.status >= 200 && res.status < 300) {
                 alert('Friend Referred !!');
                 onClose();
-            }       
+     
         } catch (err: any) {
             alert(err.message);
         }

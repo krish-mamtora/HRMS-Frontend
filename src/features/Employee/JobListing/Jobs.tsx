@@ -8,6 +8,7 @@ type Props = {}
 type ActiveModal = {
     type : 'refer' |'share'|null,
     jobId : number |null,
+    emails?: string[];
 }
 
 const Jobs = (props: Props) => {
@@ -18,6 +19,7 @@ const Jobs = (props: Props) => {
       const [ActiveModal , setActiveModal] = useState<ActiveModal>({
         type : null , 
         jobId : null,
+        emails : [] ,
       });
 
         if (isLoading) return <div>Loading...</div>;
@@ -68,19 +70,22 @@ const Jobs = (props: Props) => {
                    <p className="text-sm text-sky-700 font-medium">JD : {job.description}</p>
                    <p className="text-sm text-sky-700 font-medium">Exp: {job.expYearsReq}</p>
                     <h2>Contact Mail : {job.contactMail}</h2>
+                    <h2>Reviewer Mail : {job.reviewerEmail}</h2>
+
                     <h2>No of Positions : {job.totalPositions}</h2>
                      <a onClick={(e) => handleDownload(e, job.jdUrl)}  className='font-medium text-blue-600 hover:underline flex items-center'>
                      Job Description Document </a>
                     <h2>Status : {job.status}</h2>
                     <div>
                         <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded mr-5 mt-2"
-                        onClick={()=>setActiveModal({type : 'refer' , jobId:job.id})}
+                        onClick={()=>setActiveModal({type : 'refer' , jobId:job.id ,  emails: [job.reviewerEmail, job.contactMail]})}
                         >Refer Friend</button>
 
                              {ActiveModal.type==='refer' && ActiveModal.jobId &&(
                                 <ReferralModal
                                 jobId={ActiveModal.jobId}
                                 jobTitle={data?.find((j: Job) => j.id === ActiveModal.jobId)?.title || ''}
+                                sendMails={ActiveModal.emails || []}
                                 isOpen={true}
                                 onClose={() => closeModal()}
                                 />
@@ -94,6 +99,7 @@ const Jobs = (props: Props) => {
                                     <ShareJobModal
                                     jobId={ActiveModal.jobId}
                                     jobTitle={data?.find((j: Job) => j.id === ActiveModal.jobId)?.title || ''}
+                                    jobUrl={job.jdUrl}                             
                                     isOpen={true}
                                     onClose={() => closeModal()}
                                     />
