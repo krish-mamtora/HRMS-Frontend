@@ -5,6 +5,8 @@ import Social from './Social/Social';
 import TravelPlans from './TravelandExpense/TravelPlans';
 import TravelPlanDetails from './TravelandExpense/TravelPlanDetails';
 import TravelExpense from './TravelandExpense/TravelExpense';
+import ListUser from '../OrgChart/ListUser';
+import Profile from '../OrgChart/Profile';
 
 const EmployeeRoutes = [
 
@@ -24,7 +26,14 @@ const EmployeeRoutes = [
     path: 'social',
     element: <Social />,
   },
-  
+     {
+        path:'organization',
+        element : <ListUser/>
+     },
+          {
+        path:'organization/profile/:userProfileId',
+        element : <Profile/>
+     },
   {
     path : 'games',
     element : <Games/>

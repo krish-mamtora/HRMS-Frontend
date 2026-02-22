@@ -28,6 +28,7 @@ export default function MainLayout() {
                 <NavLink to="/hr/travel" className={navLinkClass}>Travel</NavLink>
                 <NavLink to="/hr/social" className={navLinkClass}>Social</NavLink>
                 <NavLink to="/hr/games" className={navLinkClass}>Games</NavLink>
+                <NavLink to="/hr/organization" className={navLinkClass}>Organization</NavLink>
                 <NavLink to="/hr/jobs" className={navLinkClass}>Jobs</NavLink>
               </div>
             )}
@@ -37,6 +38,8 @@ export default function MainLayout() {
                 <NavLink to="/employee/travel" className={navLinkClass}>Travel</NavLink>
                 <NavLink to="/employee/social" className={navLinkClass}>Social</NavLink>
                 <NavLink to="/employee/games" className={navLinkClass}>Games</NavLink>
+                <NavLink to="/employee/organization" className={navLinkClass}>Organization</NavLink>
+
                 <NavLink to="/employee/jobs" className={navLinkClass}>Jobs</NavLink>
               </div>
             )}

@@ -15,16 +15,23 @@ export interface UserProfileDisplayDto {
   isActive: boolean;
 }
 
-const fetchEmployeesProfile = async(id:number):Promise<UserProfileDisplayDto[]>=>{
-    const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile/${id}`);
-    console.log("Employee Profile : " , response.data);
+
+const fetchAllEmployeesProfile = async():Promise<UserProfileDisplayDto[]>=>{
+    const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile`);
+    console.log("All Employee Profile : " , response.data);
     return response.data;
 }
 
-const useProfile = (id:number) =>{
+// const fetchEmployeesProfile = async(id:number):Promise<UserProfileDisplayDto[]>=>{
+//     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile/${id}`);
+//     console.log("Employee Profile : " , response.data);
+//     return response.data;
+// }
+
+const useProfile = () =>{
     return useQuery<UserProfileDisplayDto[], Error>({
-        queryKey: ['fetchuserProfile', 'assigned', id],
-        queryFn: () => fetchEmployeesProfile(id),
+        queryKey: ['fetchuserProfile'],
+        queryFn: () => fetchAllEmployeesProfile(),
     });
 }
 export default  useProfile;

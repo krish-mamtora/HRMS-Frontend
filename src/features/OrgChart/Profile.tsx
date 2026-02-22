@@ -9,10 +9,11 @@ type Props = {}
 
 const Profile = () => {
 
-  const { empProfileId } = useParams();
-  const numProfileId = empProfileId ? Number(empProfileId) : 0;
+  const { userProfileId } = useParams();
 
-  const { data, isLoading, isError, error } = useOrg(numProfileId);
+  const numuserProfileId = userProfileId ? Number(userProfileId) : 0;
+
+  const { data, isLoading, isError, error } = useOrg(numuserProfileId);
 
   if (!data) {
     return <h2>No Profile Found..</h2>
@@ -31,6 +32,7 @@ const Profile = () => {
                 <h2 className="text-xl font-semibold text-slate-900">Name: {profile.firstName} {profile.lastName} ,,,  Reports to -<code>&gt;</code> </h2>
                 <span className="text-sm text-sky-700 font-medium">Manager Id : {profile.managerId}</span><br />
                 <span className="text-sm text-sky-700 font-medium">Department: {profile.department}</span><br />
+                 <span className="text-sm text-sky-700 font-medium">Designation: {profile.designation}</span><br />
                 <span className="text-sm text-sky-700 font-medium">Age: {profile.age}</span><br />
                 <span className="text-sm text-sky-700 font-medium">Address: {profile.address}</span><br />
                 <span className="text-sm text-sky-700 font-medium">Gender: {profile.gender}</span><br />
