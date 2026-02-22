@@ -27,6 +27,33 @@ const Jobs = (props: Props) => {
             type:null , jobId:null
         })
       }
+
+         const handleDownload = async (e: React.MouseEvent, JdUrl: string) => {
+              e.preventDefault();
+      
+              try {
+                  const response = await fetch(`https://localhost:7035/api/jobListing/downloadJD/${JdUrl}`);
+                  if (!response.ok) {
+                      throw new Error('Could not download the file. Please check if the file exists.');
+                  }
+                  const blob = await response.blob();
+                  const url = window.URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.style.display = 'none';
+                  a.href = url;
+      
+                  const fileName = JdUrl.includes('_') ? JdUrl.split('_').slice(1).join('_') : JdUrl;
+                  a.download = fileName;
+      
+                  document.body.appendChild(a);
+                  a.click();
+                  window.URL.revokeObjectURL(url);
+                  document.body.removeChild(a);
+              } catch (err) {
+                  console.error("Download error:", err);
+                  alert("Failed to download proof. Please try again.");
+              }
+          };
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Position</div>
@@ -42,7 +69,8 @@ const Jobs = (props: Props) => {
                    <p className="text-sm text-sky-700 font-medium">Exp: {job.expYearsReq}</p>
                     <h2>Contact Mail : {job.contactMail}</h2>
                     <h2>No of Positions : {job.totalPositions}</h2>
-                    <h2>Job Url : {job.jdUrl}</h2>
+                     <a onClick={(e) => handleDownload(e, job.jdUrl)}  className='font-medium text-blue-600 hover:underline flex items-center'>
+                     Job Description Document </a>
                     <h2>Status : {job.status}</h2>
                     <div>
                         <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded mr-5 mt-2"

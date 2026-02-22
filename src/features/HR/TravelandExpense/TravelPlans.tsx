@@ -60,13 +60,10 @@ const TravelPlans = (props: Props) => {
                         </button>
                     )}
                 </div>       
-        {/* <button onClick={handleRedirect} className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">Add New Plan</button> */}
                <div>
                   <Outlet />
                 </div>
-     
-      {/* <h1>Travel Plan List</h1> */}
-        <div>
+             <div>
     
         </div>
      
@@ -84,7 +81,6 @@ const TravelPlans = (props: Props) => {
                     <h2>ID : {plan.id}</h2>
                     <button onClick={()=>managePlan(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Manage Membres</button>
                      <button onClick={()=>handleAssign(plan.id)} className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Assign Plan</button>
-                     {/* <button className="mr-3 mt-3 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold py-1 px-3 border border-blue-700 rounded">Travel Documents</button> */}
                 </li>
                 ))}
             </ul>
