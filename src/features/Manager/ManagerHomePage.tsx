@@ -1,10 +1,11 @@
-import React from 'react'
+import { Outlet } from 'react-router-dom';
 
-type Props = {}
-
-const ManagerHomePage = (props: Props) => {
+const ManagerHomePage = () => {
   return (
-    <div>Manager Home Page</div>
-  )
-}
+    <div>
+        <Outlet /> 
+    </div>
+  );
+};
+
 export default ManagerHomePage;

@@ -45,6 +45,16 @@ export default function MainLayout() {
             )}
 
 
+            
+            {accessToken && role === 'Manager' && (
+              <div className="flex gap-4 border-l pl-4 border-gray-200">
+                <NavLink to="/manager/team-members" className={navLinkClass}>Team</NavLink>
+                <NavLink to="/manager/organization" className={navLinkClass}>Organization</NavLink>
+              </div>
+            )}
+
+            
+            
 
           </div>
 
