@@ -14,6 +14,7 @@ import Profile from '../OrgChart/Profile';
 import ExpenseList from './TravelandExpense/ExpenseList';
 import ExpenseProof from './TravelandExpense/ExpenseProof';
 import ListUser from '../OrgChart/ListUser';
+import GameConfig from './Games/GameConfig';
 
 type Props = {}
 
@@ -76,6 +77,10 @@ const HrRoutes = [
   {
     path : 'games',
     element : <Games/>
+  },
+  {
+    path:'games/config',
+    element:<GameConfig/>
   },
    {
     path: 'jobs',
