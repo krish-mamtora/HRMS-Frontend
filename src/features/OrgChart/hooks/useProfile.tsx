@@ -9,6 +9,7 @@ export interface UserProfileDisplayDto {
   gender: string;
   managerId: number;
   age: number;
+  designation : string;
   department: string;
   favouriteSport: string;
   joinDate: string; 
