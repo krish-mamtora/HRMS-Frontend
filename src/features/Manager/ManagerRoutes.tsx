@@ -1,4 +1,3 @@
-// ManagerRoutes.tsx
 import TeamPeople from './team/TeamPeople';
 import ListUser from '../OrgChart/ListUser';
 import EmpTravelPlans from './travel/EmpTravelPlans';
