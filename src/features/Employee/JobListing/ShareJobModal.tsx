@@ -5,10 +5,11 @@ import type {  ShareJob } from './types';
 interface ModalProps {
     jobId: number;
     jobTitle: string;
+     jobUrl: string; 
     isOpen: boolean;
     onClose: () => void;
 }
-const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose }) => {
+const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, onClose }) => {
     const [formData, setFormData] = useState<ShareJob>({
         JobId: jobId,
         ReceiverMail: '',
@@ -16,16 +17,35 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
         Message: '',
         EmpId: parseInt(localStorage.getItem('id') || '0'),
     });
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({ ...prevData, [name]: value }));
     };
 
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files) {
+            setSelectedFile(e.target.files[0]);
+        }
+    };
+
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+     const data = new FormData();
+        data.append('JobId', formData.JobId.toString());
+        data.append('ReceiverMail', formData.ReceiverMail);
+        data.append('Subject', formData.Subject);
+        data.append('Message', formData.Message);
+        data.append('EmpId', formData.EmpId.toString());
+    
+        if (selectedFile) {
+            data.append('JobDescriptionPdf', selectedFile); 
+        }
     try {
-        const response = await api.post('/ShareJob', formData);
+        const response = await api.post('/ShareJob', data, {
+            headers: { 'Content-Type': 'multipart/form-data' } 
+        });
         if (response.status === 200) {
             alert("Email sent successfully!");
             onClose(); 
@@ -62,6 +82,13 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle, isOpen, onClose 
                         </label>
                         <input value={formData.Message} onChange={handleChange} id="Message" type="text" name='Message' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Message" />
                     </div>
+                    <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                        Attachment (JD PDF)
+                    </label>
+                    <input  type="file" accept="application/pdf" onChange={handleFileChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                    />
+                </div>
                     <div className='flex justify-end'>
                         <button
                             type="button"
