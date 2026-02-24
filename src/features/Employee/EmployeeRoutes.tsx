@@ -7,6 +7,7 @@ import TravelPlanDetails from './TravelandExpense/TravelPlanDetails';
 import TravelExpense from './TravelandExpense/TravelExpense';
 import ListUser from '../OrgChart/ListUser';
 import Profile from '../OrgChart/Profile';
+import GameDetails from './Games/GameDetails';
 
 const EmployeeRoutes = [
 
@@ -38,15 +39,13 @@ const EmployeeRoutes = [
     path : 'games',
     element : <Games/>
   },
+  {
+    path : 'games/:gameId',
+    element : <GameDetails/>
+  },
    {
     path: 'jobs',
     element: <Jobs />,
-    // children:[
-    //   {
-    //     path:'create',
-    //     element : <CreateJob/>
-    //   }
-    // ]
   },
 ]
 export default EmployeeRoutes;
