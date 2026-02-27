@@ -9,7 +9,11 @@ const Social = () => {
   const addPost = () =>{
       navigate('create');
   }
-  const { data: posts, isLoading, isError, error } = usePosts();
+  const MyPosts = ()=>{
+    navigate('myposts');
+  }
+  const { data: posts, isLoading, isError, error , refetch  } = usePosts();
+  console.log(posts);
   const [selectedPost, setSelectedPost] = useState<PostsDisplayDto | null>(null);
   const [postToDelete, setPostToDelete] = useState<PostsDisplayDto | null>(null);
   const currentUser = localStorage.getItem('role');
@@ -17,32 +21,46 @@ const Social = () => {
   const isHR = (currentUser  === 'HR');
 
     const handleDeletePost = async () => {
-  if (!postToDelete || !deletionReason.trim()) return;
+        if (!postToDelete || !deletionReason.trim()) return;
 
-const currentUserId = parseInt(localStorage.getItem('id') || '0', 10);
+        const currentUserId = parseInt(localStorage.getItem('id') || '0', 10);
 
-  try {
-    const response = await api.delete(`/Posts/${postToDelete.id}`, {
-      params: { 
-        userId: currentUserId,
-        reason: deletionReason 
-      }
-    });
-    alert("Post Deleted and User Notified");
-    console.log("Delete response:", response.data);
-    setPostToDelete(null);
-    setDeletionReason('');
-  } catch (err) {
-    console.error("Failed to delete post:", err);
-    alert("Failed to delete post.");
-  }
+        try {
+            const response = await api.delete(`/Posts/${postToDelete.id}`, {
+            params: { 
+                userId: currentUserId,
+                reason: deletionReason 
+            }
+            });
+            alert("Post Deleted and User Notified");
+            console.log("Delete response:", response.data);
+            setPostToDelete(null);
+            setDeletionReason('');
+        } catch (err) {
+            console.error("Failed to delete post:", err);
+            alert("Failed to delete post.");
+        }
+  };
+    const handleReaction = async (postId: number, reactionType: string) => {
+    try {
+      
+      await api.post('/Posts/react', {
+        postId: postId,
+        reactionType: reactionType,
+        isActive: true 
+      });
+        refetch(); 
+    } catch (err) {
+      console.error("Reaction failed:", err);
+    }
   };
 
   if (isLoading) return <div className="flex justify-center p-10 font-semibold">Loading feed...</div>;
   if (isError) return <div className="text-red-500 text-center p-10">Error: {error.message}</div>;
   return (
     <div className="bg-gray-100 min-h-screen py-8 px-4">
-      <button onClick={()=>addPost()}>Create Post</button>
+      <button onClick={()=>addPost()} className="mt-2 mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors">Create Post</button>
+       <button onClick={()=>MyPosts() } className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">My Posts</button>
       <div className="max-w-xl mx-auto space-y-6">
 
         {posts?.map((post) => (
@@ -93,30 +111,41 @@ const currentUserId = parseInt(localStorage.getItem('id') || '0', 10);
 
 
             <div className="flex items-center gap-4 p-3 px-4 border-t border-gray-50">
-                <button className="flex items-center text-gray-500 hover:text-blue-600 transition-colors group">
-                    <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">👍</span>
-                    <span className="text-sm font-semibold">{post.interactions?.likeCount || 0}</span>
-                </button>
+                 <button 
+                        onClick={() => handleReaction(post.id, "Like")}
+                        className="flex items-center text-gray-500 hover:text-blue-600 transition-colors group"
+                    >
+                        <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">👍</span>
+                        <span className="text-sm font-semibold">{post.postInteraction?.likeCount || 0}</span>
+                    </button>
 
-                <button className="flex items-center text-gray-500 hover:text-yellow-500 transition-colors group">
-                    <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">👏</span>
-                    <span className="text-sm font-semibold">{post.interactions?.celebrateCount || 0}</span>
-                </button>
-                  <button className="flex items-center text-gray-500 hover:text-red-500 transition-colors group">
-                    <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">❤️</span>
-                    <span className="text-sm font-semibold">{post.interactions?.loveCount || 0}</span>
-                </button>
-
-                <button className="flex items-center text-gray-500 hover:text-purple-600 transition-colors group">
-                    <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">💡</span>
-                    <span className="text-sm font-semibold">{post.interactions?.insightfulCount || 0}</span>
-                </button>
-                <button 
+                 <button 
+                    onClick={() => handleReaction(post.id, "Celebrate")}
+                        className="flex items-center text-gray-500 hover:text-yellow-500 transition-colors group"
+                    >
+                        <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">👏</span>
+                        <span className="text-sm font-semibold">{post.postInteraction?.celebrateCount || 0}</span>
+                    </button>
+                 <button 
+                        onClick={() => handleReaction(post.id, "Love")}
+                        className="flex items-center text-gray-500 hover:text-red-500 transition-colors group"
+                    >
+                        <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">❤️</span>
+                        <span className="text-sm font-semibold">{post.postInteraction?.loveCount || 0}</span>
+                    </button>
+                   <button 
+                        onClick={() => handleReaction(post.id, "Insightful")}
+                        className="flex items-center text-gray-500 hover:text-purple-600 transition-colors group"
+                    >
+                        <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">💡</span>
+                        <span className="text-sm font-semibold">{post.postInteraction?.insightfulCount || 0}</span>
+                    </button>
+               <button 
                     onClick={() => setSelectedPost(post)}
                     className="flex items-center text-gray-500 hover:text-green-600 transition-colors ml-auto group"
                 >
                     <span className="text-xl mr-1.5 group-hover:scale-110 transition-transform">💬</span>
-                    <span className="text-sm font-semibold">{post.interactions?.commentCount || 0}</span>
+                    <span className="text-sm font-semibold">{post.postInteraction?.commentCount || 0}</span>
                 </button>
             </div>
 

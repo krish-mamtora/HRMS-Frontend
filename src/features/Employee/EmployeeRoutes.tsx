@@ -11,6 +11,7 @@ import MyBookings from './Games/MyBookings';
 import GD from './Games/GD';
 import AddPost from '../Social/AddPost';
 import Social from '../Social/Social';
+import MyPosts from '../Social/MyPosts';
 
 const EmployeeRoutes = [
 
@@ -32,6 +33,10 @@ const EmployeeRoutes = [
   },{
     path : 'social/create',
     element : <AddPost/>
+  },
+    ,{
+    path : 'social/myposts',
+    element : <MyPosts/>
   },
      {
         path:'organization',

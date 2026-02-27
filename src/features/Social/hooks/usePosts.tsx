@@ -1,6 +1,15 @@
 import { useQuery } from '@tanstack/react-query';
 import api from '../../auth/api/axios';
 
+export interface PostInteractionDisplayDto {
+  postId: number;
+  likeCount: number;
+  celebrateCount: number;
+  loveCount: number;
+  insightfulCount: number;
+  commentCount: number;
+  lastUpdatedAt: string;
+}
 
 export interface PostsDisplayDto {
   id: number;
@@ -13,6 +22,7 @@ export interface PostsDisplayDto {
   likeCount: number;
   commentCount: number;
   createdAt: string;
+   interactions: PostInteractionDisplayDto | null;
 }
 const fetchPosts = async (): Promise<PostsDisplayDto[]> => {
   const response = await api.get<PostsDisplayDto[]>('/Posts/all');

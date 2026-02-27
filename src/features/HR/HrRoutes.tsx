@@ -16,6 +16,7 @@ import ListUser from '../OrgChart/ListUser';
 import GameConfig from './Games/GameConfig';
 import Social from '../Social/Social';
 import AddPost from '../Social/AddPost';
+import MyPosts from '../Social/MyPosts';
 
 type Props = {}
 
@@ -78,7 +79,10 @@ const HrRoutes = [
     path : 'social/create',
     element : <AddPost/>
   },
-  
+  ,{
+    path : 'social/myposts',
+    element : <MyPosts/>
+  },
   {
     path : 'games',
     element : <Games/>
