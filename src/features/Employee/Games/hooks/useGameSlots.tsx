@@ -1,7 +1,7 @@
 import api from '../../../auth/api/axios';
 import { useQuery } from '@tanstack/react-query';
 
-interface GameSlot {
+export interface GameSlot {
   id: number;
   gamesId: number;
   startTime: string; 
@@ -9,7 +9,7 @@ interface GameSlot {
   capacity: number;
   assigned: number;
   availableSeats: number;
-  isBookingOpen: boolean;
+  isBookingOpen: boolean; 
 }
 
 const fetchGameSlots = async (gameId: number, date: string): Promise<GameSlot[]> => {
@@ -24,6 +24,7 @@ const useGameSlots = (gameId: number, date: string) => {
   return useQuery<GameSlot[], Error>({
     queryKey: ['gameSlots', gameId, date], 
     queryFn: () => fetchGameSlots(gameId, date),
+      enabled: !!gameId,
     staleTime: 1000 * 60 * 5, 
     gcTime: 1000 * 60 * 10,  
     refetchOnWindowFocus: false,

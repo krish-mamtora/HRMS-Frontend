@@ -3,6 +3,8 @@ import TeamPeople from './team/TeamPeople';
 import ListUser from '../OrgChart/ListUser';
 import TravelPlans from './travel/TravelPlans';
 import TravelExpense from './travel/TravelExpense';
+import Social from '../Social/Social';
+import AddPost from '../Social/AddPost';
 
 const ManagerRoutes = [
   {
@@ -13,6 +15,14 @@ const ManagerRoutes = [
   {
     path: 'organization',
     element: <ListUser />, 
+  }
+  ,
+  {
+    path: 'social',
+    element: <Social />,
+  },{
+    path : 'social/create',
+    element : <AddPost/>
   }
   ,{
     path: 'employee-plans/:empProfileId', 

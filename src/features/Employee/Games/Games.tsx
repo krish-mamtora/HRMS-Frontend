@@ -1,6 +1,6 @@
 import React from 'react'
 import useGames from './hooks/useGames';
-import { useNavigate } from 'react-router-dom';
+import { redirect, useNavigate } from 'react-router-dom';
 
 interface Game {
   id: number;
@@ -12,6 +12,11 @@ interface Game {
 type Props = {}
 
 const Games = (props: Props) => {
+  const gotoMyBookings = () =>{
+   
+    const userId = localStorage.getItem('id');
+        navigate(`my-bookings/${userId}`);
+    }
    const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGames();
   const handleAction = (gameId: number) => {
@@ -23,7 +28,9 @@ const Games = (props: Props) => {
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Games</h1>
-
+       <div>
+      <button onClick={()=>gotoMyBookings()}>My Bookings</button>
+    </div>
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">

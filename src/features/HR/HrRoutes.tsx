@@ -2,7 +2,6 @@ import React, { Children } from 'react'
 import HRHomePage from './HRHomePage';
 import TravelPlans from './TravelandExpense/TravelPlans';
 import Jobs from './JobListing/Jobs';
-import Social from './Social/Social';
 import Games from './Games/Games';
 import AddPlanForm from './TravelandExpense/AddPlanForm';
 import CreateJob from './JobListing/CreateJob';
@@ -15,6 +14,8 @@ import ExpenseList from './TravelandExpense/ExpenseList';
 import ExpenseProof from './TravelandExpense/ExpenseProof';
 import ListUser from '../OrgChart/ListUser';
 import GameConfig from './Games/GameConfig';
+import Social from '../Social/Social';
+import AddPost from '../Social/AddPost';
 
 type Props = {}
 
@@ -72,6 +73,10 @@ const HrRoutes = [
   {
     path: 'social',
     element: <Social />,
+  },
+  ,{
+    path : 'social/create',
+    element : <AddPost/>
   },
   
   {
