@@ -12,6 +12,7 @@ import GD from './Games/GD';
 import AddPost from '../Social/AddPost';
 import Social from '../Social/Social';
 import MyPosts from '../Social/MyPosts';
+import MyWating from './Games/MyWaiting';
 
 const EmployeeRoutes = [
 
@@ -58,6 +59,10 @@ const EmployeeRoutes = [
     path: 'games/my-bookings/:userId',
     element : <MyBookings/>
   },
+{
+  path: 'games/my-waitings/:userId',
+    element : <MyWating/>
+},
    {
     path: 'jobs',
     element: <Jobs />,

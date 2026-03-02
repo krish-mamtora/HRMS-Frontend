@@ -12,10 +12,16 @@ interface Game {
 type Props = {}
 
 const Games = (props: Props) => {
+  const userId = localStorage.getItem('id');
   const gotoMyBookings = () =>{
    
-    const userId = localStorage.getItem('id');
         navigate(`my-bookings/${userId}`);
+    }
+
+     const gotoMyWaitings = () =>{
+   
+    const userId = localStorage.getItem('id');
+        navigate(`my-waitings/${userId}`);
     }
    const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGames();
@@ -26,12 +32,13 @@ const Games = (props: Props) => {
   if (isError) return <div className="p-4 text-center text-red-500">Error: {(error)?.message}</div>;
 
   return (
-    <div className="p-4">
+    <div className="p-4 mb-5">
       <h1 className="text-2xl font-bold mb-4">Games</h1>
-       <div>
-      <button onClick={()=>gotoMyBookings()}>My Bookings</button>
+       <div className="flex justify-end">
+      <button onClick={()=>gotoMyBookings()} className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Bookings</button>
+      <button onClick={()=>gotoMyWaitings()}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">Waiting</button>
     </div>
-      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>

@@ -1,120 +1,218 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
 
-type Props = {}
-
-type PostsCreateUpdateDto = {
-  id?: number;
-  title: string;
-  description: string;
-  isVisible: boolean;
-  isSystemGenerated: boolean;
-  images: FileList | null; 
-  tagIds: string;
+type TagsDisplayDto = {
+  id: number;
+  tagName: string;
 };
 
-const AddPost = (props: Props) => {
-    const { register, handleSubmit, formState: { errors } } = useForm<PostsCreateUpdateDto>({
-    defaultValues: {
-      isVisible: true,
-      isSystemGenerated: false,
-      title: '',
-      description: '',
-      tagIds: ''
-    }
-  });
-   const onSubmit:  SubmitHandler<PostsCreateUpdateDto> = async(data) => {
-    const formData = new FormData();
+type PostsCreateUpdateDto = {
+  title: string;
+  description: string;
+  images: FileList | null;
+  tagIds: number[]; 
+};
 
-    if (data.id) formData.append('Id', data.id.toString());
-     if (data.id) formData.append('Id', data.id.toString());
+const AddPost = () => {
+  const navigate = useNavigate();
+  const [tags, setTags] = useState<TagsDisplayDto[]>([]);
+  const [selectedTags, setSelectedTags] = useState<number[]>([]);
+  
+  // NEW: State to store multiple images and their previews
+  const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const { register, handleSubmit, formState: { errors } } = useForm<PostsCreateUpdateDto>();
+
+  // Fetch Tags on Mount (Kept exactly as is)
+  useEffect(() => {
+    const fetchTags = async () => {
+      try {
+        const response = await api.get<TagsDisplayDto[]>('/Posts/tags');
+        setTags(response.data);
+      } catch (err) {
+        console.error("Failed to load tags", err);
+      }
+    };
+    fetchTags();
+  }, []);
+
+  // NEW: Handle multiple file selections (Appends new files to the list)
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const newFiles = Array.from(e.target.files);
+      
+      // Accumulate files
+      setSelectedImageFiles(prev => [...prev, ...newFiles]);
+
+      // Accumulate previews
+      const newPreviews = newFiles.map(file => URL.createObjectURL(file));
+      setImagePreviews(prev => [...prev, ...newPreviews]);
+    }
+  };
+
+  // NEW: Remove specific image
+  const removeImage = (index: number) => {
+    setSelectedImageFiles(prev => prev.filter((_, i) => i !== index));
+    setImagePreviews(prev => {
+      URL.revokeObjectURL(prev[index]); // Cleanup memory
+      return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const toggleTag = (tagId: number) => {
+    setSelectedTags(prev => 
+      prev.includes(tagId) ? prev.filter(id => id !== tagId) : [...prev, tagId]
+    );
+  };
+
+  const onSubmit: SubmitHandler<PostsCreateUpdateDto> = async (data) => {
+    setIsSubmitting(true);
+    const formData = new FormData();
     formData.append('Title', data.title);
     formData.append('Description', data.description);
 
-    const tagIdsArray = data.tagIds.split(',').map(id => parseInt(id.trim())).filter(id => !isNaN(id));
-    tagIdsArray.forEach(id => formData.append('TagIds', id.toString()));
+    // Tags Logic (Kept as is)
+    selectedTags.forEach(id => formData.append('TagIds', id.toString()));
 
+    // NEW: Append Multiple Images from our custom state
+    selectedImageFiles.forEach(file => {
+      formData.append('Images', file);
+    });
 
-    if (data.images && data.images.length > 0) {
-        for (let i = 0; i < data.images.length; i++) {
-            formData.append('Images', data.images[i]);
-        }
-    }
-    
-    console.log('Submitting Form Data:', Object.fromEntries(formData));
     try {
-        const token = localStorage.getItem('accessToken'); 
-
-        const response = await api.post(
-            '/Posts/upsert/',
-            formData,
-            {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                    'Authorization': `Bearer ${token}`
-                },
-            }
-        );
-        
-        alert('Post Created');
-
+      await api.post('/Posts/upsert/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      alert('Success! Your post is live.');
+      navigate('/hr/social');
     } catch (error) {
-        console.error('Submission Error:', error);
+      console.error('Submission Error:', error);
+      alert('Error creating post.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
+
   return (
-     <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md mt-10">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New Post</h2>
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            {...register('title', { required: 'Title is required', maxLength: 50 })}
-            type="text"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
-            placeholder="Enter title"
-          />
-          {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title.message}</p>}
-        </div>
-             <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            {...register('description', { maxLength: 150 })}
-            rows={3}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
-            placeholder="Enter description"
-          />
+    <div className="bg-gray-50 min-h-screen py-10 px-4">
+      <div className="max-w-xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <button 
+            onClick={() => navigate(-1)} 
+            className="text-gray-700 hover:text-black flex items-center text-sm font-bold transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Feed
+          </button>
+          <h2 className="text-xl font-extrabold text-gray-900">New Achievement</h2>
+          <div className="w-20"></div>
         </div>
 
-         <div>
-          <label className="block text-sm font-medium text-gray-700">Tag IDs (comma separated)</label>
-          <input
-            {...register('tagIds')}
-            type="text"
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"
-            placeholder="1, 5, 10"
-          />
+        <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
+          <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
+            
+            {/* Title - Darker Fonts */}
+            <div>
+              <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-2">Post Title</label>
+              <input
+                {...register('title', { required: 'Title is required' })}
+                type="text"
+                placeholder="What's the big news?"
+                className="w-full text-xl font-bold text-gray-900 border-none focus:ring-0 p-0 placeholder-gray-400"
+              />
+              <div className="h-px bg-gray-300 mt-2"></div>
+              {errors.title && <p className="text-red-600 text-xs mt-1 font-bold">{errors.title.message}</p>}
+            </div>
+
+            {/* Description - Darker Fonts */}
+            <div>
+              <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-2">Description</label>
+              <textarea
+                {...register('description', { required: 'A description is helpful' })}
+                rows={4}
+                placeholder="Tell everyone about it..."
+                className="w-full text-base font-medium text-gray-800 border-none focus:ring-0 p-0 placeholder-gray-400 resize-none"
+              />
+              <div className="h-px bg-gray-300 mt-2"></div>
+            </div>
+
+            {/* Tags Selection - Kept As Is */}
+            <div>
+              <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Add Tags</label>
+              <div className="flex flex-wrap gap-2">
+                {tags.map(tag => (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => toggleTag(tag.id)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-bold border transition-all ${
+                      selectedTags.includes(tag.id)
+                        ? 'bg-blue-700 border-blue-700 text-white shadow-md'
+                        : 'bg-white border-gray-300 text-gray-700 hover:border-gray-500 shadow-sm'
+                    }`}
+                  >
+                    #{tag.tagName}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* MODIFIED: Multi-Image Upload UI */}
+            <div>
+              <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Upload Images</label>
+              <div className="flex flex-wrap gap-4">
+                {imagePreviews.map((src, index) => (
+                  <div key={index} className="relative h-24 w-24 rounded-lg overflow-hidden border-2 border-gray-200 group">
+                    <img src={src} className="h-full w-full object-cover" alt="preview" />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-red-600 text-white rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
+                ))}
+                
+                <label className="h-24 w-24 flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-lg cursor-pointer hover:border-blue-600 hover:bg-blue-50 transition-all text-gray-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span className="text-[10px] mt-1 font-black uppercase">Add Photo</span>
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div className="pt-6">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-700 text-white py-4 rounded-xl font-black text-sm uppercase tracking-widest shadow-lg hover:bg-blue-800 disabled:bg-gray-400 transition-all transform active:scale-95"
+              >
+                {isSubmitting ? 'Publishing...' : 'Post Achievement'}
+              </button>
+            </div>
+
+          </form>
         </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Images</label>
-          <input
-            {...register('images')}
-            type="file"
-            multiple
-            accept="image/*"
-            className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-          />
-        </div>
-        <button
-          type="submit"
-          className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-        >
-          Submit Post
-        </button>
-      </form>
+      </div>
     </div>
-  )
-}
+  );
+};
+
 export default AddPost;

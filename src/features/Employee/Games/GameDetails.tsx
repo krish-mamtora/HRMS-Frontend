@@ -2,72 +2,89 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useGameSlots, { type GameSlot } from "./hooks/useGameSlots";
 import useCreateBooking from "./hooks/useCreateBooking";
+import useProfile from "../../OrgChart/hooks/useProfile";
+
 interface UserBookingDetail {
-    userId: number;
-    status: string; 
-    message: string;
+  userId: number;
+  status: string;
+  message: string;
 }
-interface BookingResultDto {
-    userResults: UserBookingDetail[];
-    bookedUsers: number[];
-    waitingUsers: number[];
-}
+
 const GameDetails = () => {
   const { gameId } = useParams();
   const navigate = useNavigate();
-  const [bookingResults, setBookingResults] = useState<any[]>([]);
-  const [selectedDate, setSelectedDate] = useState("");
+  const { data: allEmployees } = useProfile();
+  
+  const [bookingResults, setBookingResults] = useState<UserBookingDetail[]>([]);
   const [selectedSlot, setSelectedSlot] = useState<GameSlot | null>(null);
-  const [userIds, setUserIds] = useState<number[]>([0]);
   const [displayMessage, notifyUser] = useState<string | null>(null);
 
-  const loggedInUserId = localStorage.getItem('id');
+  const getInitialDate = () => {
+    const today = new Date();
+    const dayOfWeek = today.getDay(); 
+    if (dayOfWeek === 6) today.setDate(today.getDate() + 2);
+    else if (dayOfWeek === 0) today.setDate(today.getDate() + 1);
+    return today.toISOString().split('T')[0];
+  };
 
-  const gameIdNum = gameId ? parseInt(gameId) : undefined;
-  // const isoDate = new Date(selectedDate).toISOString();
-  const { data: slots , isLoading , isError } = useGameSlots(gameId , selectedDate);
-  console.log(slots);
-  console.log(gameId , gameIdNum);
+  const [selectedDate, setSelectedDate] = useState(getInitialDate);
+  const [userIds, setUserIds] = useState<number[]>([0]);
+  const [userSearchTerms, setUserSearchTerms] = useState<string[]>([""]);
+
+  const loggedInUserId = localStorage.getItem('id');
+  const { data: slots, isLoading } = useGameSlots(gameId, selectedDate);
   const createBookingMutation = useCreateBooking();
 
   const handleAddUser = () => {
+    if (userIds.length >= 4) {
+      alert("You can only add a maximum of 4 users per booking.");
+      return;
+    }
     setUserIds([...userIds, 0]);
+    setUserSearchTerms([...userSearchTerms, ""]);
   };
 
-  const handleUserChange = (index: number, value: string) => {
-    const updated = [...userIds];
-    updated[index] = parseInt(value) || 0;
-    setUserIds(updated);
+  const handleSelectUser = (index: number, emp: any) => {
+    const updatedIds = [...userIds];
+    updatedIds[index] = emp.userProfileId;
+    setUserIds(updatedIds);
+
+    const updatedTerms = [...userSearchTerms];
+    updatedTerms[index] = `${emp.firstName} ${emp.lastName}`;
+    setUserSearchTerms(updatedTerms);
   };
 
   const handleSubmit = async () => {
     if (!selectedSlot) return;
-
-    const filteredUsers = userIds.filter(id => id > 0);
-
-    if (filteredUsers.length === 0) {
-      notifyUser("Please enter at least one valid user ID.");
-      return;
-    }
+    setBookingResults([]); 
+    notifyUser("Processing...");
 
     try {
       const result = await createBookingMutation.mutateAsync({
         SlotId: selectedSlot.id,
         BookedBy: Number(loggedInUserId),
-        Status: "Pending", 
-        userIds: filteredUsers
+        status: "Pending",
+        userIds: userIds.filter(id => id > 0)
       });
-      setBookingResults(result.userResults || []);
-      notifyUser(null);
-      setUserIds([0]);
+
+      if (result && result.userResults) {
+        setBookingResults(result.userResults);
+        notifyUser(null); 
+      } else {
+        notifyUser("Booking completed with no specific status messages.");
+      }
     } catch (error: any) {
-      notifyUser(error?.response?.data || "Booking failed ");
+      notifyUser("Connection error. Please try again.");
     }
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const date = new Date(e.target.value);
-    const day = date.getDay();
+    const todayDate = new Date().toISOString().split("T")[0];
+    if (e.target.value < todayDate) {
+      alert("You cannot select a past date.");
+      return;
+    }
+    const day = new Date(e.target.value).getDay();
     if (day === 0 || day === 6) {
       alert("Only Monday to Friday allowed.");
       return;
@@ -78,74 +95,113 @@ const GameDetails = () => {
   return (
     <div className="p-6">
       <button onClick={() => navigate("/employee/games")} className="mb-4 text-blue-600 underline">Back</button>
-
       <h1 className="text-xl font-bold mb-4">Book Slot</h1>
-
       <input type="date" value={selectedDate} onChange={handleDateChange} className="border p-2 rounded mb-6" />
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {slots?.map((slot) => (
-          <div key={slot.id} onClick={() => setSelectedSlot(slot)} className="border rounded p-4 shadow hover:bg-gray-50 cursor-pointer">
-             <div><strong>Capacity:</strong> {slot.id}</div>
-            <div><strong>Available:</strong> {slot.capacity - slot.assigned}</div>
-            <div><strong>Capacity:</strong> {slot.capacity}</div>
-            <div><strong>Start:</strong> {slot.startTime}</div>
-            <div><strong>End:</strong> {new Date(slot.endTime).toLocaleTimeString()}</div>
-            <div><strong>Status:</strong> {slot.isBookingOpen ? "Open" : "Closed"}</div>
-          </div>
-        ))}
+      <div className="flex gap-4 mb-4 text-xs font-bold uppercase tracking-wider">
+        <div className="flex items-center gap-1"><span className="w-3 h-3 bg-green-500 rounded"></span> Open</div>
+        <div className="flex items-center gap-1"><span className="w-3 h-3 bg-yellow-500 rounded"></span> Full</div>
+        <div className="flex items-center gap-1"><span className="w-3 h-3 bg-red-500 rounded"></span> Closed</div>
       </div>
 
-      {bookingResults.length > 0 && (
-        <div className="mt-4 p-3 bg-gray-50 rounded border max-h-40 overflow-y-auto">
-          <h3 className="text-xs font-bold uppercase text-gray-500 mb-2">Booking Status:</h3>
-          <ul className="space-y-2">
-            {bookingResults.map((res, index) => (
-              <li key={index} className="text-sm flex justify-between items-center">
-                <span className="font-medium">User {res.userId}:</span>
-                <span className={
-                  res.status === "Booked" ? "text-green-600" : 
-                  res.status === "Waiting" ? "text-yellow-600" : "text-red-600"
-                }>
-                  {res.message}
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
+        {slots?.map((slot, index) => {
+          const isFull = slot.capacity - slot.assigned === 0;
+          const isOpen = slot.isBookingOpen;
+          let bgColor = !isOpen ? "bg-red-500 hover:bg-red-600" : isFull ? "bg-yellow-500 hover:bg-yellow-600" : "bg-green-500 hover:bg-green-600";
+
+          return (
+            <div key={slot.id} onClick={() => { setSelectedSlot(slot); setBookingResults([]); }} className={`group relative flex items-center justify-center aspect-square rounded shadow-md cursor-pointer transition-all transform hover:scale-110 text-white font-bold ${bgColor}`}> 
+              {index + 1}
+              <div className="absolute bottom-full mb-2 hidden group-hover:block z-50 w-48 bg-gray-900 text-white text-[10px] p-2 rounded shadow-xl pointer-events-none">
+                <p>Start: {slot.startTime.replace('T', ' ').substring(0, 16)}</p>
+                <p>Ends: {slot.endTime.replace('T', ' ').substring(0, 16)}</p>
+                <p>Available: {slot.capacity - slot.assigned}</p>
+                <p className="mt-1 border-t border-gray-700 pt-1">Status: {isOpen ? "Open" : "Closed"}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {selectedSlot && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
-          <div className="bg-white w-full max-w-lg p-6 rounded shadow-lg">
-            <h2 className="text-lg font-bold mb-3">Slot Details</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white w-full max-w-lg p-6 rounded-xl shadow-2xl">
+            <h2 className="text-lg font-bold mb-3 border-b pb-2">Slot Details</h2>
 
-            <div className="text-sm mb-4 space-y-1">
+            <div className="text-sm mb-4 grid grid-cols-2 gap-2 bg-gray-50 p-3 rounded">
               <div>Capacity: {selectedSlot.capacity}</div>
-              <div>Assigned: {selectedSlot.assigned}</div>
               <div>Available: {selectedSlot.capacity - selectedSlot.assigned}</div>
-              <div>Booking Open: {selectedSlot.isBookingOpen ? "Yes" : "No"}</div>
+              <div className="col-span-2">Time: {selectedSlot.startTime.replace('T', ' ').substring(11, 16)} - {selectedSlot.endTime.replace('T', ' ').substring(11, 16)}</div>
             </div>
 
-            {!selectedSlot.isBookingOpen && <div className="text-red-600 text-sm mb-3">Booking is closed for this slot.</div>}
-            {selectedSlot.availableSeats === 0 && <div className="text-yellow-600 text-sm mb-3">Slot is full. You will be added to queue.</div>}
-
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-60 overflow-y-visible mb-2">
               {userIds.map((id, index) => (
-                <div key={index} className="flex gap-2 items-center">
-                  <input type="number" value={id || ""} placeholder="Enter User ID" onChange={(e) => handleUserChange(index, e.target.value)} className="flex-1 border p-2 rounded" />
+                <div key={index} className="relative flex gap-2 items-center">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      placeholder="Search Player Name..."
+                      value={userSearchTerms[index]}
+                      onChange={(e) => {
+                        const newTerms = [...userSearchTerms];
+                        newTerms[index] = e.target.value;
+                        setUserSearchTerms(newTerms);
+                        const newIds = [...userIds];
+                        newIds[index] = 0;
+                        setUserIds(newIds);
+                      }}
+                      className="w-full border p-2 rounded text-sm outline-none focus:ring-2 focus:ring-blue-400"
+                    />
+                    {userSearchTerms[index].length > 0 && id === 0 && (
+                      <ul className="absolute left-0 right-0 z-[100] bg-white border border-blue-400 rounded shadow-xl max-h-48 overflow-y-auto mt-1">
+                        {allEmployees?.filter(emp => `${emp.firstName} ${emp.lastName}`.toLowerCase().includes(userSearchTerms[index].toLowerCase()))
+                          .map(emp => (
+                            <li key={emp.userProfileId} onMouseDown={(e) => { e.preventDefault(); handleSelectUser(index, emp); }} className="p-3 hover:bg-blue-100 cursor-pointer text-sm border-b">
+                              <div className="font-bold">{emp.firstName} {emp.lastName}</div>
+                              <div className="text-gray-500 text-[11px]">{emp.designation} | ID: {emp.userProfileId}</div>
+                            </li>
+                          ))}
+                      </ul>
+                    )}
+                  </div>
+                  {userIds.length > 1 && (
+                    <button onClick={() => {
+                      setUserIds(userIds.filter((_, i) => i !== index));
+                      setUserSearchTerms(userSearchTerms.filter((_, i) => i !== index));
+                    }} className="p-2 text-red-500"> ✕ </button>
+                  )}
                 </div>
               ))}
             </div>
 
-            <button onClick={handleAddUser} className="mt-3 text-blue-600 text-sm underline">+ Add User</button>
+            <button onClick={handleAddUser} disabled={userIds.length >= 4} className={`text-sm underline mb-4 ${userIds.length >= 4 ? 'text-gray-400' : 'text-blue-600'}`}>
+              {userIds.length >= 4 ? "Maximum 4 users reached" : "+ Add Another User"}
+            </button>
 
-            {displayMessage && <div className="mt-4 text-sm text-blue-600">{displayMessage}</div>}
+            {bookingResults.length > 0 && (
+              <div className="mb-4 p-3 bg-gray-50 rounded border border-gray-200 max-h-48 overflow-y-auto">
+                <h4 className="text-xs font-bold text-gray-500 mb-2 uppercase">Status Update:</h4>
+                <ul className="space-y-2">
+                  {bookingResults.map((res, index) => (
+                    <li key={index}>
+                      <div className="flex justify-between text-xs font-bold">
+                        <span>User {res.userId}</span>
+                        <span className={res.status === 'Failed' ? 'text-red-700' : 'text-green-700'}>{res.status}</span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">{res.message}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
-            <div className="flex justify-end gap-3 mt-6">
-              <button onClick={() => { setSelectedSlot(null); setBookingResults([]); }} className="px-4 py-2 bg-gray-200 rounded"> Cancel</button>
-              <button onClick={handleSubmit} className="px-4 py-2 bg-green-600 text-white rounded">
-                {createBookingMutation.isPending ? "Processing" : "Confirm Booking"}
+            {displayMessage && <div className="mb-4 text-sm text-center font-medium text-blue-600 animate-pulse">{displayMessage}</div>}
+
+            <div className="flex justify-end gap-3 mt-4 pt-4 border-t">
+              <button onClick={() => { setSelectedSlot(null); setBookingResults([]); notifyUser(null); }} className="px-4 py-2 bg-gray-200 rounded">Close</button>
+              <button onClick={handleSubmit} disabled={createBookingMutation.isPending} className="px-4 py-2 bg-green-600 text-white rounded font-bold">
+                {createBookingMutation.isPending ? "Validating..." : "Confirm Booking"}
               </button>
             </div>
           </div>
