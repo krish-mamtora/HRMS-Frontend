@@ -115,11 +115,11 @@ const MyBookings = () => {
                   <td className="px-4 py-2 flex gap-2">
            
                     {!booking.slotPlayed && (
-                      <button  onClick={() => handleCompleteSlot(booking.slotId, booking.bId)} className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition text-sm" >
+                      <button disabled={booking.status=="Completed" || booking.status=="Cancelled"} onClick={() => handleCompleteSlot(booking.slotId, booking.bId)} className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 transition text-sm" >
                         Complete
                       </button>
                     )}
-                    <button  onClick={() => handleCancleSlot(booking.slotId, booking.bId)}  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"> Cancel  </button>
+                    <button  disabled={booking.status=="Completed" || booking.status=="Cancelled"} onClick={() => handleCancleSlot(booking.slotId, booking.bId)}  className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition text-sm"> Cancel  </button>
                   </td>
                 </tr>
               ))}

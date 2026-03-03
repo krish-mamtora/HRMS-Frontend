@@ -20,14 +20,12 @@ const AddPost = () => {
   const [tags, setTags] = useState<TagsDisplayDto[]>([]);
   const [selectedTags, setSelectedTags] = useState<number[]>([]);
   
-  // NEW: State to store multiple images and their previews
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { register, handleSubmit, formState: { errors } } = useForm<PostsCreateUpdateDto>();
 
-  // Fetch Tags on Mount (Kept exactly as is)
   useEffect(() => {
     const fetchTags = async () => {
       try {
@@ -40,25 +38,19 @@ const AddPost = () => {
     fetchTags();
   }, []);
 
-  // NEW: Handle multiple file selections (Appends new files to the list)
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);
-      
-      // Accumulate files
       setSelectedImageFiles(prev => [...prev, ...newFiles]);
-
-      // Accumulate previews
       const newPreviews = newFiles.map(file => URL.createObjectURL(file));
       setImagePreviews(prev => [...prev, ...newPreviews]);
     }
   };
 
-  // NEW: Remove specific image
   const removeImage = (index: number) => {
     setSelectedImageFiles(prev => prev.filter((_, i) => i !== index));
     setImagePreviews(prev => {
-      URL.revokeObjectURL(prev[index]); // Cleanup memory
+      URL.revokeObjectURL(prev[index]);
       return prev.filter((_, i) => i !== index);
     });
   };
@@ -75,10 +67,8 @@ const AddPost = () => {
     formData.append('Title', data.title);
     formData.append('Description', data.description);
 
-    // Tags Logic (Kept as is)
     selectedTags.forEach(id => formData.append('TagIds', id.toString()));
 
-    // NEW: Append Multiple Images from our custom state
     selectedImageFiles.forEach(file => {
       formData.append('Images', file);
     });
@@ -117,7 +107,6 @@ const AddPost = () => {
         <div className="bg-white rounded-xl shadow-md border border-gray-200 overflow-hidden">
           <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
             
-            {/* Title - Darker Fonts */}
             <div>
               <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-2">Post Title</label>
               <input
@@ -130,7 +119,6 @@ const AddPost = () => {
               {errors.title && <p className="text-red-600 text-xs mt-1 font-bold">{errors.title.message}</p>}
             </div>
 
-            {/* Description - Darker Fonts */}
             <div>
               <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-2">Description</label>
               <textarea
@@ -142,7 +130,6 @@ const AddPost = () => {
               <div className="h-px bg-gray-300 mt-2"></div>
             </div>
 
-            {/* Tags Selection - Kept As Is */}
             <div>
               <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Add Tags</label>
               <div className="flex flex-wrap gap-2">
@@ -163,7 +150,6 @@ const AddPost = () => {
               </div>
             </div>
 
-            {/* MODIFIED: Multi-Image Upload UI */}
             <div>
               <label className="block text-xs font-black text-gray-700 uppercase tracking-widest mb-3">Upload Images</label>
               <div className="flex flex-wrap gap-4">

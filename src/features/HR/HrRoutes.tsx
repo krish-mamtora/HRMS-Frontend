@@ -83,6 +83,10 @@ const HrRoutes = [
     path : 'social/myposts',
     element : <MyPosts/>
   },
+  // {
+  //   path:'/social/edit/:postId',
+  //   element : <Po/>
+  // },
   {
     path : 'games',
     element : <Games/>

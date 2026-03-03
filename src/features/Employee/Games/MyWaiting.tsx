@@ -3,15 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import api from '../../auth/api/axios';
 
-interface Waiting {
-  queueId: number;
-   slotId: number;
-//   status: string;
+// interface Waiting {
+//   queueId: number;
+//    slotId: number;
+// //   status: string;
 
-//   gameName?: string; 
-//   startTime?: string;
-//   endTime?: string;
-}
+// //   gameName?: string; 
+// //   startTime?: string;
+// //   endTime?: string;
+// }
 
 const MyWating = () => {
     const handleCancel =  (bookingId:number) =>{
@@ -19,7 +19,7 @@ const MyWating = () => {
     }
       const navigate = useNavigate();
   const { userId } = useParams<{ userId: string }>();
-  const [waitings, setWaitings] = useState<Waiting[]>([]);
+  const [waitings, setWaitings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,9 +27,9 @@ const MyWating = () => {
     const fetchWaitings = async () => {
       try {
         setLoading(true);
-        const response = await api.get<Waiting[]>(`/WaitingQueue/user/${userId}`); 
+        const response = await api.get(`/WaitingQueue/user/${userId}`); 
         setWaitings(response.data);
-        console.log(waitings);
+        console.log(response.data);
         setError(null);
       } catch (err) {
         if (axios.isAxiosError(err) && err.response) {
@@ -65,9 +65,7 @@ const MyWating = () => {
           <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
             <thead>
               <tr className="bg-gray-100 border-b">
-                <th className="px-4 py-2 text-left text-gray-600">Game Name</th>
-                <th className="px-4 py-2 text-left text-gray-600">Start Time</th>
-                <th className="px-4 py-2 text-left text-gray-600">End Time</th>
+                <th className="px-4 py-2 text-left text-gray-600">Slot</th>
                 <th className="px-4 py-2 text-left text-gray-600">Status</th>
                 <th className="px-4 py-2 text-left text-gray-600">Action</th>
               </tr>
@@ -75,19 +73,14 @@ const MyWating = () => {
             <tbody>
               {waitings.map((waiting) => (
                 <tr key={waiting.queueId} className="hover:bg-gray-50 border-b">
-                  <td className="px-4 py-2 font-medium">{waiting.gameName || "N/A"}</td>
-                  <td className="px-4 py-2">{waiting.startTime ? new Date(waiting.startTime).toLocaleTimeString() : "N/A"}</td>
-                  <td className="px-4 py-2">{waiting.endTime ? new Date(waiting.endTime).toLocaleTimeString() : "N/A"}</td>
+                  <td className="px-4 py-2 font-medium">{waiting.slotId || "N/A"}</td>
                   <td className="px-4 py-2">
                     <span className={`px-2 py-1 rounded text-sm ${waiting.status === 'Waiting' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}`}>
                       {waiting.status}
                     </span>
                   </td>
                   <td className="px-4 py-2">
-                    <button 
-                      onClick={() => handleCancel(waiting.queueId)}
-                      className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                    >
+                    <button onClick={() => handleCancel(waiting.queueId)} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">
                       Cancel
                     </button>
                   </td>

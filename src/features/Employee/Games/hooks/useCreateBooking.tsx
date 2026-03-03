@@ -9,16 +9,7 @@ export interface BookingRequestCreateDto {
     userIds:number[],
     Status : string;
 }
-interface UserBookingDetail {
-    userId: number;
-    status: string; 
-    message: string;
-}
-interface BookingResultDto {
-    userResults: UserBookingDetail[];
-    bookedUsers: number[];
-    waitingUsers: number[];
-}
+
 
 function useCreateBooking() {
   return useMutation({

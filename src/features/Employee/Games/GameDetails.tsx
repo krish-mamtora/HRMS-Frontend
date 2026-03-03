@@ -95,8 +95,10 @@ const GameDetails = () => {
   return (
     <div className="p-6">
       <button onClick={() => navigate("/employee/games")} className="mb-4 text-blue-600 underline">Back</button>
-      <h1 className="text-xl font-bold mb-4">Book Slot</h1>
-      <input type="date" value={selectedDate} onChange={handleDateChange} className="border p-2 rounded mb-6" />
+      <div className="flex justify-between">
+        <h1 className="text-xl font-bold mb-4">Book Slot</h1>
+        <input type="date" value={selectedDate} onChange={handleDateChange} className="border p-2 rounded mb-6" />
+      </div>
 
       <div className="flex gap-4 mb-4 text-xs font-bold uppercase tracking-wider">
         <div className="flex items-center gap-1"><span className="w-3 h-3 bg-green-500 rounded"></span> Open</div>
@@ -107,11 +109,14 @@ const GameDetails = () => {
       <div className="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-3">
         {slots?.map((slot, index) => {
           const isFull = slot.capacity - slot.assigned === 0;
-          const isOpen = slot.isBookingOpen;
-          let bgColor = !isOpen ? "bg-red-500 hover:bg-red-600" : isFull ? "bg-yellow-500 hover:bg-yellow-600" : "bg-green-500 hover:bg-green-600";
+          const now = new Date();
+          const endTime = new Date(slot.endTime);
+          const isPast = endTime < now;
+          const isOpen = slot.isBookingOpen && !isPast;
 
+         let bgColor = !isOpen ? "bg-red-500 hover:bg-red-600" : isFull ? "bg-yellow-500 hover:bg-yellow-600" : "bg-green-500 hover:bg-green-600";
           return (
-            <div key={slot.id} onClick={() => { setSelectedSlot(slot); setBookingResults([]); }} className={`group relative flex items-center justify-center aspect-square rounded shadow-md cursor-pointer transition-all transform hover:scale-110 text-white font-bold ${bgColor}`}> 
+            <div key={slot.id} onClick={() => {  if (isOpen) {setSelectedSlot(slot);  setBookingResults([]);}}} className={`group relative flex items-center justify-center aspect-square rounded shadow-md cursor-pointer transition-all transform hover:scale-110 text-white font-bold ${bgColor}`}> 
               {index + 1}
               <div className="absolute bottom-full mb-2 hidden group-hover:block z-50 w-48 bg-gray-900 text-white text-[10px] p-2 rounded shadow-xl pointer-events-none">
                 <p>Start: {slot.startTime.replace('T', ' ').substring(0, 16)}</p>

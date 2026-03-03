@@ -1,7 +1,6 @@
 import { QueryClient, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../auth/api/axios";
 
-
 export interface Game{
     id:number,
     name:string,

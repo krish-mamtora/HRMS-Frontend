@@ -20,7 +20,10 @@ const GameConfig = () => {
                             <th className="px-6 py-3 font-medium">Name</th>
                               <th className="px-6 py-3 font-medium">Location</th>
                             <th className="px-6 py-3 font-medium">isAvailable </th>
-                           
+                              <th className="px-6 py-3 font-medium">Start Time</th>
+                            <th className="px-6 py-3 font-medium">End Time </th>
+                                <th className="px-6 py-3 font-medium">Slot Duration</th>
+                            <th className="px-6 py-3 font-medium">Slot Capacity</th>
                         </tr>
                     </thead>
                     <tbody>

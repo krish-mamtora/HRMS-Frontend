@@ -32,12 +32,14 @@ const Games = (props: Props) => {
   if (isError) return <div className="p-4 text-center text-red-500">Error: {(error)?.message}</div>;
 
   return (
-    <div className="p-4 mb-5">
-      <h1 className="text-2xl font-bold mb-4">Games</h1>
+    <div className="p-4">
+      <div className='flex justify-between mb-5'>
+        <h1 className="text-2xl font-bold mb-4">Games</h1>
        <div className="flex justify-end">
-      <button onClick={()=>gotoMyBookings()} className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Bookings</button>
-      <button onClick={()=>gotoMyWaitings()}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">Waiting</button>
-    </div>
+        <button onClick={()=>gotoMyBookings()} className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Bookings</button>
+        <button onClick={()=>gotoMyWaitings()}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">Waiting</button>
+       </div>
+      </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
