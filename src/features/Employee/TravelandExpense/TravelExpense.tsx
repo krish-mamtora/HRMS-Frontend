@@ -9,6 +9,7 @@ export const TravelExpense = () => {
     const [amount, setAmount] = useState('');
     const [file, setFile] = useState<File | null>(null);
     const [travelAssignId, setTravelAssignId] = useState('');
+    const [expensedate , setExpensedate] = useState(null);
     const [description, setDescription] = useState('');
     const [selectedStatusType , setselectedStatusType] = useState('');
     const[selectedType , setselectedType] = useState('');
@@ -54,7 +55,8 @@ export const TravelExpense = () => {
                 expenseType: Number(expenseType),
                 amount: Number(amount),
                 travelAssignId: Number(travelAssignId),
-                description: description
+                description: description,
+                expensedate : expensedate
             };
 
             const expenseResponse = await api.post('/Expense', expenseData);
@@ -73,7 +75,7 @@ export const TravelExpense = () => {
                 // alert("Expense and Document submitted!");
                 const notificationData = {
                     travelExpenseId: newExpenseId,
-                    recipientEmail: "mivelen857@esyline.com", 
+                    recipientEmail: "micosaf532@him6.com", 
                     senderId: Number(localStorage.getItem('id')),
                     subject: "New Expense Claim Submitted",
                     body: `New expense claim for ${amount} has been submitted. Description: ${description}`
@@ -82,6 +84,10 @@ export const TravelExpense = () => {
                 alert("Expense, Document, and Notification submitted successfully!");
             }
         } catch (error) {
+            if (error.response) {
+                const serverMessage = error.response.data.message || "An error occurred";
+                alert(serverMessage); 
+            }
             console.error("Error submitting expense:", error);
             alert("Submission failed.");
         }
@@ -152,34 +158,36 @@ export const TravelExpense = () => {
          DisplayMessageForExpenseWindow = "Last Date for Expense Submission is : "+ targetDatePlusTenDays ;
     }
    
-        
-    // console.log(canCreateExpenseRequest);
+       
+    // console.log(canCreateExpenseRequest); 
     return (
         <>
+        <div>
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
+                <h1 className="text-2xl font-bold mb-4">Travel Expenses</h1>
+
                 <h4 className='text-red-500'>{DisplayMessageForExpenseWindow}</h4>
                 <br />
-                <form onSubmit={handleSubmit} className="w-full flex">
-                    <label htmlFor="expenseType">Expense Type : </label>
-                    <select name="expenseType" id="expenseType" onChange={(e) => setexpenseType(e.target.value)} required >
-                        <option value="">Select</option>
-                        <option value="1">Food Expense</option>
-                        <option value="2">Transportation Expense</option>
-                        <option value="3">Accommodation Expenses</option>
-                    </select>
-                    <br />
-                    <label htmlFor="Description">Description : </label>
-                    <input type="text" name='Description' placeholder="Description" onChange={(e) => setDescription(e.target.value)} required />
-                    <br />
-                    <label htmlFor="Amount">Amount : </label>
-                    <input type="number" name='Amount' placeholder="Amount" onChange={(e) => setAmount(e.target.value)} required />
-                    <br />
-                    <label htmlFor="proofDocument">Proof Document : </label>
-                    <input type="file" accept=".pdf,.doc,.docx" name='proofDocument' onChange={(e) => setFile(e.target.files?.[0] || null)} required />
-                    <br />
-                    <button type="submit"  disabled={!allowExpense}  className="mt-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Expense</button>
+                <form onSubmit={handleSubmit} className="w-full flex flex-row justify-between items-end">
+                    <div className="flex flex-col">
+                        <label htmlFor="expenseType">Expense Type : </label>
+                        <select name="expenseType" id="expenseType" className="border rounded p-1" onChange={(e) => setexpenseType(e.target.value)} required ><option value="">Select</option><option value="1">Food Expense</option><option value="2">Transportation Expense</option><option value="3">Accommodation Expenses</option></select></div>
+                    <div className="flex flex-col">
+                        <label htmlFor="Description">Description : </label>
+                        <input type="text" name='Description' className="border rounded p-1" placeholder="Description" onChange={(e) => setDescription(e.target.value)} required /></div>
+                    <div className="flex flex-col">
+                        <label htmlFor="Amount">Amount : </label>
+                        <input type="number" name='Amount' className="border rounded p-1" placeholder="Amount" onChange={(e) => setAmount(e.target.value)} required /></div>
+                    <div className="flex flex-col">
+                        <label htmlFor="expensedate">Expense Date : </label>
+                        <input type="date" name='expensedate' className="border rounded p-1" placeholder="Expese Date" onChange={(e) => setExpensedate(e.target.value)} required /></div>
+                    <div className="flex flex-col">
+                        <label htmlFor="proofDocument">Proof Document : </label>
+                        <input type="file" accept=".pdf,.doc,.docx" name='proofDocument' className="border rounded p-0.5" onChange={(e) => setFile(e.target.files?.[0] || null)} required /></div>
+                    <button type="submit"  disabled={!allowExpense}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Expense</button>
                 </form>
             </div>
+
 
             <div className="flex items-center justify-end gap-4 p-3 bg-gray-50 border-b text-sm text-gray-700">
                 <div  className="flex items-center gap-2">
@@ -210,6 +218,7 @@ export const TravelExpense = () => {
                             <th className="px-6 py-3 font-medium">Expense Type : </th>
                             <th className="px-6 py-3 font-medium">Amount : </th>
                             <th className="px-6 py-3 font-medium">Description :</th>
+                              <th className="px-6 py-3 font-medium">Expense Date :</th>
                             <th className="px-6 py-3 font-medium">Created At :</th>
 
                             <th className="px-6 py-3 font-medium">Document</th>
@@ -220,13 +229,13 @@ export const TravelExpense = () => {
                     <tbody>
                         {data?.filter((item)=>(selectedType==="" || item.expenseType.toString()===selectedType)&&((selectedStatusType === "" || item.status === selectedStatusType))).map((item, index) => (
                             <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
-                                {/* <td className="px-6 py-4"> {item.expenseType}</td> */}
                                 <td className="px-6 py-4">
                                     {item.expenseType === 1 ? "Food" : item.expenseType === 2
                                         ? "Travel" : item.expenseType === 3 ? "Accommodation" : "Unknown"}
                                 </td>
                                 <td className="px-6 py-4">{item.amount}</td>
                                 <td className="px-6 py-4">{item.description}</td>
+                                <td className="px-6 py-4">{new Date(item.expenseDate).toISOString().split("T")[0]}</td>
                                 <td className="px-6 py-4">{item.createdAt}</td>
                                 <td className="px-6 py-4 col ">
                                     <a
@@ -239,14 +248,14 @@ export const TravelExpense = () => {
                                 </td >
                                 <td className="px-6 py-4">{item.status}</td>
                                 <td className="px-6 py-4">{item.approvedBy}</td>
-                                <td>{item.id}</td>
+                              
                             </tr>
                         ))}
                     </tbody>
                 </table>
             </div>
-
-
+                    
+            </div>
         </>
     );
 };

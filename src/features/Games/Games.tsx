@@ -17,7 +17,9 @@ const Games = (props: Props) => {
    
         navigate(`my-bookings/${userId}`);
     }
-
+  const openConfiguration = () => {
+    navigate('/hr/games/config');
+  }
      const gotoMyWaitings = () =>{
    
     const userId = localStorage.getItem('id');
@@ -25,6 +27,7 @@ const Games = (props: Props) => {
     }
    const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGames();
+  const isHr = localStorage.getItem('role')==='HR' ? true:false;
   const handleAction = (gameId: number) => {
     navigate(`${gameId}`);
   };
@@ -38,6 +41,10 @@ const Games = (props: Props) => {
        <div className="flex justify-end">
         <button onClick={()=>gotoMyBookings()} className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Bookings</button>
         <button onClick={()=>gotoMyWaitings()}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">Waiting</button>
+        {
+          isHr && 
+        <button className="mt-2 mr-2 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition-colors" onClick={() => { openConfiguration() }}>Configure</button>
+        }  
        </div>
       </div>
       <div className="overflow-x-auto">

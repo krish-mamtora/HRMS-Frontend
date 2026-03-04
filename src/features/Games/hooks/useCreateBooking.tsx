@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
 import React from 'react'
-import api from '../../../auth/api/axios';
+import api from '../../auth/api/axios';
 
 type Props = {}
 export interface BookingRequestCreateDto {

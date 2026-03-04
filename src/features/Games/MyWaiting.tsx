@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import api from '../../auth/api/axios';
+import api from '../auth/api/axios';
+
 
 // interface Waiting {
 //   queueId: number;
@@ -54,11 +55,15 @@ const MyWating = () => {
   if (error) {
     return <div className="p-4 text-red-500">Error: {error}</div>;
   }
-
+const navigateBack = ()=>{
+  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
+  navigate(`/${role}/games`);
+}
   return (
      <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">My Waiting Slots</h1>
-  <button onClick={() => navigate("/employee/games")} className="mb-4 text-blue-600 underline">Back</button>
+           <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
+
 
        {waitings.length > 0 ? (
         <div className="overflow-x-auto">

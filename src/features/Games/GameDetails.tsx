@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useGameSlots, { type GameSlot } from "./hooks/useGameSlots";
 import useCreateBooking from "./hooks/useCreateBooking";
-import useProfile from "../../OrgChart/hooks/useProfile";
+import useProfile from "../OrgChart/hooks/useProfile";
+
 
 interface UserBookingDetail {
   userId: number;
@@ -91,10 +92,13 @@ const GameDetails = () => {
     }
     setSelectedDate(e.target.value);
   };
-
+const navigateBack = ()=>{
+  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
+  navigate(`/${role}/games`);
+}
   return (
     <div className="p-6">
-      <button onClick={() => navigate("/employee/games")} className="mb-4 text-blue-600 underline">Back</button>
+      <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
       <div className="flex justify-between">
         <h1 className="text-xl font-bold mb-4">Book Slot</h1>
         <input type="date" value={selectedDate} onChange={handleDateChange} className="border p-2 rounded mb-6" />

@@ -5,6 +5,7 @@ import TravelPlans from './travel/TravelPlans';
 import TravelExpense from './travel/TravelExpense';
 import Social from '../Social/Social';
 import AddPost from '../Social/AddPost';
+import UserProfilePage from '../UserProfilePage';
 
 const ManagerRoutes = [
   {
@@ -15,6 +16,11 @@ const ManagerRoutes = [
   {
     path: 'organization',
     element: <ListUser />, 
+  }
+  ,
+   {
+    path: 'profile',
+    element: <UserProfilePage />, 
   }
   ,
   {

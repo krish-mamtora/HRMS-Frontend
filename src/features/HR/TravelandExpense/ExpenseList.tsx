@@ -104,6 +104,7 @@ const ExpenseList = (props: Props) => {
                             <th className="px-6 py-3 font-medium">Expense Type </th>
                             <th className="px-6 py-3 font-medium">Amount  </th>
                             <th className="px-6 py-3 font-medium">Description </th>
+                             <th className="px-6 py-3 font-medium">Expense Date </th>
                             <th className="px-6 py-3 font-medium">Documents</th>
                             <th className="px-6 py-3 font-medium">Status </th>
                             <th className="px-6 py-3 font-medium">Updated By </th>
@@ -120,6 +121,7 @@ const ExpenseList = (props: Props) => {
                                 </td>
                                 <td className="px-6 py-4">{item.amount}</td>
                                 <td className="px-6 py-4">{item.description}</td>
+                                 <td className="px-6 py-4">{new Date(item.expenseDate).toISOString().split("T")[0]}</td>
                                 <td className="px-6 py-4 col ">
                                     <button
                                         onClick={() => openProofPage(item.id)}

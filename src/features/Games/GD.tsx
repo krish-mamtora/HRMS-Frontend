@@ -14,7 +14,7 @@ const GD = (props: Props) => {
   }
   const navigate = useNavigate();
   const handleBack = () => {
-    navigate(`/employee/games`);
+    navigate(`/hr/games`);
   }
   const handleSubmit = () => {
 

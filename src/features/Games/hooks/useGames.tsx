@@ -1,5 +1,7 @@
-import api from '../../../auth/api/axios' 
+
 import { useQuery } from '@tanstack/react-query';
+import api from '../../auth/api/axios';
+
 
 interface Game {
   id: number;

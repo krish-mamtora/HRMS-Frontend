@@ -19,7 +19,7 @@ export interface UserProfileDisplayDto {
 
 const fetchAllEmployeesProfile = async():Promise<UserProfileDisplayDto[]>=>{
     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile`);
-    console.log("All Employee Profile : " , response.data);
+    // console.log("All Employee Profile : " , response.data);
     return response.data;
 }
 

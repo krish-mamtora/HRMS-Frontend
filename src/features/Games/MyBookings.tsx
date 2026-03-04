@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
-import api from '../../auth/api/axios';
+import api from '../auth/api/axios';
 
 interface Booking {
   bId: number;
@@ -79,11 +79,14 @@ const MyBookings = () => {
   
   if (loading) return <div className="p-4 text-blue-500">Loading bookings...</div>;
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
-
+const navigateBack = ()=>{
+  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
+  navigate(`/${role}/games`);
+}
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
-      <button onClick={() => navigate("/employee/games")} className="mb-4 text-blue-600 underline">Back</button>
+     <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
 
       {bookings.length > 0 ? (
         <div className="overflow-x-auto">
@@ -127,7 +130,7 @@ const MyBookings = () => {
           </table>
         </div>
       ) : (
-        <p className="p-4 text-gray-500">No bookings found for this user.</p>
+        <p className="p-4 text-gray-500">No bookings found.</p>
       )}
     </div>
   );

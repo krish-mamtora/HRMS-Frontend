@@ -17,9 +17,9 @@ export default function MainLayout() {
     <div className="min-h-screen bg-gray-50">
         <nav className="p-4 shadow-md" style={{ background: isDarkMode ? '#333' : '#eee', color: isDarkMode ? '#fff' : '#000' }}>
             <div className="container mx-auto flex justify-end items-center">
-                 <button onClick={toggleTheme} className='mr-2'>
+                 {/* <button onClick={toggleTheme} className='mr-2'>
                        Switch to {isDarkMode ? 'Light' : 'Dark'} Mode
-                </button>
+                </button> */}
                <div className="flex gap-6 items-center mr-4">
             <NavLink to="/" className={navLinkClass}>Home</NavLink>
         
@@ -30,6 +30,7 @@ export default function MainLayout() {
                 <NavLink to="/hr/games" className={navLinkClass}>Games</NavLink>
                 <NavLink to="/hr/organization" className={navLinkClass}>Organization</NavLink>
                 <NavLink to="/hr/jobs" className={navLinkClass}>Jobs</NavLink>
+                <NavLink to="/hr/profile" className={navLinkClass}>Profile</NavLink>
               </div>
             )}
 
@@ -41,6 +42,8 @@ export default function MainLayout() {
                 <NavLink to="/employee/organization" className={navLinkClass}>Organization</NavLink>
 
                 <NavLink to="/employee/jobs" className={navLinkClass}>Jobs</NavLink>
+                <NavLink to="/employee/profile" className={navLinkClass}>Profile</NavLink>
+
               </div>
             )}
 
@@ -50,12 +53,10 @@ export default function MainLayout() {
               <div className="flex gap-4 border-l pl-4 border-gray-200">
                 <NavLink to="/manager/team-members" className={navLinkClass}>Team</NavLink>
                    <NavLink to="/manager/social" className={navLinkClass}>Social</NavLink>
+                        <NavLink to="/manager/profile" className={navLinkClass}>Profile</NavLink>
                 <NavLink to="/manager/organization" className={navLinkClass}>Organization</NavLink>
               </div>
             )}
-
-            
-            
 
           </div>
 

@@ -1,24 +1,31 @@
 import React, { Children } from 'react'
 import Jobs from './JobListing/Jobs';
-import Games from './Games/Games';
+
 import TravelPlans from './TravelandExpense/TravelPlans';
 import TravelPlanDetails from './TravelandExpense/TravelPlanDetails';
 import TravelExpense from './TravelandExpense/TravelExpense';
 import ListUser from '../OrgChart/ListUser';
 import Profile from '../OrgChart/Profile';
-import GameDetails from './Games/GameDetails';
-import MyBookings from './Games/MyBookings';
-import GD from './Games/GD';
+
 import AddPost from '../Social/AddPost';
 import Social from '../Social/Social';
 import MyPosts from '../Social/MyPosts';
-import MyWating from './Games/MyWaiting';
+
+import UserProfilePage from '../UserProfilePage';
+import Games from '../Games/Games'
+import GameDetails from '../Games/GameDetails';
+import MyBookings from '../Games/MyBookings';
+import MyWating from '../Games/MyWaiting';
 
 const EmployeeRoutes = [
 
   {
     path: 'travel',
     element: <TravelPlans />,
+  },
+    {
+    path: 'profile',
+    element: <UserProfilePage />,
   },
   {
     path : 'travel/:id',
