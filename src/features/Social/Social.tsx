@@ -9,8 +9,10 @@ const IMAGE_PATH = "/content/achievements";
 
 const Social = () => {
   const navigate = useNavigate();
-  const { data: posts, isLoading, isError, error, refetch } = usePosts();
-  
+  // const { data: posts, isLoading, isError, error, refetch } = usePosts();
+  const { data, fetchNextPage,isError, error, hasNextPage, isFetchingNextPage, isLoading , refetch} = usePosts();
+  const posts = data?.pages.flat() || [];
+
   const [selectedPost, setSelectedPost] = useState<PostsDisplayDto | null>(null);
   const [postToDelete, setPostToDelete] = useState<PostsDisplayDto | null>(null);
   const [viewerData, setViewerData] = useState<{ urls: string[], index: number } | null>(null);
@@ -76,7 +78,7 @@ const Social = () => {
   if (isError) return <div className="text-red-500 text-center p-10 font-medium">Error: {error.message}</div>;
 
 return (
-  <div className="bg-gray-50 min-h-screen">
+  <div className="bg-gray-150 min-h-screen">
     <div className="w-full bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex flex-col lg:flex-row lg:items-center gap-4">
@@ -163,7 +165,7 @@ return (
 
     <div className="max-w-xl mx-auto px-4 py-10 space-y-8">
       {filteredPosts?.map((post) => (
-        <div key={post.id} className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+        <div key={post.id} className="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden p-3">
           
           <div className="flex items-center justify-between p-4 pb-2">
             <div className="flex items-center">
@@ -287,6 +289,22 @@ return (
         </div>
       </div>
     )}
+     <div className="flex flex-col items-center pt-6 pb-12">
+        {hasNextPage ? (
+          <button  onClick={() => fetchNextPage()} disabled={isFetchingNextPage} className="flex items-center gap-2 px-6 py-2.5 bg-white border border-gray-300 text-gray-700 font-semibold rounded-full hover:bg-gray-50 transition-all shadow-sm disabled:opacity-50" >
+            {isFetchingNextPage ? (
+              <>
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                Loading...
+              </>
+            ) : (
+              'Show More Posts'
+            )}
+          </button>
+        ) : posts.length > 0 ? (
+          <p className="text-gray-400 text-sm font-medium">You've reached the end of the feed.</p>
+        ) : null}
+      </div>
   </div>
 );
 };
