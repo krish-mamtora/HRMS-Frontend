@@ -12,6 +12,9 @@ interface ModalProps {
 
 const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, sendMails,isOpen, onClose }) => {
     console.log(sendMails);
+
+     const [isSubmitting, setIsSubmitting] = useState(false);
+
     const [formData, setFormData] = useState<ReferalCreate>({
         JobId: jobId,
         ReffMail: '',
@@ -71,65 +74,56 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, sendMails,isOpen
     if (!isOpen) return null;
 
     return (
-        <dialog open={isOpen} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-26">
-            <div className="w-full max-w-xs">
-                <h3 className="font-bold text-lg">Refer Friend for : {jobTitle}</h3>
-                <p className="py-4">Please enter your friends details below</p>
-                <form method="dialog" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
-                            Name
-                        </label>
-                        <input value={formData.ReffName} onChange={handleChange} id="ReffName" name='ReffName' type="text" placeholder="Name of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+       <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="max-w-xl w-full bg-white p-6 rounded-lg shadow-md">
+                
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-800">Refer a Friend</h2>
+                        <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mt-1">Role: {jobTitle}</p>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
-                            Email
-                        </label>
-                        <input value={formData.ReffMail} onChange={handleChange} id="ReffName" type="email" name='ReffMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+                    <button  onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm font-medium" > Close </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Candidate Name</label>
+                        <input  name="ReffName" value={formData.ReffName} onChange={handleChange} type="text"  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 outline-none"   placeholder="Enter friend's full name" required  />
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResume">
-                            Resume (PDF/DOCX)
-                        </label>
-                        <input 
-                            onChange={handleChange} 
-                            id="ReffResume" 
-                            name="ReffResume" 
-                            type="file" 
-                            accept=".pdf,.doc,.docx" 
-                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" 
-                            required 
-                        />
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Candidate Email</label>
+                        <input name="ReffMail" value={formData.ReffMail}onChange={handleChange} type="email" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 outline-none"  placeholder="email@example.com"  required  />
                     </div>
-                    {/* <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffResumeUrl">
-                            Resume
-                        </label>
-                        <input value={formData.ReffResumeUrl} onChange={handleChange} id="ReffResumeUrl" name='ReffResumeUrl' type="text" placeholder="Resume of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
-                    </div> */}
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Description">
-                            Note
-                        </label>
-                        <input value={formData.Description} onChange={handleChange} id="Description" type="text" name='Description' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Name of your Friend.." />
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Resume (PDF/DOCX)</label>
+                        <div className="flex items-center gap-4">
+                            <label className="flex-1 flex flex-col items-center justify-center border border-dashed border-gray-400 rounded-md py-4 cursor-pointer hover:bg-gray-50 transition-all text-gray-500 bg-gray-50/30">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mb-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                </svg>
+                                <span className="text-[10px] font-bold uppercase">
+                                    {formData.ReffResume ? (formData.ReffResume as File).name : 'Upload Candidate Resume'}
+                                </span>
+                                <input type="file" name="ReffResume" accept=".pdf,.doc,.docx" onChange={handleChange} className="hidden" />
+                            </label>
+                        </div>
                     </div>
-                    <div className='flex justify-end'>
-                        <button
-                            type="button"
-                            className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                            onClick={onClose}
-                        >
-                            Close
-                        </button>
-                        <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            Refer !
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Recommendation Note</label>
+                        <textarea  name="Description" value={formData.Description} onChange={handleChange}rows={3}  className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 focus:border-blue-500 outline-none"  placeholder="Why do you recommend this person?"  />
+                    </div>
+
+                    <div className="pt-2">
+                        <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 border border-blue-700 rounded transition-colors disabled:bg-gray-400 shadow-sm active:scale-95">
+                            {isSubmitting ? 'Sending...' : 'Submit Referral'}
                         </button>
                     </div>
                 </form>
-            
             </div>
-        </dialog>
+        </div>
     );
 };
 

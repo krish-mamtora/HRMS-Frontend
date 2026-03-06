@@ -3,6 +3,7 @@ import useJobs from '../hooks/useJobs';
 import ReferralModal from './ReferralModal';
 import type { Job } from './types';
 import ShareJobModal from './ShareJobModal';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 type ActiveModal = {
@@ -12,6 +13,7 @@ type ActiveModal = {
 }
 
 const Jobs = (props: Props) => {
+    const navigate = useNavigate();
 
       const {data , isLoading , isError , error} = useJobs();
       const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
@@ -58,11 +60,17 @@ const Jobs = (props: Props) => {
           };
   return (
     <>
-        <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Position</div>
-         
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Job Position </h2>
+
+            <div className="flex flex-wrap items-center gap-2">
+                <button onClick={() => navigate('my-referrals')}  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"> My Referrals</button>
+                <button onClick={() => navigate('my-jobshare')}  className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors"> My Job Share </button>
+            </div>
+        </div>
        <div className="p-4">
              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {data?.map((job) => (
+                {data?.map((job) => (   
                 
                 <li key={job.id} className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                     <h2 className="text-xl font-semibold text-slate-900">Title : {job.title}</h2>

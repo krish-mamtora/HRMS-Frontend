@@ -1,7 +1,7 @@
 import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type {TravelDocument} from "../hooks/useTravelDocument";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTravelDocument from '../hooks/useTravelDocument';
 type Props = {}
 
@@ -13,7 +13,7 @@ const TravelDocument = (props: Props) => {
         const [Type, setType] = useState('');
         const [CreatedAt, setCreatedAt] = useState('');
   const [travelAssignId, setTravelAssignId] = useState<string | null>(null);
-  
+  const navigate =useNavigate();
   const { planId, empId } = useParams<{ planId: string, empId: string }>();
     const [filedoc, setFile] = useState<File | null>(null);
 
@@ -102,6 +102,7 @@ const TravelDocument = (props: Props) => {
   return (
     <>
     <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
+       <button className='underline text-blue-500' onClick={()=>navigate(-1)}>Back</button>
 
       <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
         <form onSubmit={handleSubmit} className="w-full flex items-center gap-4 whitespace-nowrap">

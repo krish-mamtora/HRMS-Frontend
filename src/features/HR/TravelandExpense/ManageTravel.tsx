@@ -14,8 +14,7 @@ const ManageTravel = (props: Props) => {
         const navigate = useNavigate();
 
     const ViewProfile = (empProfileId : number) =>{
-            navigate(`/hr/UserProfile/${empProfileId}`);
-  
+            navigate(`/HR/organization/profile/${empProfileId}`);
     }
     const [selectedDepartment , setSelectedDepartment] = useState('');
     
@@ -43,7 +42,7 @@ const ManageTravel = (props: Props) => {
         <>
 
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Members</div>
-
+ <button onClick={()=>navigate(-1)} className='underline text-blue-500'>Back</button>
         <div className="flex justify-end p-2 bg-gray-50 border-b">
         <label htmlFor="departmentFilter">Select Department : </label>
         <select name='departmentFilter' value={selectedDepartment} onChange={(e)=>setSelectedDepartment(e.target.value)}>

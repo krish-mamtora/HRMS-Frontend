@@ -10,6 +10,7 @@ interface ModalProps {
     onClose: () => void;
 }
 const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, onClose }) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState<ShareJob>({
         JobId: jobId,
         ReceiverMail: '',
@@ -59,52 +60,49 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, 
     if (!isOpen) return null;
 
     return (
-        <dialog open={isOpen} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-26">
-            <div className="w-full max-w-xs">
-                <h3 className="font-bold text-lg">Refer Friend for : {jobTitle}</h3>
-                <p className="py-4">Please enter your friends details below</p>
-                <form method="dialog" onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="ReffName">
-                            Email
-                        </label>
-                        <input value={formData.ReceiverMail} onChange={handleChange} id="ReceiverMail" type="email" name='ReceiverMail' placeholder="Email address of your Friend.." className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required />
+       <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="max-w-xl w-full bg-white p-6 rounded-lg shadow-md">
+                <div className="flex justify-between items-center mb-6">
+                    <div>
+                        <h2 className="text-xl font-semibold text-gray-800">Share Job</h2>
+                        <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mt-1">{jobTitle}</p>
                     </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Subject">
-                            Subject
-                        </label>
-                        <input value={formData.Subject} onChange={handleChange} id="Subject" type="text" name='Subject' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Subject" />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="Message">
-                            Message
-                        </label>
-                        <input value={formData.Message} onChange={handleChange} id="Message" type="text" name='Message' className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Message" />
-                    </div>
-                    <div className="mb-4">
-                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                        Attachment (JD PDF)
-                    </label>
-                    <input  type="file" accept="application/pdf" onChange={handleFileChange} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
+                    <button onClick={onClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition text-sm font-medium">Close</button>
                 </div>
-                    <div className='flex justify-end'>
-                        <button
-                            type="button"
-                            className="mr-3 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition"
-                            onClick={onClose}
-                        >
-                            Close
-                        </button>
-                        <button type="submit" className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                            Send Email !
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Friend's Email</label>
+                        <input name="ReceiverMail" value={formData.ReceiverMail} onChange={handleChange} type="email" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 outline-none text-sm" placeholder="email@example.com" required />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                        <input name="Subject" value={formData.Subject} onChange={handleChange} type="text" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 outline-none text-sm" placeholder="Subject" required />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Message</label>
+                        <input name="Message" value={formData.Message} onChange={handleChange} type="text" className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-blue-500 outline-none text-sm" placeholder="Add a note..." />
+                    </div>
+
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Attachment (JD PDF)</label>
+                        <label className="flex flex-col items-center justify-center border border-dashed border-gray-400 rounded-md py-4 cursor-pointer hover:bg-gray-50 transition-all text-gray-500 bg-gray-50/30">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mb-1 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" /></svg>
+                            <span className="text-[10px] font-bold uppercase">{selectedFile ? selectedFile.name : 'Attach JD PDF'}</span>
+                            <input type="file" accept="application/pdf" onChange={handleFileChange} className="hidden" />
+                        </label>
+                    </div>
+
+                    <div className="pt-2">
+                        <button type="submit" disabled={isSubmitting} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 border border-blue-700 rounded transition-colors disabled:bg-gray-400 shadow-sm active:scale-95 text-sm">
+                            {isSubmitting ? 'Sending...' : 'Send Email'}
                         </button>
                     </div>
                 </form>
-            
             </div>
-        </dialog>
+        </div>
     );
 };
 

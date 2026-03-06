@@ -9,7 +9,8 @@ export interface ExpenseData {
     Description : string,
     HrRemarks : string , 
     CreatedAt : Date,
-    ApprovedBy : number 
+    ApprovedBy : number ,
+    Expensedate : Date,
 }
 
 const fetchExpenseDetailsfromPlanAssignId = async(id : number):Promise<ExpenseData[]>=>{

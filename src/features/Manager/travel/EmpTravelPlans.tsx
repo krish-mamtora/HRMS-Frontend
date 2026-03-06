@@ -28,6 +28,7 @@ const EmpTravelPlans = (props: Props) => {
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Plan List</div>
+            <button onClick={()=>navigate(-1)} className='underline text-blue-500'>Back</button>
 
         <div>
 

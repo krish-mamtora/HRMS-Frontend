@@ -8,7 +8,8 @@ export interface Expense{
     status: string , 
     hrRemarks : string , 
     createdAt : Date,
-    approvedBy : number 
+    approvedBy : number, 
+    expensedate : Date
 }
 
 

@@ -9,22 +9,31 @@ export interface UserProfileDisplayDto {
   gender: string;
   managerId: number;
   age: number;
+  designation : string;
   department: string;
   favouriteSport: string;
   joinDate: string; 
   isActive: boolean;
 }
 
-const fetchEmployeesProfile = async(id:number):Promise<UserProfileDisplayDto[]>=>{
+
+const fetchAllEmployeesProfile = async():Promise<UserProfileDisplayDto[]>=>{
+    const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile`);
+    // console.log("All Employee Profile : " , response.data);
+    return response.data;
+}
+
+export const fetchEmployeesProfileById = async(id:number):Promise<UserProfileDisplayDto[]>=>{
     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile/${id}`);
     console.log("Employee Profile : " , response.data);
     return response.data;
 }
 
-const useProfile = (id:number) =>{
+const useProfile = (id?:number) =>{
     return useQuery<UserProfileDisplayDto[], Error>({
-        queryKey: ['fetchuserProfile', 'assigned', id],
-        queryFn: () => fetchEmployeesProfile(id),
+        queryKey: ['fetchuserProfile' , id],
+        queryFn: () =>id? fetchEmployeesProfileById(id):fetchAllEmployeesProfile(),
+        enabled: true
     });
 }
 export default  useProfile;

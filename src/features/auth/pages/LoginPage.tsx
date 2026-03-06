@@ -29,13 +29,13 @@ export default function LoginPage(){
                 }
                 localStorage.setItem('id' , res.data.id);
                 if(res.data.role === 'Employee'){
-                     navigate("/employee");
+                     navigate("/employee/travel");
                 }
                 else if(res.data.role ==='HR'){
-                    navigate("/hr");
+                    navigate("/hr/travel");
                 }
                 else if(res.data.role ==="Manager"){
-                   navigate("/manager");
+                   navigate("/manager/team-members");
                 }
             }catch(err){
                  if (axios.isAxiosError(err)) {

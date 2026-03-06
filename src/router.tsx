@@ -67,7 +67,7 @@ const router = createBrowserRouter([
                     </RoleProtected>
                 </Protected>
                 ),      
-                children : ManagerRoutes
+                children : ManagerRoutes,
         },
          {
             path:"employee" , element : 

@@ -18,7 +18,7 @@ const fetchUser = async(id:number):Promise<GetUser[]>=>{
 const useJobs = (id:number) => {
    return useQuery<GetUser,Error>({
         queryKey : ['GetUserName' , id],
-        queryFn : fetchUser(id),
+        queryFn : ()=>fetchUser(id),
         staleTime: 5 * 60 * 1000, 
         cacheTime: 30 * 60 * 1000, 
           retry: 2,    

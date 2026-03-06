@@ -93,6 +93,7 @@ const AddPlanForm = (props: Props) => {
               <div>
               <label htmlFor="TravelMode" className="block text-sm font-medium text-gray-700 mb-1">Select an option</label>
                 <select id="TravelMode" name="TravelMode"  value={formData.TravelMode} onChange={handleChange} required className="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body">
+                <option value="" disabled>Select Transport Mode</option> 
                 <option value="road">Road Transport</option>
                 <option value="rail">Rail Transport</option>
                 <option value="water">Water Transport</option>
@@ -102,6 +103,7 @@ const AddPlanForm = (props: Props) => {
             <div>
             <label htmlFor="TripType" className="block text-sm font-medium text-gray-700 mb-1">Trip Type</label>
             <select id="TripType" name="TripType" value={formData.TripType} onChange={handleChange} required className="block w-full px-3 py-2.5 bg-neutral-secondary-medium border border-default-medium text-heading text-sm rounded-base focus:ring-brand focus:border-brand shadow-xs placeholder:text-body">
+                <option value="" disabled>Select Trip Type</option>
                 <option value="Client Meeting">Client Meeting</option>
                 <option value="Conferences and Trade Showst">Conferences and Trade Showst</option>
                 <option value="Incentive Travel">Incentive Travel</option>

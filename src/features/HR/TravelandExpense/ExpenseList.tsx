@@ -75,7 +75,7 @@ const ExpenseList = (props: Props) => {
     return (
         <>
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>ExpenseList  </div>
-
+            <button onClick={()=>navigate(-1)} className='underline text-blue-500'>Back</button>
              <div className="flex items-center justify-end gap-4 p-3 bg-gray-50 border-b text-sm text-gray-700">
                 <div  className="flex items-center gap-2">
                     <label htmlFor="selectedStatusType" className="font-medium">Expense Status</label>
@@ -104,6 +104,7 @@ const ExpenseList = (props: Props) => {
                             <th className="px-6 py-3 font-medium">Expense Type </th>
                             <th className="px-6 py-3 font-medium">Amount  </th>
                             <th className="px-6 py-3 font-medium">Description </th>
+                             <th className="px-6 py-3 font-medium">Expense Date </th>
                             <th className="px-6 py-3 font-medium">Documents</th>
                             <th className="px-6 py-3 font-medium">Status </th>
                             <th className="px-6 py-3 font-medium">Updated By </th>
@@ -120,6 +121,7 @@ const ExpenseList = (props: Props) => {
                                 </td>
                                 <td className="px-6 py-4">{item.amount}</td>
                                 <td className="px-6 py-4">{item.description}</td>
+                                 <td className="px-6 py-4">{new Date(item.expenseDate).toISOString().split("T")[0]}</td>
                                 <td className="px-6 py-4 col ">
                                     <button
                                         onClick={() => openProofPage(item.id)}
