@@ -9,11 +9,6 @@ const IMAGE_PATH = "/content/achievements";
 
 const Social = () => {
   const navigate = useNavigate();
-  // const { data: posts, isLoading, isError, error, refetch } = usePosts(); ,
-  // const getCommentCountforPost = async(postId:number)=>{
-  //   const resp = await api.get(`/Comment/commentcount/${postId}`);
-  //   return resp.data;
-  // }
   const { data, fetchNextPage,isError, error, hasNextPage, isFetchingNextPage, isLoading , refetch} = usePosts();
   const posts = data?.pages.flat() || [];
 
@@ -143,9 +138,15 @@ return (
           <div className="hidden lg:flex items-center space-x-2 border-l pl-4 border-gray-100">
             <button 
               onClick={() => navigate('myposts')} 
-              className="whitespace-nowrap text-sm border border-gray-300 bg-white text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 transition-all font-medium"
+              className="whitespace-nowrap text-sm bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all font-medium shadow-sm"
             >
               My Posts
+            </button>
+             <button 
+              onClick={() => navigate('mycomments')} 
+              className="whitespace-nowrap text-sm bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-all font-medium shadow-sm"
+            >
+              My Comments
             </button>
             <button 
               onClick={() => navigate('create')} 
@@ -252,8 +253,7 @@ return (
               className="flex items-center text-gray-400 hover:text-blue-500 transition-colors ml-auto p-2"
             >
               <span className="text-lg mr-1.5">💬</span>
-              <span className="text-xs font-bold">{post.postInteraction?.commentCount || 0}</span>
-              {/* <span>{getCommentCountforPost(post.id)}</span> */}
+              <span>{post.commentCount}</span>
             </button>
           </div>
         </div>

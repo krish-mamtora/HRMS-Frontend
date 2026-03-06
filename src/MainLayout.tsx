@@ -44,7 +44,6 @@ export default function MainLayout() {
         <nav className="p-4 shadow-md" style={{ background: isDarkMode ? '#333' : '#eee', color: isDarkMode ? '#fff' : '#000' }}>
             <div className="container mx-auto flex justify-end items-center">
                <div className="flex gap-6 items-center mr-4">
-            <NavLink to="/" className={navLinkClass}>Home</NavLink>
         
             {accessToken && role === 'HR' && (
               <div className="flex gap-4 border-l pl-4 border-gray-200">

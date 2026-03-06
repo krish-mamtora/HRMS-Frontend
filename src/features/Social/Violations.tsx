@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import api from '../auth/api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
@@ -7,7 +8,7 @@ const IMAGE_PATH = "/content/achievements";
 const Violations = () => {
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+    const navigate = useNavigate();
   const fetchModeratedHistory = async () => {
     try {
       const response = await api.get('/Posts/moderated-history');
@@ -18,6 +19,9 @@ const Violations = () => {
       setLoading(false);
     }
   };
+    const handleBack = () =>{
+    navigate(-1);
+  }
 
     const handleRestore = async (postId: number) => {
     try {
@@ -44,6 +48,7 @@ const Violations = () => {
       <div className="mb-8 bg-white p-5 rounded-lg shadow-sm border border-gray-100">
         <h1 className="text-2xl font-bold text-gray-800">Moderation Logs</h1>
         <p className="text-sm text-gray-500">History of posts you have hidden due to violations</p>
+          <button onClick={() => handleBack()} className='underline text-blue-500'>Back</button>
       </div>
 
       {posts.length === 0 ? (

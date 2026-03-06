@@ -23,7 +23,7 @@ const fetchAllEmployeesProfile = async():Promise<UserProfileDisplayDto[]>=>{
     return response.data;
 }
 
-const fetchEmployeesProfileById = async(id:number):Promise<UserProfileDisplayDto[]>=>{
+export const fetchEmployeesProfileById = async(id:number):Promise<UserProfileDisplayDto[]>=>{
     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile/${id}`);
     console.log("Employee Profile : " , response.data);
     return response.data;

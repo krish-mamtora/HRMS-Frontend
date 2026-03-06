@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import api from '../auth/api/axios';
+import { useNavigate } from 'react-router-dom';
 
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
 
 const MyPosts = () => {
+  const navigate = useNavigate();
   const [posts, setPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<'all' | 'visible' | 'hidden'>('all');
@@ -24,6 +26,9 @@ const MyPosts = () => {
       setLoading(false);
     }
   };
+  const handleBack = () =>{
+    navigate(-1);
+  }
 
   const handleDelete = async () => {
     if (!postToDelete) return;
@@ -95,6 +100,7 @@ const handleRestore = async (postId: number) => {
           <h1 className="text-2xl font-bold text-gray-800">My Contributions</h1>
           <p className="text-sm text-gray-500">Manage and edit your published achievements</p>
         </div>
+        <button onClick={() => handleBack()} className='underline text-blue-500'>Back</button>
         <div className="flex gap-2 bg-gray-50 p-1 rounded-md border border-gray-200">
           {(['all', 'visible', 'hidden'] as const).map((f) => (
             <button  key={f} onClick={() => setActiveFilter(f)} className={`px-4 py-1.5 rounded text-sm font-bold capitalize transition-all ${

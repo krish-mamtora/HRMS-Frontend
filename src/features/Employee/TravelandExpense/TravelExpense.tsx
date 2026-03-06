@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import api from '../../auth/api/axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useExpense from '../hooks/useExpense';
 import type { ExpenseProof } from '../../HR/hooks/useProofDocument';
 
@@ -18,7 +18,7 @@ export const TravelExpense = () => {
     const { id } = useParams();
     const numPlanId = id ? Number(id) : 0;
     const EmpId = localStorage.getItem('id');
-
+    const naviagte = useNavigate();
 
     useEffect(() => {
         const fetchData = async () => {
@@ -165,7 +165,7 @@ export const TravelExpense = () => {
         <div>
             <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
                 <h1 className="text-2xl font-bold mb-4">Travel Expenses</h1>
-
+                <button className='underline text-blue-500' onClick={()=>naviagte(-1)}>Back</button>
                 <h4 className='text-red-500'>{DisplayMessageForExpenseWindow}</h4>
                 <br />
                 <form onSubmit={handleSubmit} className="w-full flex flex-row justify-between items-end">
@@ -248,7 +248,6 @@ export const TravelExpense = () => {
                                 </td >
                                 <td className="px-6 py-4">{item.status}</td>
                                 <td className="px-6 py-4">{item.approvedBy}</td>
-                              
                             </tr>
                         ))}
                     </tbody>

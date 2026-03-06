@@ -25,10 +25,9 @@ const ListUser = (props: Props) => {
 
   return (
     <>
-    <div className="p-6">
-      <div className='flex  justify-between'>
-      <h2 className="text-xl font-semibold mb-4 text-gray-800">All Employee Profiles</h2>
-        <div className="relative w-full md:w-80">
+       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">All Employee Profiles</h2>
+           <div className="flex flex-wrap items-center relative w-full md:w-80">
             <input type="text" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="w-full border border-gray-300 rounded-md pl-10 pr-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm transition-all shadow-sm"  placeholder="Search by name or department..."  />
              <svg className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
          </div>
@@ -66,7 +65,7 @@ const ListUser = (props: Props) => {
           </tbody>
         </table>
       </div>
-    </div>
+    {/* </div> */}
     </>
   )
 }

@@ -22,6 +22,7 @@ import GameDetails from '../Games/GameDetails';
 import MyBookings from '../Games/MyBookings';
 import MyWating from '../Games/MyWaiting';
 import Violations from '../Social/Violations';
+import MyComments from '../Social/MyComments';
 
 type Props = {}
 
@@ -87,6 +88,10 @@ const HrRoutes = [
   ,{
     path : 'social/myposts',
     element : <MyPosts/>
+  },
+  {
+    path:'social/mycomments',
+    element:<MyComments/>
   },
   {
     path:'social/manage-violations',

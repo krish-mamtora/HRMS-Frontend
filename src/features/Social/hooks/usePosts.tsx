@@ -24,11 +24,8 @@ export interface PostsDisplayDto {
   createdAt: string;
    interactions: PostInteractionDisplayDto | null;
 }
-// const fetchPosts = async (): Promise<PostsDisplayDto[]> => {
-//   const response = await api.get<PostsDisplayDto[]>('/Posts/all');
-//   return response.data;
-// };
 const fetchPostsFeed = async ({ pageParam = 1 }): Promise<PostsDisplayDto[]> => {
+  
   console.log('fetching page: ',pageParam);
   const response = await api.get<PostsDisplayDto[]>(`/Posts/feed`, {
     params: {
@@ -36,29 +33,36 @@ const fetchPostsFeed = async ({ pageParam = 1 }): Promise<PostsDisplayDto[]> => 
       pageSize: 10,
     },
   });
-  return response.data;
+  const posts = response.data;
+
+ const postsWithCommentCounts = await Promise.all(
+    posts.map(async (post) => {
+      try {
+        const countRes = await api.get<number>(`/Comment/commentcount/${post.id}`);
+        
+        return {
+          ...post,
+          commentCount: countRes.data 
+        };
+      } catch (error) {
+        console.error(`Failed to fetch count for post ${post.id}`, error);
+        return { ...post, commentCount: 0 }; 
+      }
+    })
+  );
+
+  return postsWithCommentCounts;
 };
-const usePosts = () => {
+
+ const usePosts = () => {
   return useInfiniteQuery<PostsDisplayDto[], Error>({
     queryKey: ['posts-feed'],
     queryFn: fetchPostsFeed,
-   initialPageParam: 1,
+    initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 10 ? allPages.length + 1 : undefined;
     },
   });
 };
-
-// const usePosts = () => { 
-//   return useQuery<PostsDisplayDto[], Error>({
-//     queryKey: ['posts'],
-//     queryFn: fetchPosts,
-//     staleTime: 1000 * 60 * 5, 
-//     gcTime: 1000 * 60 * 10,  
-//     refetchOnWindowFocus: false,
-//     refetchOnMount: false,
-//     retry: 2,
-//   });
-// };
 
 export default usePosts;
