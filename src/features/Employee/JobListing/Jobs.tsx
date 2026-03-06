@@ -3,6 +3,7 @@ import useJobs from '../hooks/useJobs';
 import ReferralModal from './ReferralModal';
 import type { Job } from './types';
 import ShareJobModal from './ShareJobModal';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {}
 type ActiveModal = {
@@ -12,6 +13,7 @@ type ActiveModal = {
 }
 
 const Jobs = (props: Props) => {
+    const navigate = useNavigate();
 
       const {data , isLoading , isError , error} = useJobs();
       const [selectedJobId, setSelectedJobId] = useState<number | null>(null);
@@ -59,7 +61,11 @@ const Jobs = (props: Props) => {
   return (
     <>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Position</div>
-         
+         <div>
+            <button onClick={()=>{navigate(`my-referrals`)}}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Referals</button>
+
+            <button onClick={()=>{navigate(`my-jobshare`)}}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors mr-4">My Job Share</button>
+         </div>
        <div className="p-4">
              <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {data?.map((job) => (
