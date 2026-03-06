@@ -1,7 +1,7 @@
 import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type { TravelDocument } from "../hooks/useTravelDocument";
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTravelDocument from '../../HR/hooks/useTravelDocument'
 type Props = {}
 
@@ -18,7 +18,7 @@ const TravelPlanDetails = (props: Props) => {
   const { id } = useParams<{ id: string }>();
   const [filedoc, setFile] = useState<File | null>(null);
   const empId = localStorage.getItem('id');
-
+const navigate = useNavigate();
   console.log(id, empId);
   useEffect(() => {
     const fetchData = async () => {
@@ -105,6 +105,7 @@ const TravelPlanDetails = (props: Props) => {
   return (
     <>
       <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
+       <button className='underline text-blue-500' onClick={()=>navigate(-1)}>Back</button>
 
       <div className="overflow-x-auto bg-neutral-primary-soft shadow-sm rounded-lg border border-gray-200 p-4">
         <br />

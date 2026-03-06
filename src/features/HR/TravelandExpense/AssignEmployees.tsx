@@ -29,6 +29,8 @@ const AssignEmployees = (props: Props) => {
   const [selectedDepartment, setSelectedDepartment] = useState('');
 
   const { data, isLoading, isError, error } = useAssignEmp();
+      console.log(data)
+
   const { planId } = useParams<{ planId: string }>();
 
   const planIdNum = planId ? Number(planId) : 0;
@@ -89,6 +91,7 @@ const AssignEmployees = (props: Props) => {
     <>
       <div>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Add Travel Members</div>
+        <button onClick={()=>navigate(-1)} className='underline text-blue-500'>Back</button>
         <div className="flex justify-end p-2 bg-gray-50 border-b">
           <label htmlFor="departmentFilter">Select Department : </label>
           <select name='departmentFilter' value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
@@ -119,7 +122,11 @@ const AssignEmployees = (props: Props) => {
               </tr>
             </thead>
             <tbody>
-              {data?.filter((item) => selectedDepartment === "" || item.department === selectedDepartment).map((item, index) => (
+              {data?.filter((item) =>{ const departmentMatch =  selectedDepartment === "" || item.department === selectedDepartment;
+                const isnotManager =  item.managerId !== item.userProfileId;
+                const notHr = item.department != 'HR';
+                return departmentMatch && isnotManager && notHr;
+              }).map((item, index) => (
                 <tr key={index} className="odd:bg-neutral-primary even:bg-neutral-secondary-soft border-b border-default">
                   <td className="px-6 py-4">{item.userProfileId}</td>
                   <td className="px-6 py-4">{item.firstName}</td>
@@ -129,7 +136,7 @@ const AssignEmployees = (props: Props) => {
                   <td className="px-6 py-4">{item.gender}</td>
                   <td className='px-6 py-4'>{item.managerId}</td>
                   <td className="px-6 py-4">
-                    <button onClick={() => ViewProfile(item.userProfileId)} className='bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3'>View Profile</button>
+                    {/* <button onClick={() => ViewProfile(item.userProfileId)} className='bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3'>View Profile</button> */}
                     <button onClick={() => assignEmployee(item.userProfileId)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Assign</button>
                   </td>
                 </tr>

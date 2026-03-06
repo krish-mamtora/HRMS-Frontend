@@ -75,7 +75,7 @@ const ExpenseList = (props: Props) => {
     return (
         <>
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>ExpenseList  </div>
-
+            <button onClick={()=>navigate(-1)} className='underline text-blue-500'>Back</button>
              <div className="flex items-center justify-end gap-4 p-3 bg-gray-50 border-b text-sm text-gray-700">
                 <div  className="flex items-center gap-2">
                     <label htmlFor="selectedStatusType" className="font-medium">Expense Status</label>

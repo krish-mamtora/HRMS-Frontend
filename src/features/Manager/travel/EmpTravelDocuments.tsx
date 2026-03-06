@@ -1,7 +1,7 @@
 import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type {TravelDocument} from '../../HR/hooks/useTravelDocument';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import useTravelDocument from '../../HR/hooks/useTravelDocument';
 type Props = {}
 
@@ -13,7 +13,7 @@ const EmpTravelDocuments = (props: Props) => {
         const [Type, setType] = useState('');
         const [CreatedAt, setCreatedAt] = useState('');
   const [travelAssignId, setTravelAssignId] = useState<string | null>(null);
-  
+  const navigate = useNavigate();
   const { empProfileId, id } = useParams<{ empProfileId: string, id: string }>();
     const [filedoc, setFile] = useState<File | null>(null);
 
@@ -71,6 +71,7 @@ const EmpTravelDocuments = (props: Props) => {
     <>
     <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
 
+    <button className='underline text-blue-500' onClick={()=>navigate(-1)}>Back</button>
 
       <div className="flex justify-end p-2 bg-gray-50 border-b">
         <select value={filterType} onChange={(e) => setFilterType(e.target.value)} className="text-xs border rounded p-1 outline-none" >

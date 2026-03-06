@@ -79,14 +79,11 @@ const MyBookings = () => {
   
   if (loading) return <div className="p-4 text-blue-500">Loading bookings...</div>;
   if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
-const navigateBack = ()=>{
-  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
-  navigate(`/${role}/games`);
-}
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">My Bookings</h1>
-     <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
+     <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 underline">Back</button>
 
       {bookings.length > 0 ? (
         <div className="overflow-x-auto">

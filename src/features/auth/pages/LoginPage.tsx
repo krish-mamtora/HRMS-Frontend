@@ -35,7 +35,7 @@ export default function LoginPage(){
                     navigate("/hr/travel");
                 }
                 else if(res.data.role ==="Manager"){
-                   navigate("/manager");
+                   navigate("/manager/team-members");
                 }
             }catch(err){
                  if (axios.isAxiosError(err)) {

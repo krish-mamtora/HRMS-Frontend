@@ -18,7 +18,7 @@ const TeamPeople = (props: Props) => {
     return (
         <>
             <div className="p-6">
-                <h2  className="text-2xl font-bold mb-4">All Employee Profiles</h2>
+                <h2  className="text-2xl font-bold mb-4">Team Members Profiles</h2>
                 <div className="overflow-x-auto rounded-lg border border-gray-200">
                     <table className="min-w-full divide-gray-200 bg-white text-sm">
                         <thead className="bg-gray-50">
