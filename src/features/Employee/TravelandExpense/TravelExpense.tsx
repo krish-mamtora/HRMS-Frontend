@@ -58,13 +58,13 @@ export const TravelExpense = () => {
                 description: description,
                 expensedate : expensedate
             };
-
+            console.log(expenseData);
             const expenseResponse = await api.post('/Expense', expenseData);
 
             if (expenseResponse.status >= 200 && expenseResponse.status < 300) {
 
                 const newExpenseId = expenseResponse.data.id;
-                // console.log('new expense id : ',newExpenseId)
+                 console.log('new expense id : ',newExpenseId)
                 const fileData = new FormData();
                 fileData.append('ProofDocument', file);
                 fileData.append('TravelExpenseId', newExpenseId);
@@ -72,7 +72,7 @@ export const TravelExpense = () => {
                 await api.post('/ExpenseProof', fileData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
-                // alert("Expense and Document submitted!");
+                alert("Expense and Document submitted!");
                 const notificationData = {
                     travelExpenseId: newExpenseId,
                     recipientEmail: "micosaf532@him6.com", 
