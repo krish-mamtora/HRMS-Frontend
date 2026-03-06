@@ -21,6 +21,7 @@ import UserProfilePage from '../UserProfilePage';
 import GameDetails from '../Games/GameDetails';
 import MyBookings from '../Games/MyBookings';
 import MyWating from '../Games/MyWaiting';
+import Violations from '../Social/Violations';
 
 type Props = {}
 
@@ -86,6 +87,10 @@ const HrRoutes = [
   ,{
     path : 'social/myposts',
     element : <MyPosts/>
+  },
+  {
+    path:'social/manage-violations',
+    element:<Violations/>
   },
   {
     path : 'profile',

@@ -10,7 +10,7 @@ const UserProfilePage = () => {
     const userId = localStorage.getItem('id');
     const { isDarkMode, toggleTheme } = useThemeStore();
     
-    const handleinputChanges = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleinputChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     }
@@ -113,6 +113,21 @@ const UserProfilePage = () => {
                                 <p className="text-gray-800  text-lg mt-1">{user.gender || "Not provided"}</p>
                             )}
                         </div>
+
+                         <div className="bg-white p-5 rounded-xl border border-gray-100 ">
+                              <label className="text-xs  text-gray-400 uppercase">Birthday</label>
+                              {
+                                isEditing?(
+                                    <input type="date" name="birthday" value = {formData?.birthday||""}  onChange={handleinputChanges} className="w-full mt-1 p-2 border-2 border-blue-100 rounded-lg outline-none focus:border-blue-500"/>
+                                ):(
+                                    <p>
+                                        {
+                                            user?.birthday ||"Not provided"
+                                        }
+                                    </p>
+                                )
+                              }
+                         </div>
 
                         <div className="bg-white p-5 rounded-xl border border-gray-100  flex items-center justify-between">
                             <div>

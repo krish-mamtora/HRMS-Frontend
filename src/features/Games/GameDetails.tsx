@@ -37,8 +37,9 @@ const GameDetails = () => {
   const createBookingMutation = useCreateBooking();
 
   const handleAddUser = () => {
-    if (userIds.length >= 4) {
-      alert("You can only add a maximum of 4 users per booking.");
+    const availableSeats = selectedSlot ? selectedSlot.capacity - selectedSlot.assigned:0;
+    if (userIds.length >= availableSeats) {
+      alert(`You can only add ${availableSeats} users for this slot.`);
       return;
     }
     setUserIds([...userIds, 0]);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import api from '../auth/api/axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import useProfile from './hooks/useProfile';
 import useOrg from './hooks/useOrg';      
@@ -9,9 +9,14 @@ import useDirectCont from './hooks/useDirectCont';
 type Props = {}
 
 const Profile = () => {
-
+  
   const { userProfileId } = useParams();
-
+  const navigate = useNavigate();
+    const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
+    
+  const redirectBack = () =>{
+    navigate(`/${role}/organization`);
+  }
   const numuserProfileId = userProfileId ? Number(userProfileId) : 0;
  const { data:directContact} = useDirectCont(numuserProfileId);
 
@@ -28,6 +33,7 @@ const Profile = () => {
       <div>
 
         <div className="p-4">
+          <button className='underline text-blue-500' onClick={()=>redirectBack()}>Back</button>
           <h2>Top-level managerial chain</h2>
           <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {data?.map((profile) => (
