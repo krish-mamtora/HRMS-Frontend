@@ -1,12 +1,14 @@
 // ManagerRoutes.tsx
 import TeamPeople from './team/TeamPeople';
 import ListUser from '../OrgChart/ListUser';
-import TravelPlans from './travel/TravelPlans';
-import TravelExpense from './travel/TravelExpense';
+
 import Social from '../Social/Social';
 import AddPost from '../Social/AddPost';
 import UserProfilePage from '../UserProfilePage';
-
+import EmpTravelPlans from './travel/EmpTravelPlans';
+import  EmpTravelExpense  from './travel/EmpTravelExpense';
+import EmpTravelDocuments from './travel/EmpTravelDocuments';
+import MyPosts from '../Social/MyPosts';
 const ManagerRoutes = [
   {
     path: 'team-members',
@@ -31,12 +33,20 @@ const ManagerRoutes = [
     element : <AddPost/>
   }
   ,{
+    path : 'social/myposts',
+    element : <MyPosts/>
+  },
+  ,{
     path: 'employee-plans/:empProfileId', 
-    element: <TravelPlans />
+    element: <EmpTravelPlans />
   },
     {
     path: 'employee-plans/expense/:empProfileId/:planid',
-    element: <TravelExpense />
+    element: <EmpTravelExpense />
+  },
+   {
+    path: 'employee-plans/documents/:empProfileId/:id',
+    element: <EmpTravelDocuments />
   }
 ];
 
