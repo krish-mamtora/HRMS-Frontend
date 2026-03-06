@@ -9,7 +9,11 @@ const IMAGE_PATH = "/content/achievements";
 
 const Social = () => {
   const navigate = useNavigate();
-  // const { data: posts, isLoading, isError, error, refetch } = usePosts();
+  // const { data: posts, isLoading, isError, error, refetch } = usePosts(); ,
+  // const getCommentCountforPost = async(postId:number)=>{
+  //   const resp = await api.get(`/Comment/commentcount/${postId}`);
+  //   return resp.data;
+  // }
   const { data, fetchNextPage,isError, error, hasNextPage, isFetchingNextPage, isLoading , refetch} = usePosts();
   const posts = data?.pages.flat() || [];
 
@@ -149,6 +153,14 @@ return (
             >
               Create Post
             </button>
+            {isHR && (
+            <button 
+              onClick={() => navigate('manage-violations')} 
+              className="whitespace-nowrap text-sm bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all font-medium shadow-sm flex items-center gap-2"
+            >
+              Manage Violations
+            </button>
+          )}
           </div>
         </div>
         
@@ -241,6 +253,7 @@ return (
             >
               <span className="text-lg mr-1.5">💬</span>
               <span className="text-xs font-bold">{post.postInteraction?.commentCount || 0}</span>
+              {/* <span>{getCommentCountforPost(post.id)}</span> */}
             </button>
           </div>
         </div>
