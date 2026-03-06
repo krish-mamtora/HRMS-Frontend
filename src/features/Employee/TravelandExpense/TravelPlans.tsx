@@ -36,8 +36,9 @@ const TravelPlans = (props: Props) => {
                     <h2 className="text-xl font-semibold text-slate-900">Destination : {plan.destination}</h2>
                     <span className="text-sm text-sky-700 font-medium">Purpose :  </span>{plan.purpose}<br/>
                     <span className="text-sm text-sky-700 font-medium">Type : </span> {plan.tripType}<br/>
-                    <span className="text-sm text-sky-700 font-medium">Start Date : </span>{plan.startDate}<br/>
-                    <span className="text-sm text-sky-700 font-medium">End Date :</span> {plan.endDate}<br/>
+                  <span className="text-sm text-sky-700 font-medium">Start Date : </span>{new Date(plan.startDate).toLocaleDateString()}<br/>
+                    <span className="text-sm text-sky-700 font-medium">End Date :</span> {new Date(plan.endDate).toLocaleDateString()}<br/>
+           
                       <button onClick={()=>handleExpense(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600 mr-3 mt-2">Expenses</button>
 
                      <button onClick={()=>handleDetails(plan.id)} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600">Documents</button>
