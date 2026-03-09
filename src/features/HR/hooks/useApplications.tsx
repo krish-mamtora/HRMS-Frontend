@@ -1,16 +1,19 @@
 import React from 'react'
 import api from '../../auth/api/axios';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 type Props = {}
 
 export interface JobReferals{
+    id: number,
     jobId :number,
     reffName : string ,
     reffMail : string , 
     reffResumeUrl : string , 
     empId : number , 
     description : string ,  
+    status : string,
+    receiverEmails?: string[] | null;
 }
 
 const fetchApplicationsFromJobId = async(jobId:number):Promise<JobReferals[]>=>{
@@ -20,7 +23,7 @@ const fetchApplicationsFromJobId = async(jobId:number):Promise<JobReferals[]>=>{
     return response.data;
 }
 
-const useApplications = (jobId:number) => {
+export const useApplications = (jobId:number) => {
     return useQuery<JobReferals[],Error>({
         queryKey : ['JobReferals' , jobId],
         queryFn :()=> fetchApplicationsFromJobId(jobId),
@@ -31,4 +34,16 @@ const useApplications = (jobId:number) => {
             retry: 2,
     });
 }
-export default useApplications;
+
+export const useUpdateStatus = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: async ({ id, updatedData }: { id: number, updatedData: any }) => {
+            const response = await api.put(`/Referal/${id}`, updatedData);
+            return response.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['JobReferals'] });
+        },
+    });
+};
