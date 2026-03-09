@@ -60,7 +60,7 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, 
     if (!isOpen) return null;
 
     return (
-       <div className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
+       <div className="fixed inset-0 z-[100] bg-black/10 backdrop-blur-sm flex items-center justify-center p-4">
             <div className="max-w-xl w-full bg-white p-6 rounded-lg shadow-md">
                 <div className="flex justify-between items-center mb-6">
                     <div>

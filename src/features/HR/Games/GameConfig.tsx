@@ -80,12 +80,12 @@ const GameConfig = () => {
   navigate(`/${role}/games`);
 }
     return (
-        <div>
+        <div className='p-4'>
              <h1 className="text-2xl font-bold mb-4">Game Configuration</h1>
-            <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
+            <button onClick={() => navigateBack()} className="mb-3 text-blue-600 underline">Back</button>
 
               <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
-                <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body">
+                <table id="search-table" className="w-full text-sm text-left rtl:text-right text-body bg-white">
                     <thead className="bg-neutral-secondary-soft border-b border-default">
                         <tr>
                             <th className="px-6 py-3 font-medium">Name</th>

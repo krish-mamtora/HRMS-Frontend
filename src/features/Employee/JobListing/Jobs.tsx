@@ -60,6 +60,7 @@ const Jobs = (props: Props) => {
           };
   return (
     <>
+    <div className='p-4'>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Job Position </h2>
 
@@ -116,6 +117,7 @@ const Jobs = (props: Props) => {
                 </li>
                 ))}
             </ul>
+         </div>
          </div>
     </>
   )

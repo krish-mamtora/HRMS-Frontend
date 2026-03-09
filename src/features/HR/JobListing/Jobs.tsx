@@ -103,7 +103,8 @@ const Jobs = (props: Props) => {
 
     return (
         <>
-            <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
+        <div className='p-4'>
+         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Creation and Refferal</div>
             <div className='flex justify-end'>
                 {!isCreating && (
                     <button
@@ -191,9 +192,6 @@ const Jobs = (props: Props) => {
                 </div>
             )}
 
-            {/* <h1>Job Position List</h1> */}
-
-
             <div className="p-4">
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {data?.map((job) => (
@@ -214,6 +212,8 @@ const Jobs = (props: Props) => {
                         </li>
                     ))}
                 </ul>
+            </div>
+
             </div>
         </>
     )

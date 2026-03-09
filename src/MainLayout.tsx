@@ -129,8 +129,7 @@ export default function MainLayout() {
             </div>
         </nav>
         <hr />
-        <main  className="container mx-auto p-4">
-
+      <main className="min-h-screen w-full bg-gray-100">
         <Outlet/>
         </main>
     </div>

@@ -92,7 +92,7 @@ export const JobApplications = () => {
 
     return (
         <>
-            <div>
+            <div className='p-4'>
             <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Job Applications</div>
 
                 <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">

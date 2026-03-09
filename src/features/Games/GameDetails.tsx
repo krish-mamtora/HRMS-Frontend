@@ -98,7 +98,7 @@ const navigateBack = ()=>{
   navigate(`/${role}/games`);
 }
   return (
-    <div className="p-6">
+    <div className="p-7">
       <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
       <div className="flex justify-between">
         <h1 className="text-xl font-bold mb-4">Book Slot</h1>

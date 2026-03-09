@@ -23,6 +23,7 @@ const TravelPlans = (props: Props) => {
 
   return (
     <>
+    <div className='p-4'>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Plan List</div>
 
         <div>
@@ -45,6 +46,7 @@ const TravelPlans = (props: Props) => {
                 </li>
                 ))}
             </ul>
+         </div>
          </div>
     </>
    

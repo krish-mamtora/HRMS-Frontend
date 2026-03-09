@@ -33,6 +33,7 @@ const userId = localStorage.getItem('id');
 
   return (
      <>
+     <div className='p-4'>
     <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 underline">Back</button>
     <div>MyJobShare</div>
     {loading ? (<p>Loading...</p>) : jobsahres ? (
@@ -65,6 +66,7 @@ const userId = localStorage.getItem('id');
             )
         
         }
+        </div>
     </>
   )
 }

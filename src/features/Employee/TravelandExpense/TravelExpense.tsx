@@ -143,9 +143,9 @@ export const TravelExpense = () => {
     // console.log(canCreateExpenseRequest); 
     return (
         <>
-        <div>
-            <div className="mt-5 relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
-                <h1 className="text-2xl font-bold mb-4">Travel Expenses</h1>
+        <div className='p-4'>
+            <div className="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default p-5">
+                <h1 className="text-2xl font-bold">Travel Expenses</h1>
                 <button className='underline text-blue-500' onClick={()=>naviagte(-1)}>Back</button>
                 <h4 className='text-red-500'>{DisplayMessageForExpenseWindow}</h4>
                 <br />
