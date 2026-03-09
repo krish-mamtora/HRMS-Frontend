@@ -6,6 +6,7 @@ export interface Job {
   expYearsReq: number;
   role: string;
   totalPositions: number;
+  reviewerEmail:string;
   jdUrl: string;
   contactMail: string;
 }
