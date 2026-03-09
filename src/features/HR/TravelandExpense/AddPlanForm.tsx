@@ -1,6 +1,7 @@
 import React, { useState, type ChangeEvent, type FormEvent } from 'react'
 import api from '../../auth/api/axios';
 import type { AxiosError } from 'axios';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { usePlans } from '../hooks/usePlans';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +19,7 @@ export interface TravelPlanData {
 
 const AddPlanForm = (props: Props) => {
        const [feedback , setFeedback]= useState({message:'' , error:''});
-        
+         const queryClient = useQueryClient();
         const [formData , setFormData] = useState<TravelPlanData>({
             startDate : '',
             endDate : '',
@@ -28,7 +29,22 @@ const AddPlanForm = (props: Props) => {
             TripType:'',
             createdByUserId : Number(localStorage.getItem('id'))||0
         });
-    
+        const mutation = useMutation({
+            mutationFn: async (newPlan: TravelPlanData) => {
+                const res = await api.post("/TravelPlan", newPlan);
+                return res.data;
+            },
+            onSuccess: () => {
+                queryClient.invalidateQueries({ queryKey: ['TravelPlans'] });
+                alert("Plan created successfully!");
+                navigate('/hr/travel/');
+            },
+            onError: (err: AxiosError) => {
+                const errorMessage = (err.response?.data as any)?.message || 'Failed to add plan';
+                setFeedback({ message: '', error: errorMessage });
+            }
+        });
+
         const handleChange = (e:ChangeEvent<HTMLInputElement| HTMLSelectElement | HTMLTextAreaElement>)=>{
            const {name , value} = e.target;
             setFormData ((prevData)=>({
@@ -42,25 +58,11 @@ const AddPlanForm = (props: Props) => {
             }
     const handleSubmit =async (e:FormEvent<HTMLFormElement>)=>{
         e.preventDefault();
-        // console.log(formData);
-        console.log(localStorage.getItem('id'));
-        console.log(formData.createdByUserId);
-       if(!formData.TravelMode||!formData.TripType||!formData.startDate||!formData.createdByUserId||!formData.destination||!formData.endDate||!formData.purpose){
-            setFeedback(prev => ({ ...prev, error: 'Please enter all fields' }));
-                return;
-       }try{
-            const res = await api.post("/TravelPlan" , formData)
-            if(res.status >= 200 && res.status<=300){
-                alert("Plan created");
-            }
-        }catch(err){
-            if(axios.isAxiosError(err)){
-                const axiosError = err as AxiosError<{message:string}>;
-                setFeedback(prev=>({...prev , error:axiosError.response?.data?.message || 'failed to add plan'}))
-            }else{
-                setFeedback(prev=>({...prev , error:'An error occured'}));
-            }
-       }
+        if (!formData.TravelMode || !formData.TripType || !formData.startDate || !formData.destination) {
+            setFeedback({ message: '', error: 'Please fill all required fields' });
+            return;
+        }
+        mutation.mutate(formData);
     }
 
   return (
@@ -71,9 +73,11 @@ const AddPlanForm = (props: Props) => {
         <h2 className="text-xl font-semibold text-gray-800">Create New Plan</h2>
               <button onClick={handleClose} className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Close</button>
     </div> 
-    {/* <div>AddPlanForm</div> */}
+
     <div className="">
         <form onSubmit={handleSubmit}  className="space-y-4">
+      {feedback.error && (<div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md text-sm">{feedback.error} </div>
+        )}
             <div>
                 <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-1">Destination : </label>
                 <input type="text" id="destination" name="destination" className="w-full border border-gray-300 rounded-md px-3 py-2"  value={formData.destination} onChange={handleChange} required />
@@ -112,8 +116,7 @@ const AddPlanForm = (props: Props) => {
             </select>
             </div>
             <input type="hidden" id="createdByUserId" name="createdByUserId" value={localStorage.getItem('id')||''} required/>
-
-            <button type='submit' className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded">Create Plan</button>
+            <button  type="submit" disabled={mutation.isPending}className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded disabled:bg-gray-400"> {mutation.isPending ? 'Creating...' : 'Create Plan'} </button>
         </form>        
     </div>
 </div>

@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../../auth/api/axios';
 
 export interface PostInteractionDisplayDto {
@@ -54,7 +54,7 @@ const fetchPostsFeed = async ({ pageParam = 1 }): Promise<PostsDisplayDto[]> => 
   return postsWithCommentCounts;
 };
 
- const usePosts = () => {
+export const usePosts = () => {
   return useInfiniteQuery<PostsDisplayDto[], Error>({
     queryKey: ['posts-feed'],
     queryFn: fetchPostsFeed,
@@ -65,4 +65,66 @@ const fetchPostsFeed = async ({ pageParam = 1 }): Promise<PostsDisplayDto[]> => 
   });
 };
 
-export default usePosts;
+export const useCreatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const res = await api.post('/Posts/upsert/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts-feed'] });
+    },
+  });
+};
+export const useUpdatePost = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (formData: FormData) => {
+      const res = await api.post('/Posts/upsert', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts-feed'] });
+    },
+    onError: (error: any) => {
+        const serverMessage = error.response?.data?.message || "Submission failed.";
+        alert(serverMessage);
+    }
+  });
+};
+export const useDeletePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (postId: number) => {
+      await api.delete(`/Posts/my-post/${postId}`);
+      return postId;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts-feed'] });
+    },
+    onError: (error: any) => {
+      const serverMessage = error.response?.data?.message || "Submission failed.";
+      alert(serverMessage);
+    }
+  });
+};
+export const useRestorePost = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (postId: number) => {
+      const res = await api.put(`/Posts/restore/${postId}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts-feed'] });
+    },
+  });
+};
+// export default usePosts;

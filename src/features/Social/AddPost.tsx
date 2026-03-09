@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useCreatePost } from './hooks/usePosts'
+import { usePosts } from './hooks/usePosts';  
 import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
+// import { useCreatePost } from './hooks/usePosts';
 
 type TagsDisplayDto = {
   id: number;
@@ -24,6 +27,7 @@ const AddPost = () => {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+   const { mutate, isPending } = useCreatePost();
   const { register, handleSubmit, formState: { errors } } = useForm<PostsCreateUpdateDto>();
 
   useEffect(() => {
@@ -73,19 +77,18 @@ const AddPost = () => {
       formData.append('Images', file);
     });
 
-    try {
-      await api.post('/Posts/upsert/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      alert('Your Achievement is Uploaded.');
-      const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
-      navigate(`/${role}/social`);
-    } catch (error) {
-      console.error('Submission Error:', error);
-      alert('Error creating post.');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
+     mutate(formData, {
+      onSuccess: () => {
+        alert('Your Achievement is Uploaded.');
+        const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
+        navigate(`/${role}/social`);
+      },
+      onError: (error: any) => {
+        console.error('Submission Error:', error);
+        alert('Error creating post: ' + (error.response?.data?.message || 'Server Error'));
+      }
+    });
   };
 
   return (
@@ -178,8 +181,11 @@ const AddPost = () => {
         </div>
 
         <div className="pt-2">
-          <button type="submit" disabled={isSubmitting}className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 border border-blue-700 rounded transition-colors disabled:bg-gray-400" >
+          {/* <button type="submit" disabled={isSubmitting}className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 border border-blue-700 rounded transition-colors disabled:bg-gray-400" >
             {isSubmitting ? 'Publishing...' : 'Create Post'}
+          </button> */}
+            <button  type="submit"  disabled={isPending} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 border border-blue-700 rounded disabled:bg-gray-400">
+            {isPending ? 'Publishing...' : 'Create Post'}
           </button>
         </div>
       </form>

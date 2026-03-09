@@ -1,7 +1,7 @@
 import React, { useEffect, useState, FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import { useNavigate, useParams } from 'react-router-dom';
-import useExpense from '../hooks/useExpense';
+import useExpense, { useCreateExpense } from '../hooks/useExpense';
 import type { ExpenseProof } from '../../HR/hooks/useProofDocument';
 
 export const TravelExpense = () => {
@@ -19,6 +19,7 @@ export const TravelExpense = () => {
     const numPlanId = id ? Number(id) : 0;
     const EmpId = localStorage.getItem('id');
     const naviagte = useNavigate();
+    const createMutation = useCreateExpense(Number(travelAssignId));
 
     useEffect(() => {
         const fetchData = async () => {
@@ -45,54 +46,34 @@ export const TravelExpense = () => {
         if (EmpId && numPlanId) fetchData();
     }, [EmpId, numPlanId]);
 
-
-    const handleSubmit = async (e: FormEvent, id:number) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         if (!file) return alert("Please upload proof");
 
-        try {
-            const expenseData = {
-                expenseType: Number(expenseType),
-                amount: Number(amount),
-                travelAssignId: Number(travelAssignId),
-                description: description,
-                expensedate : expensedate
-            };
-            console.log(expenseData);
-            const expenseResponse = await api.post('/Expense', expenseData);
+        const payload = {
+            expenseData: {
+                ExpenseType: Number(expenseType),
+                Amount: Number(amount),
+                TravelAssignId: Number(travelAssignId),
+                Description: description,
+                Expensedate: expensedate
+            },
+            file: file
+        };
 
-            if (expenseResponse.status >= 200 && expenseResponse.status < 300) {
-
-                const newExpenseId = expenseResponse.data.id;
-                 console.log('new expense id : ',newExpenseId)
-                const fileData = new FormData();
-                fileData.append('ProofDocument', file);
-                fileData.append('TravelExpenseId', newExpenseId);
-
-                await api.post('/ExpenseProof', fileData, {
-                    headers: { 'Content-Type': 'multipart/form-data' }
-                });
-                alert("Expense and Document submitted!");
-                const notificationData = {
-                    travelExpenseId: newExpenseId,
-                    recipientEmail: "micosaf532@him6.com", 
-                    senderId: Number(localStorage.getItem('id')),
-                    subject: "New Expense Claim Submitted",
-                    body: `New expense claim for ${amount} has been submitted. Description: ${description}`
-                };
-                await api.post('/Expense/notifyExpenseCreate', notificationData);
+        createMutation.mutate(payload, {
+            onSuccess: () => {
                 alert("Expense, Document, and Notification submitted successfully!");
+                setAmount('');
+                setDescription('');
+                setFile(null);
+            },
+            onError: (error: any) => {
+                const serverMessage = error.response?.data?.message || "Submission failed.";
+                alert(serverMessage);
             }
-        } catch (error) {
-            if (error.response) {
-                const serverMessage = error.response.data.message || "An error occurred";
-                alert(serverMessage); 
-            }
-            console.error("Error submitting expense:", error);
-            alert("Submission failed.");
-        }
+        });
     };
-
 
 
     const { data, isLoading, isError, error } = useExpense(Number(travelAssignId));
@@ -184,7 +165,10 @@ export const TravelExpense = () => {
                     <div className="flex flex-col">
                         <label htmlFor="proofDocument">Proof Document : </label>
                         <input type="file" accept=".pdf,.doc,.docx" name='proofDocument' className="border rounded p-0.5" onChange={(e) => setFile(e.target.files?.[0] || null)} required /></div>
-                    <button type="submit"  disabled={!allowExpense}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Expense</button>
+                    {/* <button type="submit"  disabled={!allowExpense}  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded">Add Expense</button> */}
+                     <button type="submit" disabled={createMutation.isPending || !allowExpense} className="bg-blue-600 text-white px-6 py-2 rounded disabled:bg-gray-400 font-bold" >
+                    {createMutation.isPending ? 'Submitting...' : 'Submit Expense Claim'}
+                    </button>
                 </form>
             </div>
 

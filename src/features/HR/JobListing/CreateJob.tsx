@@ -4,6 +4,7 @@ import type { AxiosError } from 'axios';
 import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 type Props = {}
 
 export interface JobCreate {
@@ -25,7 +26,7 @@ const CreateJob = (props: Props) => {
     const [formData, setFormData] = useState<JobCreate>({
         Title: '',
         Description: '',
-        Status: '',
+        Status: 'Open',
         ExpYearsReq: 0,
         Role: '',
         TotalPositions: 1,
@@ -47,46 +48,51 @@ const CreateJob = (props: Props) => {
         }
     };
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
     const handleClose = () => {
         navigate('/hr/jobs/');
     }
+    const mutation = useMutation({
+        mutationFn: async (jobData: JobCreate) => {
+             console.log("Sending Payload:", jobData);
+            const data = new FormData();
+            data.append('Title', jobData.Title);
+            data.append('Description', jobData.Description);
+            data.append('Role', jobData.Role);
+            data.append('ContactMail', jobData.ContactMail);
+            data.append('Status', jobData.Status);
+            data.append('ExpYearsReq', jobData.ExpYearsReq.toString());
+            data.append('ReviewerEmail', jobData.ReviewerEmail);
+            data.append('TotalPositions', jobData.TotalPositions.toString());
+            data.append('ManagedBy', jobData.ManagedBy.toString());
 
+            if (jobData.JdUrl) {
+                data.append('JdUrl', jobData.JdUrl);
+            }
+
+          const res = await api.post("/jobListing", data, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['JobCreate'] });
+            alert("Job created successfully!");
+            navigate('/hr/jobs/');
+        },
+        onError: (err: AxiosError) => {
+            const serverError = err.response?.data as any;
+            console.error("Server Error:", serverError);
+            alert("Failed to create job: " + (serverError?.title || "Check console for details"));
+        }
+    });
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        mutation.mutate(formData);
 
-        const data = new FormData();
-
-        data.append('Title', formData.Title);
-        data.append('Description', formData.Description);
-        data.append('Role', formData.Role);
-        data.append('ContactMail', formData.ContactMail);
-        data.append('Status', formData.Status || "Open");
-        data.append('ExpYearsReq', formData.ExpYearsReq.toString());
-        data.append('ReviewerEmail' , formData.ReviewerEmail);
-        data.append('TotalPositions', formData.TotalPositions.toString());
-        data.append('ManagedBy', formData.ManagedBy.toString());
-
-        if (formData.JdUrl) {
-            data.append('JdUrl', formData.JdUrl);
-        }
-
-        try {
-            const res = await api.post("/jobListing", data, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-
-            if (res.status === 201 || res.status === 200) {
-                alert("Job created successfully!");
-                navigate('/hr/jobs/');
-            }
-        } catch (err) {
-            if (axios.isAxiosError(err)) {
-                console.error("Server Error:", err.response?.data);
-            }
-        }
     };
 
     return (
@@ -155,9 +161,9 @@ const CreateJob = (props: Props) => {
                         <input type="hidden" name="ManagedBy" value={localStorage.getItem('id') || ''} />
 
                         <div className="pt-4">
-                            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md shadow transition duration-200">
-                                Create Job Opening
-                            </button>
+                          <button  type="submit"  disabled={mutation.isPending} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md shadow disabled:bg-gray-400 transition">
+                        {mutation.isPending ? 'Creating Position...' : 'Create Job Opening'}
+                    </button>
                         </div>
                     </form>
                 </div>

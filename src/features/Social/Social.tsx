@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import usePosts, { type PostsDisplayDto } from './hooks/usePosts'
+import  { type PostsDisplayDto } from './hooks/usePosts'
+import { usePosts } from './hooks/usePosts';
 import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
 import CommentModal from './CommentModal';

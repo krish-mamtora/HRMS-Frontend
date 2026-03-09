@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import api from '../auth/api/axios';
 import { useNavigate } from 'react-router-dom';
-
+import { useDeletePost, useRestorePost, useUpdatePost } from './hooks/usePosts';
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
 
@@ -15,6 +15,10 @@ const MyPosts = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [postToDelete, setPostToDelete] = useState<number | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+   const updateMutation = useUpdatePost();
+  const deleteMutation = useDeletePost();
+  const restoreMutation = useRestorePost();
+
   const fetchMyPosts = async () => {
     try {
       const response = await api.get('/Posts/user/history');
@@ -32,38 +36,32 @@ const MyPosts = () => {
 
   const handleDelete = async () => {
     if (!postToDelete) return;
-    setIsDeleting(true);
-    try {
-      await api.delete(`/Posts/my-post/${postToDelete}`);
-      
-      setPosts(prev => prev.filter(p => p.id !== postToDelete));
-      
-      setPostToDelete(null);
-      alert("Post has been moved to your hidden history.");
-    } catch (err) {
-      alert("Error hiding post.");
-    } finally {
-      setIsDeleting(false);
-    }
+    // setIsDeleting(true);
+     deleteMutation.mutate(postToDelete, {
+      onSuccess: () => {
+        setPosts(prev => prev.filter(p => p.id !== postToDelete));
+        setPostToDelete(null);
+        alert("Post has been moved to your hidden history.");
+      },
+      onError: () => alert("Error hiding post.")
+    });
   };
 const handleRestore = async (postId: number) => {
-  try {
-    await api.put(`/Posts/restore/${postId}`);
-    setPosts(prev => prev.map(p => 
-      p.id === postId ? { ...p, isVisible: true } : p
-    ));
-    
-      alert("Post has been restored to the public feed.");
-    } catch (err: any) {
-      if (err.response?.status === 403) {
-        alert("Cannot Restore: This post was removed by HR for policy violations. Please contact the HR department.");
-      } else if (err.response?.status === 404) {
-        alert("Post not found.");
-      } else {
-        alert("An unexpected error occurred while restoring the post.");
+  restoreMutation.mutate(postId, {
+      onSuccess: () => {
+        setPosts(prev => prev.map(p => 
+          p.id === postId ? { ...p, isVisible: true } : p
+        ));
+        alert("Post has been restored to the public feed.");
+      },
+      onError: (err: any) => {
+        if (err.response?.status === 403) {
+          alert("Cannot Restore: Removed by HR for policy violations.");
+        } else {
+          alert("An unexpected error occurred.");
+        }
       }
-    console.error("Restore error info:", err);
-  }
+    });
 };
 
   useEffect(() => { fetchMyPosts(); }, []);
@@ -82,13 +80,17 @@ const handleRestore = async (postId: number) => {
     formData.append('Description', editingPost?.description || '');
     selectedFiles.forEach(file => formData.append('Images', file));
 
-    try {
-      await api.post('/Posts/upsert', formData, { headers: { 'Content-Type': 'multipart/form-data' } });
-      setIsModalOpen(false);
-      setSelectedFiles([]);
-      fetchMyPosts();
-      alert("Post updated successfully");
-    } catch (err) { alert("Update failed"); }
+    updateMutation.mutate(formData, {
+      onSuccess: () => {
+        setIsModalOpen(false);
+        setSelectedFiles([]);
+         fetchMyPosts(); 
+        alert("Post updated successfully");
+      },
+      onError: () => {
+        alert("Update failed");
+      }
+    });
   };
 
   if (loading) return <div className="p-10 text-center text-gray-400 animate-pulse">Loading your history...</div>;
@@ -147,17 +149,21 @@ const handleRestore = async (postId: number) => {
                   <span>{new Date(post.createdAt).toLocaleDateString()}</span>
                   <span className="flex items-center gap-1">👍 {post.postInteraction?.likeCount || 0}</span>
                 </div>
-                
-                <button onClick={() => { setEditingPost(post); setIsModalOpen(true); }} 
-                  className="bg-white hover:bg-gray-50 text-blue-600 border border-blue-600 px-3 py-1 rounded text-xs font-bold transition-colors" >
-                  Edit Post
-                </button>
 
-               {post.isVisible ? (
-                   <button onClick={() => setPostToDelete(post.id)} className="bg-white hover:bg-red-50 text-red-500 border border-red-500 px-3 py-1 rounded text-xs font-bold transition-colors" > Delete </button>
-                   ):(
-                  <button onClick={() => handleRestore(post.id)} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-bold transition-colors shadow-sm"> Restore </button>
-                 )}
+              <div className="flex gap-2">
+                {post.isVisible ? (
+                  <>
+                    <button onClick={() => { setEditingPost(post); setIsModalOpen(true); }} className="bg-white hover:bg-blue-50 text-blue-600 border border-blue-600 px-3 py-1 rounded text-xs font-bold transition-colors">Edit </button>
+                    <button onClick={() => setPostToDelete(post.id)} disabled={deleteMutation.isPending && postToDelete === post.id} className="bg-white hover:bg-red-50 text-red-500 border border-red-500 px-3 py-1 rounded text-xs font-bold transition-colors disabled:opacity-50">
+                      {deleteMutation.isPending && postToDelete === post.id ? 'Hiding...' : 'Delete'}
+                    </button>
+                  </>
+                ) : (
+                  <button onClick={() => handleRestore(post.id)} disabled={restoreMutation.isPending} className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs font-bold transition-colors shadow-sm disabled:bg-gray-400">
+                    {restoreMutation.isPending ? 'Restoring...' : 'Restore'}
+                  </button>
+                )}
+            </div>
 
               </div>
             </div>
@@ -176,7 +182,7 @@ const handleRestore = async (postId: number) => {
             </div>
             <h3 className="text-lg font-bold text-gray-800">Delete Achievement?</h3>
             <p className="text-gray-500 text-sm mt-2">
-              This action cannot be undone. This post and all its images will be permanently removed.
+              Are you sure you want to delete this post ???.
             </p>
             
             <div className="flex gap-3 mt-6">
@@ -235,7 +241,10 @@ const handleRestore = async (postId: number) => {
                 />
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-sm transition-all">Save Changes</button>
+                 <button type="submit"  disabled={updateMutation.isPending}className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-sm transition-all" >
+                  {updateMutation.isPending ? 'Updating...' : 'Save Changes'}
+                </button>
+                {/* <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow-sm transition-all">Save Changes</button> */}
                 <button type="button" onClick={() => setIsModalOpen(false)} className="bg-white text-gray-500 font-bold py-2 px-6 border border-gray-300 rounded hover:bg-gray-50">Cancel</button>
               </div>
             </form>
