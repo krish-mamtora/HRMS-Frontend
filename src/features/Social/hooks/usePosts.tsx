@@ -54,17 +54,39 @@ const fetchPostsFeed = async ({ pageParam = 1 }): Promise<PostsDisplayDto[]> => 
   return postsWithCommentCounts;
 };
 
-export const usePosts = () => {
+// export const usePosts = () => {
+//   return useInfiniteQuery<PostsDisplayDto[], Error>({
+//     queryKey: ['posts-feed'],
+//     queryFn: fetchPostsFeed,
+//     initialPageParam: 1,
+//     getNextPageParam: (lastPage, allPages) => {
+//       return lastPage.length === 10 ? allPages.length + 1 : undefined;
+//     },
+//   });
+// };
+export const usePosts = (filters: any) => {
   return useInfiniteQuery<PostsDisplayDto[], Error>({
-    queryKey: ['posts-feed'],
-    queryFn: fetchPostsFeed,
+    queryKey: ['posts-feed', filters],
+
     initialPageParam: 1,
+
+    queryFn: ({ pageParam = 1 }) =>
+      api.get('/Posts/feed', {
+        params: {
+          pageNumber: pageParam,
+          pageSize: 10,
+          search: filters.searchQuery,
+          tag: filters.selectedTag,
+          startDate: filters.startDate,
+          endDate: filters.endDate
+        }
+      }).then(res => res.data),
+
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === 10 ? allPages.length + 1 : undefined;
-    },
+    }
   });
 };
-
 export const useCreatePost = () => {
   const queryClient = useQueryClient();
 

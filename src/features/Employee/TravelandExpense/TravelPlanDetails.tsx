@@ -104,6 +104,8 @@ const navigate = useNavigate();
 
   return (
     <>
+    <div className='p-4'>
+
       <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
        <button className='underline text-blue-500' onClick={()=>navigate(-1)}>Back</button>
 
@@ -184,7 +186,7 @@ const navigate = useNavigate();
                   <a
                     onClick={(e) => handleDownload(e, item.travelDocumentUrl)}
                     className='font-medium text-blue-600 hover:underline flex items-center'
-                  >
+                    >
 
                     {item.travelDocumentUrl.split('_')[1]}
                   </a>
@@ -197,6 +199,7 @@ const navigate = useNavigate();
           </tbody>
         </table>
       </div>
+            </div>
 
     </>
   );

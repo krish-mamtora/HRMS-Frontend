@@ -65,10 +65,11 @@ const EmpTravelDocuments = (props: Props) => {
                 alert("Failed to download proof. Please try again.");
             }
         };
-    
         
   return (
     <>
+    <div className='p-4'>
+
     <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Documents</div>
 
     <button className='underline text-blue-500' onClick={()=>navigate(-1)}>Back</button>
@@ -110,8 +111,8 @@ const EmpTravelDocuments = (props: Props) => {
                                 <td className="px-6 py-4 col ">
                                     <a
                                          onClick={(e) => handleDownload(e,item.travelDocumentUrl)} 
-                                        className='font-medium text-blue-600 hover:underline flex items-center'
-                                    >
+                                         className='font-medium text-blue-600 hover:underline flex items-center'
+                                         >
                               
                                         {item.travelDocumentUrl.split('_')[1]}
                                     </a>
@@ -125,6 +126,7 @@ const EmpTravelDocuments = (props: Props) => {
                 </table>
             </div>
 
+          </div>
     </>
   );
 };

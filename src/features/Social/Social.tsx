@@ -4,44 +4,29 @@ import { usePosts } from './hooks/usePosts';
 import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
 import CommentModal from './CommentModal';
+import { useDebounce } from './hooks/useDebounce';
 
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
 
 const Social = () => {
+  
   const navigate = useNavigate();
-  const { data, fetchNextPage,isError, error, hasNextPage, isFetchingNextPage, isLoading , refetch} = usePosts();
-  const posts = data?.pages.flat() || [];
-
+  
   const [selectedPost, setSelectedPost] = useState<PostsDisplayDto | null>(null);
   const [postToDelete, setPostToDelete] = useState<PostsDisplayDto | null>(null);
   const [viewerData, setViewerData] = useState<{ urls: string[], index: number } | null>(null);
   const [deletionReason, setDeletionReason] = useState('');
-
+  
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTag, setSelectedTag] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  
+  const debouncedSearch = useDebounce(searchQuery, 500);
+const { data, fetchNextPage, isError, error, hasNextPage, isFetchingNextPage, isLoading, refetch } = usePosts({ searchQuery: debouncedSearch, selectedTag, startDate, endDate });
+  const posts = data?.pages.flat() || [];
   const currentUser = localStorage.getItem('role');
   const isHR = (currentUser === 'HR');
-
-  const filteredPosts = posts?.filter(post => {
-  
-    const matchesSearch = 
-      post.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
-      post.description.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesTag = selectedTag === '' || post.tagNames.includes(selectedTag);
-
-    const postDate = new Date(post.createdAt).setHours(0, 0, 0, 0);
-    const start = startDate ? new Date(startDate).setHours(0, 0, 0, 0) : null;
-    const end = endDate ? new Date(endDate).setHours(23, 59, 59, 999) : null;
-    
-    const matchesDate = (!start || postDate >= start) && (!end || postDate <= end);
-
-    return matchesSearch && matchesTag && matchesDate;
-  });
 
   const allTags = Array.from(new Set(posts?.flatMap(p => p.tagNames) || []));
 
@@ -73,7 +58,7 @@ const Social = () => {
       console.error("Reaction failed:", err);
     }
   };
-
+const filteredPosts = posts;
   if (isLoading) return <div className="flex justify-center items-center min-h-screen text-gray-400 animate-pulse">Loading feed...</div>;
   if (isError) return <div className="text-red-500 text-center p-10 font-medium">Error: {error.message}</div>;
 
