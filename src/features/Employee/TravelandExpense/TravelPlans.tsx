@@ -20,12 +20,15 @@ const TravelPlans = (props: Props) => {
       navigate(`/employee/travel/expense/${id}`);
       console.log(id);
     }
+  
 
   return (
     <>
     <div className='p-4'>
         <div className='font-bold text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight'>Travel Plan List</div>
-
+      {
+        data.length===0 && <h2>No plan assigned</h2>
+      }
         <div>
 
         </div>

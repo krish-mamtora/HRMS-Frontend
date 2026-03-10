@@ -44,6 +44,7 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, sendMails,isOpen
             alert('Please fill required fields!!');
             return;
         }
+        setIsSubmitting(true); 
         try {
                const data = new FormData();
                 data.append('JobId', formData.JobId.toString());

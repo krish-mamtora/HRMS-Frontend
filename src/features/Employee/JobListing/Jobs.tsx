@@ -10,6 +10,7 @@ type ActiveModal = {
     type : 'refer' |'share'|null,
     jobId : number |null,
     emails?: string[];
+     jobUrl?: string;
 }
 
 const Jobs = (props: Props) => {
@@ -22,13 +23,14 @@ const Jobs = (props: Props) => {
         type : null , 
         jobId : null,
         emails : [] ,
+        jobUrl: '',
       });
 
         if (isLoading) return <div>Loading...</div>;
         if (error) return <div>Error: {error.message}</div>;
       const closeModal = () =>{
         setActiveModal({
-            type:null , jobId:null
+            type:null , jobId:null ,jobUrl: '' 
         })
       }
 
@@ -101,14 +103,14 @@ const Jobs = (props: Props) => {
                             )}
                             
                             <button className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded"
-                            onClick={()=>setActiveModal({type : 'share' , jobId:job.id})}
+                            onClick={()=>setActiveModal({type : 'share' , jobId:job.id ,   jobUrl: job.jdUrl })}
 
                             >Share Job</button>
                             {ActiveModal.type==='share' && ActiveModal.jobId && (
                                     <ShareJobModal
                                     jobId={ActiveModal.jobId}
                                     jobTitle={data?.find((j: Job) => j.id === ActiveModal.jobId)?.title || ''}
-                                    jobUrl={job.jdUrl}                             
+                                     jobUrl={ActiveModal.jobUrl || ''}                             
                                     isOpen={true}
                                     onClose={() => closeModal()}
                                     />

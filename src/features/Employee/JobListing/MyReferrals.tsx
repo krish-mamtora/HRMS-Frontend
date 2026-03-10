@@ -35,7 +35,7 @@ const userId = localStorage.getItem('id');
     <>
     <div className='p-4'>
     <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 underline">Back</button>
-    <div>My Refferals</div>
+    <h3>My Refferals</h3>
     {loading ? (<p>Loading...</p>) : referrals ? (
                   <div className="overflow-x-auto">
                     <table className="min-w-full border-collapse border border-gray-300">

@@ -93,13 +93,13 @@ const GameDetails = () => {
     }
     setSelectedDate(e.target.value);
   };
-const navigateBack = ()=>{
-  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
-  navigate(`/${role}/games`);
-}
+// const navigateBack = ()=>{
+//   var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
+//   navigate(`/${role}/games`);
+// }
   return (
     <div className="p-7">
-      <button onClick={() => navigateBack()} className="mb-4 text-blue-600 underline">Back</button>
+      <button onClick={() => navigate(-1)} className="mb-4 text-blue-600 underline">Back</button>
       <div className="flex justify-between">
         <h1 className="text-xl font-bold mb-4">Book Slot</h1>
         <input type="date" value={selectedDate} onChange={handleDateChange} className="border p-2 rounded mb-6" />

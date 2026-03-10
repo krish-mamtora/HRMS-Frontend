@@ -70,6 +70,7 @@ const Profile = () => {
                                 <th className="px-6 py-3">Department</th>
                                 <th className="px-6 py-3">Designation</th>
                                 <th className="px-6 py-3">Address</th>
+                                <th className="px-6 py-3">Favourite Sport</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100">
@@ -81,6 +82,7 @@ const Profile = () => {
                                     <td className="px-6 py-4 text-sky-700">{profile.department}</td>
                                     <td className="px-6 py-4 text-slate-700">{profile.designation}</td>
                                     <td className="px-6 py-4 text-slate-600">{profile.address}</td>
+                                      <td className="px-6 py-4 text-slate-700">{profile.favouriteSport}</td>
                                 </tr>
                             ))}
                         </tbody>
