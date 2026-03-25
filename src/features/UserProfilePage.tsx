@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import api from './auth/api/axios';
 import useThemeStore from '../store/useThemeStore';
+import { getIdFromToken } from './auth/api/getUserRoleFromToken';
 
 const UserProfilePage = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState<any>(null);
     const [user, setUser] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
-    const userId = localStorage.getItem('id');
+    const userId = getIdFromToken();
+    console.log(userId)
     const { isDarkMode, toggleTheme } = useThemeStore();
     
     const handleinputChanges = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

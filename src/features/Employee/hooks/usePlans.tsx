@@ -1,5 +1,6 @@
 import api from '../../auth/api/axios';
 import { useQuery } from '@tanstack/react-query';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 interface AssignedPlan {
   empId: number;
@@ -25,7 +26,7 @@ export interface TravelPlanData {
 
 
 const fetchAssignedPlan = async (): Promise<AssignedPlan[][]> => {
-  var currentEmployee = localStorage.getItem('id');
+  const currentEmployee = getIdFromToken();
   if (!currentEmployee) {
     throw new Error("No Employee Found in localstorage");
   }

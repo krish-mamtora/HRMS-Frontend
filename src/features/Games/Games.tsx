@@ -1,7 +1,7 @@
 import React from 'react'
 import useGames from './hooks/useGames';
 import { redirect, useNavigate } from 'react-router-dom';
-import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
+import { getIdFromToken, getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 
 interface Game {
   id: number;
@@ -13,7 +13,7 @@ interface Game {
 type Props = {}
 
 const Games = (props: Props) => {
-  const userId = localStorage.getItem('id');
+  const userId = getIdFromToken();
   const gotoMyBookings = () =>{
    
         navigate(`my-bookings/${userId}`);
@@ -22,14 +22,11 @@ const Games = (props: Props) => {
     navigate('/hr/games/config');
   }
      const gotoMyWaitings = () =>{
-   
-    const userId = localStorage.getItem('id');
         navigate(`my-waitings/${userId}`);
     }
    const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGames();
   const role = getRoleFromToken();
-  // const isHr = localStorage.getItem('role')==='HR' ? true:false;
     const isHr = role==='HR' ? true:false;
 
   const handleAction = (gameId: number) => {

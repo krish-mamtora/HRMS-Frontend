@@ -4,6 +4,7 @@ import useExpense from '../hooks/useExpense';
 import useProofDocument from '../hooks/useProofDocument';
 import api from '../../auth/api/axios';
 import type { Expense } from '../hooks/useExpense';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 type Props = {}
 
@@ -29,7 +30,7 @@ const ExpenseList = (props: Props) => {
                 ...selectedExpense,
                 hrRemarks: hrRemarks,
                 status: statusvalue,
-                approvedBy: localStorage.getItem('id')
+                approvedBy: getIdFromToken()
             };
             await api.put(`/Expense/${selectedExpense.id}`, updatedData);
             setopenApprovalModal(false);

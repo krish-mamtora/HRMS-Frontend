@@ -1,6 +1,7 @@
 import React from 'react'
 import useTeam from '../hooks/useTeam';
 import { useNavigate } from 'react-router-dom';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 type Props = {}
 
@@ -9,7 +10,7 @@ const TeamPeople = (props: Props) => {
       const viewAssignedPlans = (empProfileId : number) =>{
         navigate(`/manager/employee-plans/${empProfileId}`);
     }
-    const { data, isLoading, isError, error } = useTeam(Number(localStorage.getItem('id')));
+    const { data, isLoading, isError, error } = useTeam(Number(getIdFromToken()));
     console.log("Here", data)
     console.log(typeof (data));
     if (isLoading) return <div>Loading...</div>;

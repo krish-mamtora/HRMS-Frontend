@@ -78,7 +78,6 @@ const GameConfig = () => {
     };
     const role = getRoleFromToken()
     const navigateBack = ()=>{
-//   var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
   navigate(`/${role}/games`);
 }
     return (

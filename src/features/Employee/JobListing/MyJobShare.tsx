@@ -1,12 +1,13 @@
 import React, { use, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import api from '../../auth/api/axios';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 type Props = {}
 
 const MyJobShare = (props: Props) => {
 const navigate = useNavigate();
-const userId = localStorage.getItem('id');
+const userId = getIdFromToken();
   const [jobsahres, setJobsahres] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
 

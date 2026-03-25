@@ -1,6 +1,7 @@
 import React, { useEffect, useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type {  ShareJob } from './types';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 interface ModalProps {
     jobId: number;
@@ -16,7 +17,7 @@ const SharejobModal: React.FC<ModalProps> = ({ jobId, jobTitle , jobUrl,isOpen, 
         ReceiverMail: '',
         Subject: '',
         Message: '',
-        EmpId: parseInt(localStorage.getItem('id') || '0'),
+        EmpId: parseInt(getIdFromToken()|| '0'),
     });
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     console.log(jobUrl);

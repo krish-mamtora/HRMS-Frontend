@@ -15,7 +15,6 @@ export const AuthProvider = ({children} : {children: React.ReactNode})=>{
 
     const [authData, setAuthData] = useState<{ accessToken: string | null, role: string | null }>({
         accessToken: localStorage.getItem('accessToken'),
-        // role: localStorage.getItem('role'),
          role : getRoleFromToken()
     });
 
@@ -26,20 +25,18 @@ export const AuthProvider = ({children} : {children: React.ReactNode})=>{
             return;
        }else{
          localStorage.setItem("accessToken", accessToken );
-         localStorage.setItem("role" , role);
          setAuthData({accessToken , role});
        }
     }
 
     const logout = () => {
          localStorage.removeItem("accessToken");
-         localStorage.removeItem("role");
         setAuthData({ accessToken: null, role: null });
     };
 
     useEffect(()=>{
         const storedaccessToken  = localStorage.getItem("accessToken");
-        const storedRole = localStorage.getItem("role");
+        const storedRole = getRoleFromToken();
         if(storedRole && storedaccessToken){
             setAuthData({accessToken: storedaccessToken, role: storedRole});
         }

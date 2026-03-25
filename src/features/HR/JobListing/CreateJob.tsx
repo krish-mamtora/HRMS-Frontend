@@ -5,6 +5,7 @@ import axios from 'axios';
 
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 type Props = {}
 
 export interface JobCreate {
@@ -21,6 +22,7 @@ export interface JobCreate {
 }
 
 const CreateJob = (props: Props) => {
+    const currUserId = getIdFromToken();
     const [feedback, setFeedback] = useState({ message: '', error: '' });
 
     const [formData, setFormData] = useState<JobCreate>({
@@ -33,7 +35,7 @@ const CreateJob = (props: Props) => {
         ReviewerEmail:'',
         JdUrl: null,
         ContactMail: '',
-        ManagedBy: Number(localStorage.getItem('id')) || 0
+        ManagedBy: Number(currUserId) || 0
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -158,7 +160,7 @@ const CreateJob = (props: Props) => {
                             </div> */}
                         </div>
 
-                        <input type="hidden" name="ManagedBy" value={localStorage.getItem('id') || ''} />
+                        <input type="hidden" name="ManagedBy" value={currUserId || ''} />
 
                         <div className="pt-4">
                           <button  type="submit"  disabled={mutation.isPending} className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md shadow disabled:bg-gray-400 transition">

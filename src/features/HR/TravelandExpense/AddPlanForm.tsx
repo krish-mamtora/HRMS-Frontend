@@ -5,6 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { usePlans } from '../hooks/usePlans';
 import { useNavigate } from 'react-router-dom';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 type Props = {}
 
 export interface TravelPlanData {
@@ -18,6 +19,7 @@ export interface TravelPlanData {
 }
 
 const AddPlanForm = (props: Props) => {
+    const currentUserId = getIdFromToken()
        const [feedback , setFeedback]= useState({message:'' , error:''});
          const queryClient = useQueryClient();
         const [formData , setFormData] = useState<TravelPlanData>({
@@ -27,7 +29,7 @@ const AddPlanForm = (props: Props) => {
             purpose : '',
             TravelMode: '',
             TripType:'',
-            createdByUserId : Number(localStorage.getItem('id'))||0
+            createdByUserId : Number(getIdFromToken)||0
         });
         const mutation = useMutation({
             mutationFn: async (newPlan: TravelPlanData) => {
@@ -115,7 +117,7 @@ const AddPlanForm = (props: Props) => {
                 <option value="Corporate Retreats">Corporate Retreats</option>
             </select>
             </div>
-            <input type="hidden" id="createdByUserId" name="createdByUserId" value={localStorage.getItem('id')||''} required/>
+            <input type="hidden" id="createdByUserId" name="createdByUserId" value={currentUserId||''} required/>
             <button  type="submit" disabled={mutation.isPending}className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded disabled:bg-gray-400"> {mutation.isPending ? 'Creating...' : 'Create Plan'} </button>
         </form>        
     </div>

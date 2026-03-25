@@ -3,11 +3,13 @@ import api from '../../auth/api/axios';
 import type {TravelDocument} from "../hooks/useTravelDocument";
 import { useNavigate, useParams } from 'react-router-dom';
 import useTravelDocument from '../hooks/useTravelDocument';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 type Props = {}
 
 const TravelDocument = (props: Props) => {
+    const currentUserId = getIdFromToken();
       const [filterType, setFilterType] = useState('');
-       const [UploadedBy, setUploadedBy] = useState(localStorage.getItem('id') || '');
+       const [UploadedBy, setUploadedBy] = useState(currentUserId || '');
         const [TravelDocument, setTravelDocument] = useState<File | null>(null);
         const [Description, setDescription] = useState('');
         const [Type, setType] = useState('');
@@ -161,7 +163,7 @@ const TravelDocument = (props: Props) => {
                                 </td>
                                 <td className="px-6 py-4">{item.description}</td>
                                 <td className="px-6 py-4">
-                                 {item.uploadedBy==localStorage.getItem('id') ? 'You':'Employee' }
+                                 {item.uploadedBy== currentUserId ? 'You':'Employee' }
 
                                 </td>
                                 <td className="px-6 py-4 col ">

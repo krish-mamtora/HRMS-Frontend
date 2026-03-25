@@ -27,7 +27,6 @@ export default function LoginPage(){
                 if(res.data && res.data.accessToken && res.data.role){
                     login(res.data.accessToken , res.data.role);
                 }
-                localStorage.setItem('id' , res.data.id);
                 if(res.data.role === 'Employee'){
                      navigate("/employee/travel");
                 }

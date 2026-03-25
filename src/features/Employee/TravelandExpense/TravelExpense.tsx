@@ -3,6 +3,7 @@ import api from '../../auth/api/axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import useExpense, { useCreateExpense } from '../hooks/useExpense';
 import type { ExpenseProof } from '../../HR/hooks/useProofDocument';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 export const TravelExpense = () => {
     const [expenseType, setexpenseType] = useState('');
@@ -17,7 +18,7 @@ export const TravelExpense = () => {
     var allowExpense = false;
     const { id } = useParams();
     const numPlanId = id ? Number(id) : 0;
-    const EmpId = localStorage.getItem('id');
+    const EmpId = getIdFromToken();
     const naviagte = useNavigate();
     const createMutation = useCreateExpense(Number(travelAssignId));
 

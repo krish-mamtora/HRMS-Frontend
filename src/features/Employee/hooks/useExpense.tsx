@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import api from "../../auth/api/axios";
+import { getIdFromToken } from "../../auth/api/getUserRoleFromToken";
 
 export interface ExpenseData {
     TravelAssignId : number , 
@@ -51,7 +52,7 @@ export const useCreateExpense = (travelAssignId: number) => {
             const notificationData = {
                 travelExpenseId: newExpenseId,
                 recipientEmail: "micosaf532@him6.com", 
-                senderId: Number(localStorage.getItem('id')),
+                senderId: Number(getIdFromToken()),
                 subject: "New Expense Claim Submitted",
                 body: `New expense claim for ${payload.expenseData.Amount} has been submitted.`
             };

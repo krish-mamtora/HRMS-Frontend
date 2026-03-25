@@ -78,12 +78,10 @@ const AddPost = () => {
       formData.append('Images', file);
     });
 
-    // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
      mutate(formData, {
       onSuccess: () => {
         alert('Your Achievement is Uploaded.');
         const role = getRoleFromToken();
-        // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
         navigate(`/${role}/social`);
       },
       onError: (error: any) => {

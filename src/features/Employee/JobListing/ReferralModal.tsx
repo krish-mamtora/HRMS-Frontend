@@ -1,6 +1,7 @@
 import React, { useState, type ChangeEvent, type FormEvent } from 'react';
 import api from '../../auth/api/axios';
 import type { ReferalCreate } from './types';
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 
 interface ModalProps {
     jobId: number;
@@ -21,7 +22,7 @@ const ReferralModal: React.FC<ModalProps> = ({ jobId, jobTitle, sendMails,isOpen
         ReffResume: null,
         SendMails :sendMails,
         ReffName: '',
-        EmpId: parseInt(localStorage.getItem('id') || '0'),
+        EmpId: parseInt(getIdFromToken() || '0'),
         Description: '',
     });
 

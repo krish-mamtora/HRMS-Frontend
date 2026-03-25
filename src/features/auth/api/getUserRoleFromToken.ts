@@ -17,3 +17,22 @@ export const getRoleFromToken = (): string | null => {
     return null;
   }
 };
+
+
+export const getIdFromToken = (): string | null => {
+  const token = localStorage.getItem('accessToken');
+  
+  if (!token) return null;
+
+  try {
+    const decodedToken: any = jwtDecode(token); 
+    const idkey = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier";
+    
+    const id = decodedToken[idkey];
+    
+    return id || null;
+  } catch (error) {
+    console.error("Token decoding failed:", error);
+    return null;
+  }
+};

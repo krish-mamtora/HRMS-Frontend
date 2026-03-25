@@ -3,11 +3,13 @@ import api from '../../auth/api/axios';
 import type { TravelDocument } from "../hooks/useTravelDocument";
 import { useNavigate, useParams } from 'react-router-dom';
 import useTravelDocument from '../../HR/hooks/useTravelDocument'
+import { getIdFromToken } from '../../auth/api/getUserRoleFromToken';
 type Props = {}
 
 const TravelPlanDetails = (props: Props) => {
 
-  const [UploadedBy, setUploadedBy] = useState(localStorage.getItem('id') || '');
+  const empId = getIdFromToken();
+  const [UploadedBy, setUploadedBy] = useState(empId || '');
   const [TravelDocument, setTravelDocument] = useState<File | null>(null);
   const [filterType, setFilterType] = useState('');
 
@@ -17,7 +19,6 @@ const TravelPlanDetails = (props: Props) => {
   const [travelAssignId, setTravelAssignId] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const [filedoc, setFile] = useState<File | null>(null);
-  const empId = localStorage.getItem('id');
 const navigate = useNavigate();
   console.log(id, empId);
   useEffect(() => {
@@ -179,7 +180,7 @@ const navigate = useNavigate();
                 </td>
                 <td className="px-6 py-4">{item.description}</td>
                 <td className="px-6 py-4">
-                  {item.uploadedBy == localStorage.getItem('id') ? 'You' : 'HR'}
+                  {item.uploadedBy == getIdFromToken() ? 'You' : 'HR'}
 
                 </td>
                 <td className="px-6 py-4 col ">

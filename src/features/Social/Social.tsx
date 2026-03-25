@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
 import CommentModal from './CommentModal';
 import { useDebounce } from './hooks/useDebounce';
-import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
+import { getIdFromToken, getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
@@ -26,7 +26,6 @@ const Social = () => {
   const debouncedSearch = useDebounce(searchQuery, 500);
 const { data, fetchNextPage, isError, error, hasNextPage, isFetchingNextPage, isLoading, refetch } = usePosts({ searchQuery: debouncedSearch, selectedTag, startDate, endDate });
   const posts = data?.pages.flat() || [];
-  // const currentUser = localStorage.getItem('role');
   const role = getRoleFromToken();
   const isHR = (role === 'HR');
 
@@ -34,7 +33,7 @@ const { data, fetchNextPage, isError, error, hasNextPage, isFetchingNextPage, is
 
   const handleDeletePost = async () => {
     if (!postToDelete || !deletionReason.trim()) return;
-    const currentUserId = parseInt(localStorage.getItem('id') || '0', 10);
+    const currentUserId = parseInt(getIdFromToken() || '0', 10);
     try {
       await api.delete(`/Posts/${postToDelete.id}`, {
         params: { userId: currentUserId, reason: deletionReason }

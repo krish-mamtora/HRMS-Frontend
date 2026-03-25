@@ -12,13 +12,12 @@ type Props = {}
 const Profile = () => {
     const { userProfileId } = useParams();
     const navigate = useNavigate();
-    // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
     const role = getRoleFromToken();
     const redirectBack = () => {
         navigate(`/${role}/organization`);
     }
      const openOrgChart = (userProfileId:number)=>{
-          navigate(`/${localStorage.getItem('role')}/organization/profile/${userProfileId}`);
+          navigate(`/${role}/organization/profile/${userProfileId}`);
     }
     const numuserProfileId = userProfileId ? Number(userProfileId) : 0;
     const { data: directContact } = useDirectCont(numuserProfileId);
