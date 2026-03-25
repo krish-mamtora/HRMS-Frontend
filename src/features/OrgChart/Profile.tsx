@@ -5,14 +5,15 @@ import axios from 'axios';
 import useProfile from './hooks/useProfile';
 import useOrg from './hooks/useOrg';
 import useDirectCont from './hooks/useDirectCont';
+import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 
 type Props = {}
 
 const Profile = () => {
     const { userProfileId } = useParams();
     const navigate = useNavigate();
-    const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
-    
+    // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
+    const role = getRoleFromToken();
     const redirectBack = () => {
         navigate(`/${role}/organization`);
     }
@@ -31,10 +32,10 @@ const Profile = () => {
 
     return (
         <div className="flex h-screen overflow-hidden">
+           <div className="flex flex-1"> 
                 <button className='underline text-blue-500 self-start mb-4 absolute top-4 left-4' onClick={() => navigate(-1)}>
                     Back
                 </button>
-           <div className="flex flex-1"> 
 
             <div className="flex flex-col items-center  p-4 overflow-y-auto bg-gray-50 w-[35%]">
                 <h2 className="mb-8 text-xl font-bold text-center">Top-level managerial chain</h2>
@@ -69,7 +70,7 @@ const Profile = () => {
                                 <th className="px-6 py-3">Name</th>
                                 <th className="px-6 py-3">Department</th>
                                 <th className="px-6 py-3">Designation</th>
-                                <th className="px-6 py-3">Address</th>
+                                <th className="px-6 py-3">Address</th>  
                                 <th className="px-6 py-3">Favourite Sport</th>
                             </tr>
                         </thead>

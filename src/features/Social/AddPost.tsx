@@ -4,6 +4,7 @@ import { useCreatePost } from './hooks/usePosts'
 import { usePosts } from './hooks/usePosts';  
 import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
+import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 // import { useCreatePost } from './hooks/usePosts';
 
 type TagsDisplayDto = {
@@ -81,7 +82,8 @@ const AddPost = () => {
      mutate(formData, {
       onSuccess: () => {
         alert('Your Achievement is Uploaded.');
-        const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
+        const role = getRoleFromToken();
+        // const role = (localStorage.getItem('role') === "HR") ? 'hr' : (localStorage.getItem('role') === "Employee" ? "employee" : 'manager');
         navigate(`/${role}/social`);
       },
       onError: (error: any) => {

@@ -1,6 +1,7 @@
 import React from 'react'
 import useGames from './hooks/useGames';
 import { redirect, useNavigate } from 'react-router-dom';
+import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 
 interface Game {
   id: number;
@@ -27,7 +28,10 @@ const Games = (props: Props) => {
     }
    const navigate = useNavigate();
   const { data, isLoading, isError, error } = useGames();
-  const isHr = localStorage.getItem('role')==='HR' ? true:false;
+  const role = getRoleFromToken();
+  // const isHr = localStorage.getItem('role')==='HR' ? true:false;
+    const isHr = role==='HR' ? true:false;
+
   const handleAction = (gameId: number) => {
     navigate(`${gameId}`);
   };
@@ -44,7 +48,8 @@ const Games = (props: Props) => {
                 <button onClick={()=>gotoMyWaitings()}  className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors">Waiting </button>
                 {
                  isHr && 
-                  <button className="mt-2 mr-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition-colors" onClick={() => { openConfiguration() }}>Configure</button>
+                  <button className="whitespace-nowrap text-sm bg-amber-500 text-white px-4 py-2 rounded-md hover:bg-amber-600 transition-all font-medium shadow-sm flex items-center gap-2"
+                        onClick={() => { openConfiguration() }}>Configure</button>
                }  
             </div>
         </div>

@@ -14,6 +14,7 @@ export interface UserProfileDisplayDto {
   favouriteSport: string;
   joinDate: string; 
   isActive: boolean;
+  managerName : string;
 }
 
 const fetchOrgChart = async(id:number):Promise<UserProfileDisplayDto[]>=>{

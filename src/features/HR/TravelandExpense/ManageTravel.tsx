@@ -70,7 +70,7 @@ const ManageTravel = (props: Props) => {
                                 <th className="px-6 py-3 font-medium">Age </th>
                                 <th className="px-6 py-3 font-medium">Gender </th>
 
-                                <th className="px-6 py-3 font-medium">Manager</th>
+                                {/* <th className="px-6 py-3 font-medium">Manager</th> */}
                                 <th className="px-6 py-3 font-medium">Action</th>
                             </tr>
                         </thead>
@@ -83,7 +83,7 @@ const ManageTravel = (props: Props) => {
                                     <td className="px-6 py-4">{item.department}</td>
                                     <td className="px-6 py-4">{item.age}</td>
                                     <td className="px-6 py-4">{item.gender}</td>
-                                    <td className='px-6 py-4'>{item.managerId}</td>
+                                    {/* <td className='px-6 py-4'>{item.managerId}</td> */}
                                     <td className="px-6 py-4">
                                         <button onClick={() => ViewProfile(item.userProfileId)} className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mr-3">View Profile</button>
                                         <button onClick={() => manageDocuments(item.userProfileId)} className="bg-cyan-600 text-white px-4 py-2 rounded hover:bg-cyan-800 mr-3">Documents</button>

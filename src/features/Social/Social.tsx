@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../auth/api/axios';
 import CommentModal from './CommentModal';
 import { useDebounce } from './hooks/useDebounce';
+import { getRoleFromToken } from '../auth/api/getUserRoleFromToken';
 
 const API_BASE_URL = "https://localhost:7035";
 const IMAGE_PATH = "/content/achievements";
@@ -25,8 +26,9 @@ const Social = () => {
   const debouncedSearch = useDebounce(searchQuery, 500);
 const { data, fetchNextPage, isError, error, hasNextPage, isFetchingNextPage, isLoading, refetch } = usePosts({ searchQuery: debouncedSearch, selectedTag, startDate, endDate });
   const posts = data?.pages.flat() || [];
-  const currentUser = localStorage.getItem('role');
-  const isHR = (currentUser === 'HR');
+  // const currentUser = localStorage.getItem('role');
+  const role = getRoleFromToken();
+  const isHR = (role === 'HR');
 
   const allTags = Array.from(new Set(posts?.flatMap(p => p.tagNames) || []));
 
@@ -239,7 +241,7 @@ return (
               className="flex items-center text-gray-400 hover:text-blue-500 transition-colors ml-auto p-2"
             >
               <span className="text-lg mr-1.5">💬</span>
-              <span>{post.commentCount}</span>
+              <span>{post.interactions?.celebrateCount}</span>
             </button>
           </div>
         </div>

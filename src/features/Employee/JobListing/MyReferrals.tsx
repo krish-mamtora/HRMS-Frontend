@@ -47,7 +47,7 @@ const userId = localStorage.getItem('id');
                                 <th className="border p-2">Status</th>
                                 <th className="border p-2">Resume</th>
                                   <th className="border p-2">Description</th>
-                                   <th className="border p-2">Refered at</th>
+                                   <th className="border p-2">Refered on</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -59,7 +59,8 @@ const userId = localStorage.getItem('id');
                                     <td className="border p-2">{item.status}</td>
                                      <td className="border p-2 ">{item.reffResumeUrl}</td>
                                     <td className="border p-2">{item.description}</td> 
-                                    <td className="border p-2">{item.createdAt}</td> 
+                                    <td className="border p-2">  {item.createdAt.split('T')[0]}</td> 
+                                  
 
                                 </tr>
                             ))}

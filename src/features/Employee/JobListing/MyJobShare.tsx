@@ -50,12 +50,12 @@ const userId = localStorage.getItem('id');
                         </thead>
                           <tbody>
                             {jobsahres.map((item, index) => (
-                                <tr key={index}>
+                                <tr key={index} className="border p-2 text-center">
                                     <td className="border p-2 text-center">{item.jobId}</td>
                                     <td className="border p-2">{item.receiverMail}</td>
                                     <td className="border p-2">{item.subject}</td>
                                     <td className="border p-2">{item.message}</td>
-                                    <td className="border p-2">{item.createdAt}</td>
+                                     <td className="border p-2">{item.createdAt.split('T')[0]}</td> 
                                 </tr>
                             ))}
                         </tbody>

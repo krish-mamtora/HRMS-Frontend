@@ -14,12 +14,13 @@ export interface UserProfileDisplayDto {
   favouriteSport: string;
   joinDate: string; 
   isActive: boolean;
+   managerName : string;
 }
 
 
 const fetchAllEmployeesProfile = async():Promise<UserProfileDisplayDto[]>=>{
     const response = await api.get<UserProfileDisplayDto[]>(`/UserProfile`);
-    // console.log("All Employee Profile : " , response.data);
+    console.log("All Employee Profile : " , response.data);
     return response.data;
 }
 

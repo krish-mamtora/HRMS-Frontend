@@ -4,6 +4,7 @@ import useGameConfig from '../hooks/useGameConfig';
 import type Game from '../hooks/useGame'; 
 import api from '../../auth/api/axios';
 import { useNavigate } from 'react-router-dom';
+import { getRoleFromToken } from '../../auth/api/getUserRoleFromToken';
 
 export interface Game {
     id: number,
@@ -75,8 +76,9 @@ const GameConfig = () => {
              alert("Failed to modify configuration");
         }
     };
+    const role = getRoleFromToken()
     const navigateBack = ()=>{
-  var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
+//   var role = (localStorage.getItem('role')=="HR")?'hr':(localStorage.getItem('role')=="Employee"?"employee":'manager');
   navigate(`/${role}/games`);
 }
     return (

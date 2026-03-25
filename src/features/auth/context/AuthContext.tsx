@@ -1,5 +1,6 @@
 import { createContext , useState , useEffect } from "react";
 import { set } from "react-hook-form";
+import { getRoleFromToken } from "../api/getUserRoleFromToken";
 
 interface AuthContextType{
     accessToken : string | null;
@@ -14,7 +15,8 @@ export const AuthProvider = ({children} : {children: React.ReactNode})=>{
 
     const [authData, setAuthData] = useState<{ accessToken: string | null, role: string | null }>({
         accessToken: localStorage.getItem('accessToken'),
-        role: localStorage.getItem('role'),
+        // role: localStorage.getItem('role'),
+         role : getRoleFromToken()
     });
 
     const login = (accessToken:string , role:string)=>{

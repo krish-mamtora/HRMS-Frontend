@@ -15,6 +15,7 @@ export interface UserProfile{
     isActive : boolean,
     favouriteSport:string,
     managerId : number,
+    managerName : string,
 }
 
 
